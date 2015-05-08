@@ -17,6 +17,7 @@ Project website: http://www.cs.ubc.ca/labs/beta/Projects/autoweka/
  
 ## About this repository
 I needed to extend Auto-WEKA for supporting Weka Filters, so I use this repository to share the changes.
+ * Manuel Martín Salvador, PhD Student (Bournemouth University)
 
 ## License
 GNU General Public License v3 (see [LICENSE](https://github.com/DraXus/autoweka/blob/master/LICENSE))
