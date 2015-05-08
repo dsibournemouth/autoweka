@@ -48,6 +48,11 @@ public class ExperimentBuilder extends JFrame
     private JList mClassifierList;
     private Vector<String> mClassifiers = new Vector<String>();
     private ArrayList<String> mAllowedClassifiers = new ArrayList<String>();
+    
+    private JPanel mFilterSelection;
+    private JList mFilterList;
+    private Vector<String> mFilters = new Vector<String>();
+    private ArrayList<String> mAllowedFilters = new ArrayList<String>();
 
     private JPanel mExperimentSettings;
     private JTextField mExperimentNameText;
@@ -134,7 +139,7 @@ public class ExperimentBuilder extends JFrame
             mInstanceGenerator = InstanceGenerator.create(generatorProps.getClassName(), Util.propertiesToString(props));
             mInstanceGenerator.getAllInstanceStrings(Util.propertiesToString(generatorProps.getProperties()));
 
-            activateClassifierSelection();
+            activateFilterSelection();
         }catch(Throwable e){
             UIUtil.showExceptionDialog(this, "Error setting dataset", e);
         }
@@ -173,7 +178,7 @@ public class ExperimentBuilder extends JFrame
 
     public void backClassifierSelection()
     {
-        activateDatasetSelection();
+        activateFilterSelection();
     }
 
     public void nextClassifierSelection()
@@ -184,6 +189,49 @@ public class ExperimentBuilder extends JFrame
         }
 
         activateExperimentSettings();
+    }
+    
+  //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    
+    public void activateFilterSelection()
+    {
+        mTabs.setSelectedComponent(mFilterSelection);
+        
+        Instances instances = mInstanceGenerator.getTraining();
+        String paramDir = Util.getAutoWekaDistributionPath() + File.separator + "params" + File.separator;
+
+        ApplicabilityTester.ApplicableFilters app = ApplicabilityTester.getApplicableFilters(instances, paramDir, null);
+
+        for(ClassParams filter : app.base) {
+            mFilters.add(filter.getTargetClass());
+        }
+        for(ClassParams filter : app.meta) {
+            mFilters.add(filter.getTargetClass());
+        }
+        
+        mFilterList.setListData(mFilters);
+        int[] selectedIndicies = new int[mFilters.size()];
+        for(int i = 0; i < selectedIndicies.length; i++)
+            selectedIndicies[i] = i;
+
+        mFilterList.setSelectedIndices(selectedIndicies);
+    }
+
+    public void backFilterSelection()
+    {
+        activateDatasetSelection();
+    }
+
+    public void nextFilterSelection()
+    {
+        mAllowedFilters.clear();
+        for(int i : mFilterList.getSelectedIndices()){
+            mAllowedFilters.add(mFilters.get(i)); 
+        }
+
+        activateClassifierSelection();
     }
 
 
@@ -299,6 +347,7 @@ public class ExperimentBuilder extends JFrame
         exp.memory = mClassifierMemoryLimitText.getText() + "m";
         exp.extraPropsString = Util.propertiesToString(optMethodProps.getProperties());
         exp.allowedClassifiers = new ArrayList<String>(mAllowedClassifiers);
+        exp.allowedFilters = new ArrayList<String>(mAllowedFilters);
 
         //Setup all the extra args
         LinkedList<String> args = new LinkedList<String>();
@@ -386,6 +435,7 @@ public class ExperimentBuilder extends JFrame
             expComp.memory = mClassifierMemoryLimitText.getText() + "m";
             expComp.extraProps = Util.propertiesToString(optMethodProps.getProperties());
             expComp.allowedClassifiers = new ArrayList<String>(mAllowedClassifiers);
+            expComp.allowedFilters = new ArrayList<String>(mAllowedFilters);
 
             expComp.constructor = optMethodProps.getClassName();
 

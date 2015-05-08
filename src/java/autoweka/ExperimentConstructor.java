@@ -1,6 +1,8 @@
 package autoweka;
 
 import weka.core.Instances;
+import weka.filters.Filter;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,8 +12,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.HashMap;
-
 import java.util.ArrayList;
+
+import autoweka.Parameter.ParamType;
 
 /** 
  * Abstract class responsible for generating all the necessary stuff to run an Auto-WEKA Experiment.
@@ -32,16 +35,21 @@ public abstract class ExperimentConstructor
     protected List<ClassParams> mEnsembleClassParams = new ArrayList<ClassParams>();
     protected List<ClassParams> mAttribSearchClassParams = new ArrayList<ClassParams>();
     protected List<ClassParams> mAttribEvalClassParams = new ArrayList<ClassParams>();
+    protected List<ClassParams> mBaseFilterClassParams = new ArrayList<ClassParams>();
+    protected List<ClassParams> mMetaFilterClassParams = new ArrayList<ClassParams>();
     /**
      * List containing what classifiers are allowed to be used by this experiment
      */
     protected List<String> mAllowedClassifiers = new ArrayList<String>();
+    protected List<String> mAllowedFilters = new ArrayList<String>();
+    
     /**
      * How deep should the ensemble tree go?
      */
     protected int mEnsembleMaxNum = 5;
     //These flags sort of have meaning....
-    protected boolean mIncludeBase = true;
+    //protected boolean mIncludeBase = true;
+    protected boolean mIncludeBase = false; //modified by Manuel
     protected boolean mIncludeMeta = true;
     protected boolean mIncludeEnsemble = true;
 
@@ -172,7 +180,9 @@ public abstract class ExperimentConstructor
         while(!argQueue.isEmpty())
         {
             String arg = argQueue.poll();
-            if(arg.equals("-nometa"))
+            if(arg.equals("-nobase"))
+                mIncludeBase = false;
+            else if(arg.equals("-nometa"))
                 mIncludeMeta = false;
             else if (arg.equals("-noensemble"))
                 mIncludeEnsemble = false;
@@ -192,9 +202,11 @@ public abstract class ExperimentConstructor
             loadAttributeSelectors();
         
         mAllowedClassifiers = exp.allowedClassifiers;
+        mAllowedFilters = exp.allowedFilters;
 
         //Load up all the classifiers for the dataset we can
         loadClassifiers();
+        loadFilters();
 
         if(mAllowedClassifiers.isEmpty()){
             if(mIncludeBase){
@@ -316,6 +328,19 @@ public abstract class ExperimentConstructor
         mMetaClassParams = app.meta;
         mEnsembleClassParams = app.ensemble;
     }
+    
+    private void loadFilters()
+    {
+        Instances instances = mInstanceGenerator.getTraining();
+        List<String> allowed = null;
+        if(mAllowedFilters.size() > 0)
+            allowed = mAllowedFilters;
+
+        ApplicabilityTester.ApplicableFilters app = ApplicabilityTester.getApplicableFilters(instances, mParamBaseDir, allowed);
+
+        mBaseFilterClassParams = app.base;
+        mMetaFilterClassParams = app.meta;
+    }
 
     private void checkPrefixes()
     {
@@ -327,6 +352,8 @@ public abstract class ExperimentConstructor
         classParams.add(mEnsembleClassParams);
         classParams.add(mAttribEvalClassParams);
         classParams.add(mAttribSearchClassParams);
+        classParams.add(mBaseFilterClassParams);
+        classParams.add(mMetaFilterClassParams);
 
         for(List<ClassParams> params: classParams){
             for(ClassParams param: params)
@@ -414,6 +441,8 @@ public abstract class ExperimentConstructor
         List<String> baseClassifiers = new ArrayList<String>();
         List<String> metaClassifiers = new ArrayList<String>();
         List<String> ensembleClassifiers = new ArrayList<String>();
+        List<String> baseFilters = new ArrayList<String>();
+        List<String> metaFilters = new ArrayList<String>();
         //Go build up the names of base methods
         for(ClassParams clsParams: mBaseClassParams) { 
             String className = clsParams.getTargetClass();
@@ -426,6 +455,18 @@ public abstract class ExperimentConstructor
                 String className = clsParams.getTargetClass();
                 classifiers.add(className); 
                 metaClassifiers.add(className);
+            }
+            
+            for(ClassParams clsParams: mBaseFilterClassParams) { 
+                String className = clsParams.getTargetClass();
+                //filters.add(className); 
+                baseFilters.add(className);
+            }
+            
+            for(ClassParams clsParams: mMetaFilterClassParams) { 
+                String className = clsParams.getTargetClass();
+                //filters.add(className); 
+                metaFilters.add(className);
             }
         }
         //Go build up the names of ensemble methods
@@ -477,6 +518,21 @@ public abstract class ExperimentConstructor
             for(ClassParams clsParams: mBaseClassParams) {
                 addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams, "_1_W_1_", _1_W); 
             }
+            
+            
+            // Add filters
+            if(!metaFilters.isEmpty()){
+            
+	            Parameter _1_F = new Parameter("_1_F", metaFilters);
+	            paramGroup.add(_1_F);
+	            paramGroup.add(new Conditional(_1_F, targetclass, metaClassifiers));
+	            Parameter _1_F_0_DASHDASH = new Parameter("_1_F_0_DASHDASH", "REMOVED");
+	            paramGroup.add(_1_F_0_DASHDASH);
+	            paramGroup.add(new Conditional(_1_F_0_DASHDASH, targetclass, metaClassifiers));
+	            for(ClassParams clsParams: mMetaFilterClassParams) {
+	                addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams, "_1_F_1_", _1_F, true); 
+	            }
+            }
         }
 
         //Add in the ensemble conditionals
@@ -516,9 +572,14 @@ public abstract class ExperimentConstructor
 
         return paramGroup;
     }
+    
+    private void addClassifierToParameterConditionalGroupForDAG(ParameterConditionalGroup paramGroup, ClassParams clsParams, String prefix, Parameter parent){
+    	addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams, prefix, parent, false);
+    }
+    
 
     /** Internal helper method that adds a child classifier's params assuming a DAG structure */
-    private void addClassifierToParameterConditionalGroupForDAG(ParameterConditionalGroup paramGroup, ClassParams clsParams, String prefix, Parameter parent)
+    private void addClassifierToParameterConditionalGroupForDAG(ParameterConditionalGroup paramGroup, ClassParams clsParams, String prefix, Parameter parent, boolean recursive)
     {
         Map<Parameter, Parameter> paramMap = new HashMap<Parameter, Parameter>();
 
@@ -530,10 +591,33 @@ public abstract class ExperimentConstructor
             //Add in these parameters - but update a map so we can do the conditionals properly in a sec...
             String tempPrefix = prefix + String.format("%02d", i++) + "_";
             Parameter param = new Parameter(tempPrefix + oldParam.name, oldParam);
+            if (!param.isReady()){
+            	Instances instances = mInstanceGenerator.getTraining();
+            	param.prepare(instances.numAttributes());
+            }
             paramMap.put(oldParam, param);
             paramGroup.add(param);
 
             paramGroup.add(new Conditional(param, parent, clsParams.getTargetClass()));
+            
+            // Recursive expansion of filter parameters
+            if (recursive && param.type==ParamType.CATEGORICAL){
+            	try {
+					Class<?> currentClass = Class.forName(param.defaultCategorical);
+					// Only filters are expanded, but expanding of other classes should be also possible
+					if (Filter.class.isAssignableFrom(currentClass)){
+						
+						for(String allowedFilter: param.categoricalInnards) {
+							// We assume filter is applicable
+							ClassParams baseClsParams = new ClassParams(mParamBaseDir + File.separatorChar + "baseFilters" + File.separatorChar + allowedFilter + ".params");
+							addClassifierToParameterConditionalGroupForDAG(paramGroup, baseClsParams, tempPrefix + oldParam.name + "_", param, recursive);
+						}
+					}
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+            	
+            }
         }
         for(Conditional cond: clsParams.getConditionals())
         {

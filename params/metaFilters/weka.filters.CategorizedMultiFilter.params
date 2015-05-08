@@ -1,0 +1,5 @@
+S {weka.filters.AllFilter,weka.filters.unsupervised.instance.Resample,weka.filters.unsupervised.instance.ReservoirSample}[weka.filters.AllFilter]
+M {weka.filters.AllFilter,weka.filters.unsupervised.attribute.ReplaceMissingValues}[weka.filters.AllFilter]
+O {weka.filters.AllFilter,weka.filters.unsupervised.instance.RemoveOutliers}[weka.filters.AllFilter]
+T {weka.filters.AllFilter,weka.filters.unsupervised.attribute.Center,weka.filters.unsupervised.attribute.Standardize,weka.filters.unsupervised.attribute.Normalize}[weka.filters.AllFilter]
+R {weka.filters.AllFilter,weka.filters.unsupervised.attribute.PrincipalComponents,weka.filters.unsupervised.attribute.RandomSubset,weka.filters.supervised.attribute.AttributeSelection}[weka.filters.AllFilter]

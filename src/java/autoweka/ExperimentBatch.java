@@ -183,6 +183,11 @@ public class ExperimentBatch extends XmlSerializable
          */
         @XmlElement(name="allowedClassifiers")
         public List<String> allowedClassifiers = new ArrayList<String>();
+        /**
+         * Forces Auto-WEKA to only use the list of filters here - if it is empty, then Auto-WEKA will try to use everything that it can
+         */
+        @XmlElement(name="allowedFilters")
+        public List<String> allowedFilters = new ArrayList<String>();
     }
 
     /**
@@ -227,6 +232,7 @@ public class ExperimentBatch extends XmlSerializable
         exp.extraPropsString = expComp.extraProps;
         exp.trajectoryPointExtras = expComp.trajectoryPointExtras;
         exp.allowedClassifiers = new ArrayList<String>(expComp.allowedClassifiers);
+        exp.allowedFilters = new ArrayList<String>(expComp.allowedFilters);
 
         return exp;
     }

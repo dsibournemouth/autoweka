@@ -43,15 +43,33 @@ public class Parameter
         }
         else
         {
-            defaultNumeric = Float.parseFloat(m.group(4));
+        	if(m.group(4).equals("NUMATTS")){
+        		defaultNumeric = 0;
+        		defaultNumericOption = "NUMATTS";
+        	}
+        	else{
+        		defaultNumeric = Float.parseFloat(m.group(4));
+        	}
             type = ParamType.NUMERIC;
 
             //Get the min and max
             String[] vals = m.group(3).split(",");
             if(vals.length != 2)
                 throw new RuntimeException("Expected two values in '" + m.group(3) + "'");
-            minNumeric = Float.parseFloat(vals[0]);
-            maxNumeric = Float.parseFloat(vals[1]);
+            if (vals[0].equals("NUMATTS")){
+            	minNumeric = 0;
+            	minNumericOption = "NUMATTS";
+            }
+            else{            
+            	minNumeric = Float.parseFloat(vals[0]);
+            }
+            if (vals[1].equals("NUMATTS")){
+            	maxNumeric = 0;
+            	maxNumericOption = "NUMATTS";
+            }
+            else{            
+            	maxNumeric = Float.parseFloat(vals[1]);
+            }
 
             //Figure out what type we are
             if(m.group(5) != null)
@@ -119,8 +137,11 @@ public class Parameter
         if(categoricalInnards != null)
             categoricalInnards = new ArrayList(categoricalInnards);
         defaultNumeric = clone.defaultNumeric;
+        defaultNumericOption = clone.defaultNumericOption;
         minNumeric = clone.minNumeric;
+        minNumericOption = clone.minNumericOption;
         maxNumeric = clone.maxNumeric;
+        maxNumericOption = clone.maxNumericOption;
     }
 
     //public float getDistanceFromDefault(String value)
@@ -271,6 +292,29 @@ public class Parameter
         }
         return repr;
     }
+    
+    public void prepare(int numberAttributes){
+    	if (defaultNumericOption.equals("NUMATTS")){
+    		defaultNumeric = numberAttributes;
+    		defaultNumericOption = "";
+    	}
+    	if (minNumericOption.equals("NUMATTS")){
+    		minNumeric = numberAttributes;
+    		minNumericOption = "";
+    	}
+    	if (maxNumericOption.equals("NUMATTS")){
+    		maxNumeric = numberAttributes;
+    		maxNumericOption = "";
+    	}
+    }
+    
+    /**
+     * Check if all special parameters have been processed
+     * @return true if all parameters have been set, false otherwise
+     */
+    public boolean isReady(){
+    	return defaultNumericOption.equals("") && minNumericOption.equals("") && maxNumericOption.equals("");
+    }
 
     private static final Pattern paramPattern = Pattern.compile("\\s*([a-zA-Z0-9_-]*)\\s*([\\[{])(.*)[\\]}]\\s*\\[(.*)\\]([il]*).*");
     public enum ParamType { CATEGORICAL, NUMERIC, LOG_NUMERIC, INTEGER, LOG_INTEGER};
@@ -299,12 +343,15 @@ public class Parameter
      * The default numeric value - Stored as a float but will be converted to an int if needed
      */
     public float defaultNumeric = 0;
+    public String defaultNumericOption = "";
     /**
      * The minimal numeric value - Stored as a float but will be converted to an int if needed
      */
     public float minNumeric = 0;
+    public String minNumericOption = "";
     /**
      * The maximal numeric value - Stored as a float but will be converted to an int if needed
      */
     public float maxNumeric = 0;
+    public String maxNumericOption = "";
 }

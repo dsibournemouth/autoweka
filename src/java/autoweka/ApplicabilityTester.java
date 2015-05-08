@@ -1,8 +1,8 @@
 package autoweka;
 
 import weka.core.Instances;
-
 import weka.classifiers.AbstractClassifier;
+import weka.filters.Filter;
 import weka.attributeSelection.ASSearch;
 import weka.attributeSelection.ASEvaluation;
 
@@ -23,7 +23,8 @@ public class ApplicabilityTester
     private enum Testable{
         CLASSIFIER,
         ATTRIBUTE_SEARCH,
-        ATTRIBUTE_EVAL
+        ATTRIBUTE_EVAL,
+        FILTER
     };
 
     public static class ApplicableClassifiers
@@ -31,6 +32,12 @@ public class ApplicabilityTester
         public List<ClassParams> base;
         public List<ClassParams> meta;
         public List<ClassParams> ensemble;
+    }
+    
+    public static class ApplicableFilters
+    {
+        public List<ClassParams> base;
+        public List<ClassParams> meta;
     }
 
     /**
@@ -52,7 +59,13 @@ public class ApplicabilityTester
         //First, we need to make sure that the base method is something that actually works
         ArrayList<String> options = new ArrayList<String>();
         options.add("-W");
-        options.add(app.base.get(0).getTargetClass());
+        if (app.base.size()>0)
+        	options.add(app.base.get(0).getTargetClass());
+        else
+        	options.add("weka.classifiers.AbstractClassifier");
+        
+        
+        
 
         dir = baseDir + File.separator + "meta" + File.separator;
         app.meta = getApplicable(instances, dir, Testable.CLASSIFIER, allowed, options);
@@ -60,10 +73,44 @@ public class ApplicabilityTester
         //And do all the ensemble methods
         options.clear();
         options.add("-W");
-        options.add(app.base.get(0).getTargetClass());
+        if (app.base.size()>0)
+        	options.add(app.base.get(0).getTargetClass());
+        else
+        	options.add("weka.classifiers.AbstractClassifier");
 
         dir = baseDir + File.separator + "ensemble" + File.separator;
         app.ensemble = getApplicable(instances, dir, Testable.CLASSIFIER, allowed, options);
+
+        return app;
+    }
+    
+    /**
+     * Looks inside a folder for .param files that are WEKA filters (base and meta)
+     *
+     * @param instances The instances to test on
+     * @param paramDirName The path to the folder containing the .param files
+     */
+    public static ApplicableFilters getApplicableFilters(Instances instances, String baseDir, List<String> allowed)
+    {
+    	ApplicableFilters app = new ApplicableFilters();
+
+        //First, process the base classifiers
+        String dir = baseDir + File.separator + "baseFilters" + File.separator;
+        app.base = getApplicable(instances, dir, Testable.FILTER, allowed, null);
+
+        //Next, process the meta filters
+
+        //First, we need to make sure that the base method is something that actually works
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("-F");
+        if (app.base.size()>0)
+        	options.add(app.base.get(0).getTargetClass());
+        else
+        	options.add("weka.filters.AllFilter");
+
+        dir = baseDir + File.separator + "metaFilters" + File.separator;
+        app.meta = getApplicable(instances, dir, Testable.FILTER, allowed, options);
+
 
         return app;
     }
@@ -135,6 +182,8 @@ public class ApplicabilityTester
                 return isApplicableAttributeEvaluator(method, instances);
             case ATTRIBUTE_SEARCH:
                 return isApplicableAttributeSearch(method, instances);
+            case FILTER:
+            	return isApplicableFilter(method, instances);
             default:
                 return false;
         }
@@ -154,6 +203,8 @@ public class ApplicabilityTester
                     throw new RuntimeException("Failed to set options during applicability testing", e);
                 }
             }
+//            if (method.equals("weka.classifiers.meta.MyFilteredClassifier"))
+//            	System.out.println("Testing my classifier");
             classifier.getCapabilities().testWithFail(instances);
             return true;
         }
@@ -211,4 +262,39 @@ public class ApplicabilityTester
         }
         return true;
     }
+    
+    private static boolean isApplicableFilter(String method, Instances instances)
+    {
+        try
+        {
+            Class<?> cls = Class.forName(method);
+            Filter filter = (Filter)cls.newInstance();
+
+            filter.getCapabilities().testWithFail(instances);
+            return true;
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println("No class '" + method + "' found");
+        }
+        catch(InstantiationException e)
+        {
+            System.out.println("Failed to instantiate '" + method + "': " + e.getMessage());
+        }
+        catch(IllegalAccessException e)
+        {
+            System.out.println("Illegal access exception creating '" + method + "': " + e.getMessage());
+        }
+        catch(weka.core.UnsupportedAttributeTypeException e)
+        {
+            System.out.println(method + " failed with message: " + e.getMessage());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("'" + method + "' not supported");
+        }
+        return false;
+    }
+
 }

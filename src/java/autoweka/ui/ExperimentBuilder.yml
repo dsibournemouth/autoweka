@@ -17,6 +17,17 @@ JFrame(name=frame, title="Simple Experiment Constructor", size=800x600, defaultC
                 >"Test Data (Optional): "       mTestingArffText        openTestingButton>
                 >"Instance Generator: "         mInstanceGeneratorCombo editInstanceGeneratorButton>
                                                                         nextDatasetButton>
+        - JPanel(name=mFilterSelection, tabTitle="Filter Selection"):
+            - JTextArea(name=filterTitleText, lineWrap=true, wrapStyleWord=true, editable=false, opaque=false, text="Select the filters you wish Auto-WEKA to use (use shift/control click to select multiple filters). By default, Auto-WEKA will use all the available methods")
+            - JScrollPane(name=filterListScroll):
+                JList(name=mFilterList)
+            - JButton(name=backFiltersButton, text="Back", onAction=[backFilterSelection])
+            - JButton(name=nextFiltersButton, text="Next", onAction=[nextFilterSelection])
+            - MigLayout : |
+                [grow][grow]
+                filterTitleText+*
+                filterListScroll+* [grow] 
+                <backFiltersButton >nextFiltersButton
         - JPanel(name=mClassifierSelection, tabTitle="Classifier Selection"):
             - JTextArea(name=classifierTitleText, lineWrap=true, wrapStyleWord=true, editable=false, opaque=false, text="Select the classifiers you wish Auto-WEKA to use (use shift/control click to select multiple classifiers). By default, Auto-WEKA will use all the available methods")
             - JScrollPane(name=listScroll):
