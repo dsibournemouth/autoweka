@@ -446,7 +446,8 @@ public abstract class ExperimentConstructor
         //Go build up the names of base methods
         for(ClassParams clsParams: mBaseClassParams) { 
             String className = clsParams.getTargetClass();
-            classifiers.add(className); 
+            if(mIncludeBase)
+            	classifiers.add(className); 
             baseClassifiers.add(className);
         }
         //Go build up the names of meta methods
