@@ -8,14 +8,11 @@ import weka.core.Utils;
 
 public class CategorizedMultiFilter extends MultiFilter {
 
-
 	/** for serialization */
 	private static final long serialVersionUID = -990500449629457741L;
-	
+
 	/** The filters */
-	protected Filter m_Sampling = new AllFilter();
-	// weka.filters.unsupervised.instance.Resample
-	// weka.filters.unsupervised.instance.ReservoirSample
+
 	protected Filter m_MissingValuesHandling = new AllFilter();
 	// weka.filters.unsupervised.attribute.ReplaceMissingValues
 	protected Filter m_OutlierHandling = new AllFilter();
@@ -26,10 +23,13 @@ public class CategorizedMultiFilter extends MultiFilter {
 	// weka.filters.unsupervised.attribute.Standardize
 	// weka.filters.unsupervised.attribute.Normalize
 	protected Filter m_DimensionalityReduction = new AllFilter();
-
 	// weka.filters.unsupervised.attribute.PrincipalComponents
 	// weka.filters.unsupervised.attribute.RandomSubset
 	// weka.filters.supervised.attribute.AttributeSelection
+	protected Filter m_Sampling = new AllFilter();
+
+	// weka.filters.unsupervised.instance.Resample
+	// weka.filters.unsupervised.instance.ReservoirSample
 
 	/**
 	 * Returns a string describing this filter
@@ -52,9 +52,6 @@ public class CategorizedMultiFilter extends MultiFilter {
 	public Enumeration<Option> listOptions() {
 		Vector<Option> result = new Vector<Option>();
 
-		result.addElement(new Option("\tSampling filter.", "S", 1,
-				"-S <classname [options]>"));
-
 		result.addElement(new Option("\tMissing values filter.", "M", 1,
 				"-M <classname [options]>"));
 
@@ -67,7 +64,10 @@ public class CategorizedMultiFilter extends MultiFilter {
 		result.addElement(new Option("\tDimensionality reduction filter.", "R",
 				1, "-R <classname [options]>"));
 
-		//result.addAll(Collections.list(super.listOptions()));
+		result.addElement(new Option("\tSampling filter.", "S", 1,
+				"-S <classname [options]>"));
+
+		// result.addAll(Collections.list(super.listOptions()));
 
 		return result.elements();
 	}
@@ -102,17 +102,6 @@ public class CategorizedMultiFilter extends MultiFilter {
 		String[] options2;
 
 		super.setOptions(options);
-
-		// Sampling
-		String samplingOption = Utils.getOption("S", options);
-		if (samplingOption.length() > 0) {
-			options2 = Utils.splitOptions(samplingOption);
-			filter = options2[0];
-			options2[0] = "";
-			m_Sampling = (Filter) Utils.forName(Filter.class, filter, options2);
-		} else {
-			m_Sampling = new AllFilter();
-		}
 
 		// MissingValues
 		String missingValuesOption = Utils.getOption("M", options);
@@ -162,6 +151,17 @@ public class CategorizedMultiFilter extends MultiFilter {
 			m_DimensionalityReduction = new AllFilter();
 		}
 
+		// Sampling
+		String samplingOption = Utils.getOption("S", options);
+		if (samplingOption.length() > 0) {
+			options2 = Utils.splitOptions(samplingOption);
+			filter = options2[0];
+			options2[0] = "";
+			m_Sampling = (Filter) Utils.forName(Filter.class, filter, options2);
+		} else {
+			m_Sampling = new AllFilter();
+		}
+
 		// Connect all filters
 		updateFilters();
 
@@ -175,57 +175,41 @@ public class CategorizedMultiFilter extends MultiFilter {
 	@Override
 	public String[] getOptions() {
 		Vector<String> result;
-//		String[] options;
-//		int i;
+		// String[] options;
+		// int i;
 
 		result = new Vector<String>();
 
 		// options from parent
-//		options = super.getOptions();
-//		for (i = 0; i < options.length; i++) {
-//			result.add(options[i]);
-//		}
+		// options = super.getOptions();
+		// for (i = 0; i < options.length; i++) {
+		// result.add(options[i]);
+		// }
+
+		result.add("-M");
+		result.add(getFilterSpec(m_MissingValuesHandling));
+
+		result.add("-O");
+		result.add(getFilterSpec(m_OutlierHandling));
+
+		result.add("-T");
+		result.add(getFilterSpec(m_Transformation));
+
+		result.add("-R");
+		result.add(getFilterSpec(m_DimensionalityReduction));
 
 		result.add("-S");
 		result.add(getFilterSpec(m_Sampling));
-		
-		result.add("-M");
-		result.add(getFilterSpec(m_MissingValuesHandling));
-		
-		result.add("-O");
-		result.add(getFilterSpec(m_OutlierHandling));
-		
-		result.add("-T");
-		result.add(getFilterSpec(m_Transformation));
-		
-		result.add("-R");
-		result.add(getFilterSpec(m_DimensionalityReduction));
-		
 
 		return result.toArray(new String[result.size()]);
 	}
 
-	
-
 	private void updateFilters() {
-		Filter[] flow = { m_Sampling, m_MissingValuesHandling,
-				m_OutlierHandling, m_Transformation,
-				m_DimensionalityReduction };
+		Filter[] flow = { m_MissingValuesHandling, m_OutlierHandling,
+				m_Transformation, m_DimensionalityReduction, m_Sampling };
 		setFilters(flow);
 	}
 
-	public String samplingTipText() {
-		return "Sampling filter";
-	}
-
-	public Filter getSampling() {
-		return m_Sampling;
-	}
-
-	public void setSampling(Filter m_Sampling) {
-		this.m_Sampling = m_Sampling;
-		updateFilters();
-	}
 
 	public String missingValuesTipText() {
 		return "Missing values filter";
@@ -279,13 +263,27 @@ public class CategorizedMultiFilter extends MultiFilter {
 		updateFilters();
 	}
 	
+	public String samplingTipText() {
+		return "Sampling filter";
+	}
+
+	public Filter getSampling() {
+		return m_Sampling;
+	}
+
+	public void setSampling(Filter m_Sampling) {
+		this.m_Sampling = m_Sampling;
+		updateFilters();
+	}
+
 	/**
-	   * Main method for executing this class.
-	   * 
-	   * @param args should contain arguments for the filter: use -h for help
-	   */
-	  public static void main(String[] args) {
-	    runFilter(new CategorizedMultiFilter(), args);
-	  }
+	 * Main method for executing this class.
+	 * 
+	 * @param args
+	 *            should contain arguments for the filter: use -h for help
+	 */
+	public static void main(String[] args) {
+		runFilter(new CategorizedMultiFilter(), args);
+	}
 
 }
