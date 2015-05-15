@@ -15,6 +15,7 @@ import weka.filters.Filter;
 import weka.filters.MultiFilter;
 import weka.filters.UnsupervisedFilter;
 import weka.filters.unsupervised.attribute.InterquartileRange;
+import weka.filters.unsupervised.attribute.InterquartileRangeWithClass;
 import weka.filters.unsupervised.attribute.RemoveByName;
 
 public class RemoveOutliers extends MultiFilter implements UnsupervisedFilter,
@@ -23,11 +24,11 @@ public class RemoveOutliers extends MultiFilter implements UnsupervisedFilter,
 	/** for serialization */
 	private static final long serialVersionUID = -8775970062618940385L;
 
-	private Filter m_OutlierDetectionFilter = new InterquartileRange();
+	protected Filter m_OutlierDetectionFilter = new InterquartileRange();
 
-	private SubsetByExpression m_OutlierRemovalFilter = new SubsetByExpression();
+	protected SubsetByExpression m_OutlierRemovalFilter = new SubsetByExpression();
 	
-	private RemoveByName m_RemoveColumnsFilter = new RemoveByName();
+	protected RemoveByName m_RemoveColumnsFilter = new RemoveByName();
 
 	@Override
 	public String[] getOptions() {
@@ -76,17 +77,44 @@ public class RemoveOutliers extends MultiFilter implements UnsupervisedFilter,
 	
 	private void updateFilters() {
 		String expression = "true";
+		String classDetector = m_OutlierDetectionFilter.getClass().getName();
 		
-		if (InterquartileRange.class.isAssignableFrom(m_OutlierDetectionFilter.getClass())){
+		Filter[] flow = {};
+		
+		if (classDetector.equals("weka.filters.unsupervised.attribute.InterquartileRange")){
 			if (getInputFormat()!=null){
-				int numAttributes = getInputFormat().numAttributes(); //TODO check if the value is right. Otherwise, call updateFilters before process
+				int numAttributes = getInputFormat().numAttributes();
 				expression = "ATT" + (numAttributes+1) + " is 'no'";
 			}
+			((InterquartileRange)m_OutlierDetectionFilter).setExtremeValuesAsOutliers(true); //force Extreme Values as Outliers
+			m_OutlierRemovalFilter.setExpression(expression);
 			m_RemoveColumnsFilter.setExpression("Outlier|ExtremeValue");
+			
+			flow = new Filter[3];
+			flow[0] = m_OutlierDetectionFilter;
+			flow[1] = m_OutlierRemovalFilter;
+			flow[2] = m_RemoveColumnsFilter;
+		}
+		else if(classDetector.equals("weka.filters.unsupervised.attribute.LOF") || classDetector.equals("weka.filters.unsupervised.attribute.BaggedLOF")){
+			
+			InterquartileRangeWithClass IQRFilter = new InterquartileRangeWithClass();
+			if (getInputFormat()!=null){
+				int numAttributes = getInputFormat().numAttributes();
+
+				IQRFilter.setAttributeIndices("last"); // LOF column
+				IQRFilter.setExtremeValuesAsOutliers(true);
+				expression = "ATT" + (numAttributes+2) + " is 'no'"; // Outlier column
+			}
+			m_OutlierRemovalFilter.setExpression(expression);
+			m_RemoveColumnsFilter.setExpression("BaggedLOF|LOF|Outlier|ExtremeValue");
+			
+			flow = new Filter[4];
+			flow[0] = m_OutlierDetectionFilter;
+			flow[1] = IQRFilter;
+			flow[2] = m_OutlierRemovalFilter;
+			flow[3] = m_RemoveColumnsFilter;
 		}
 		
-		m_OutlierRemovalFilter.setExpression(expression);
-		Filter[] flow = { m_OutlierDetectionFilter, m_OutlierRemovalFilter, m_RemoveColumnsFilter };
 		setFilters(flow);
 	}
 	
