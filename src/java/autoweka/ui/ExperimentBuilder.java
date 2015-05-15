@@ -84,6 +84,7 @@ public class ExperimentBuilder extends JFrame
         mOptimisationMethodCombo.setModel(new DefaultComboBoxModel());
         mOptimisationMethodCombo.addItem(new autoweka.ui.experimentconstructors.SMAC(this));
         mOptimisationMethodCombo.addItem(new autoweka.ui.experimentconstructors.TPE(this));
+        mOptimisationMethodCombo.addItem(new autoweka.ui.experimentconstructors.RandomSearch(this));
 
         activateDatasetSelection();
     }
@@ -345,7 +346,10 @@ public class ExperimentBuilder extends JFrame
         exp.tunerTimeout = Float.parseFloat(mOptimisationTimeoutText.getText()) * 3600;
         exp.trainTimeout = Float.parseFloat(mClassifierTimeoutText.getText()) * 60;
         exp.memory = mClassifierMemoryLimitText.getText() + "m";
-        exp.extraPropsString = Util.propertiesToString(optMethodProps.getProperties());
+        if(optMethodProps.getProperties()!=null)
+        	exp.extraPropsString = Util.propertiesToString(optMethodProps.getProperties());
+        else
+        	exp.extraPropsString = "";
         exp.allowedClassifiers = new ArrayList<String>(mAllowedClassifiers);
         exp.allowedFilters = new ArrayList<String>(mAllowedFilters);
 
@@ -353,8 +357,10 @@ public class ExperimentBuilder extends JFrame
         LinkedList<String> args = new LinkedList<String>();
         args.add("-experimentpath");
         args.add(mExperimentDirText.getText());
-        args.add("-propertyoverride");
-        args.add(Util.propertiesToString(optMethodProps.getGlobalProperties()));
+        if(optMethodProps.getGlobalProperties()!=null){
+        	args.add("-propertyoverride");
+        	args.add(Util.propertiesToString(optMethodProps.getGlobalProperties()));
+        }
 
         //Make the thing
         try

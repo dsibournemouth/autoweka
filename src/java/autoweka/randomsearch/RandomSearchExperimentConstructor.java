@@ -39,7 +39,7 @@ public class RandomSearchExperimentConstructor extends ExperimentConstructor
     {
         List<String> args = new ArrayList<String>();
         args.add(Util.getJavaExecutable());
-        args.add("-Xmx256m");
+        args.add("-Xmx1000m");
         args.add("-cp");
         args.add(Util.getAbsoluteClasspath());
         args.add("autoweka.randomsearch.RandomSearchWorker");

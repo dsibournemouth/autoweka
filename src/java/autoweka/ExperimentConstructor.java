@@ -602,7 +602,7 @@ public abstract class ExperimentConstructor
             paramGroup.add(new Conditional(param, parent, clsParams.getTargetClass()));
             
             // Recursive expansion of filter parameters
-            if (recursive && param.type==ParamType.CATEGORICAL){
+            if (recursive && param.type==ParamType.CATEGORICAL && !param.defaultCategorical.startsWith("REMOVE")){
             	try {
 					Class<?> currentClass = Class.forName(param.defaultCategorical);
 					// Only filters are expanded, but expanding of other classes should be also possible
