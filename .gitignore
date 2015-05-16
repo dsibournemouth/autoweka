@@ -4,7 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear
 
@@ -14,6 +14,7 @@ hs_err_pid*
 
 # Weka
 /weka-3.7.7/
+/.wekafiles/
 
 # Auto-WEKA
 /experiments/
