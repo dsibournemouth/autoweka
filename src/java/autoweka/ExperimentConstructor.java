@@ -602,7 +602,7 @@ public abstract class ExperimentConstructor
             paramGroup.add(new Conditional(param, parent, clsParams.getTargetClass()));
             
             // Recursive expansion of filter parameters
-            if (recursive && param.type==ParamType.CATEGORICAL && !param.defaultCategorical.startsWith("REMOVE")){
+            if (recursive && param.type==ParamType.CATEGORICAL && param.defaultCategorical.startsWith("weka")){
             	try {
 					Class<?> currentClass = Class.forName(param.defaultCategorical);
 					// Only filters are expanded, but expanding of other classes should be also possible
@@ -615,7 +615,8 @@ public abstract class ExperimentConstructor
 						}
 					}
 				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+					System.out.println("Class " + param.defaultCategorical + " not found!");
+					//e.printStackTrace();
 				}
             	
             }
