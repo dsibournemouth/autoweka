@@ -1,0 +1,7 @@
+INT_numBags [1,100][10]i
+breadthFirst {REMOVED,REMOVE_PREV}[REMOVE_PREV]
+INT_min [1,30][10]i
+INT_max [30,100][40]i
+A {weka.core.neighboursearch.BallTree,weka.core.neighboursearch.CoverTree,weka.core.neighboursearch.KDTree,weka.core.neighboursearch.LinearNNSearch}[weka.core.neighboursearch.LinearNNSearch]
+# Force 8 cores
+num-slots {8}[8]
