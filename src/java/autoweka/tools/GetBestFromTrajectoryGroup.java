@@ -17,6 +17,7 @@ public class GetBestFromTrajectoryGroup
         GetBestFromTrajectoryGroup res = new GetBestFromTrajectoryGroup(args[0]);
         System.out.println("Experiment: " + res.experiment.name);
         System.out.println("Num Trajectories: " + res.numTrajectories);
+        System.out.println("Num Evaluations: " + res.numEval);
         System.out.println("Best point seed" + res.seed);
         System.out.println("Best point error estimate: " + res.errorEstimate);
 
