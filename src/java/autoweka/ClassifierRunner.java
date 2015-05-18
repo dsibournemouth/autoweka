@@ -262,8 +262,11 @@ public class ClassifierRunner
         try
         {
             classifier.setOptions(argsArray);
-            if(mVerbose)
-            	System.out.println("Classifier: " + classifier.toString() + "      Parameters: " + ArrayUtils.toString(classifier.getOptions()));
+            if(mVerbose){
+            	System.out.println("Classifier: " + classifier.toString());
+            	System.out.println("ArgsArray: " + ArrayUtils.toString(argsArray));
+            	System.out.println("Parameters: " + ArrayUtils.toString(classifier.getOptions()));
+            }
         }
         catch(Exception e)
         {
