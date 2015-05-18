@@ -233,7 +233,9 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                         HyperoptString targetclassStr = new HyperoptString(true, clsGroup.prefix, clsParams.getTargetClass());
                         targetclassStr.ignorePrefix = true;
                         clsGroup.children.add(targetclassStr);
-                        HyperoptString dashStr = new HyperoptString(true, clsGroup.prefix+"-", "REMOVED");
+                        //HyperoptString dashStr = new HyperoptString(true, clsGroup.prefix+"-", "REMOVED");
+                        // This parameter is needed for Weka to set the rest of parameters of classifier
+                        HyperoptString dashStr = new HyperoptString(true, clsGroup.prefix+"_00__01_DASHDASH", "REMOVED");
                         dashStr.ignorePrefix = true;
                         clsGroup.children.add(dashStr);
 
@@ -241,6 +243,30 @@ public class TPEExperimentConstructor extends ExperimentConstructor
 
                         metaBaseChoice.choices.add(clsGroup);
                     }
+                    
+                    HyperoptChoice metaFilterChoice = new HyperoptChoice(false, "meta_filter_choice");
+                  	metaGroup.children.add(metaFilterChoice);
+
+                  	boolean didMetaFilter = false;
+                  	for (ClassParams clsParams: mMetaFilterClassParams) 
+                  	{
+                  		HyperoptGroup clsGroup = new HyperoptGroup(false, null);
+                        clsGroup.containsNamed = true;
+                        clsGroup.prefix = "_0_" + getPrefix(clsParams.getTargetClass()) + "_F";
+
+                        HyperoptString targetclassStr = new HyperoptString(true, "_0_" + getPrefix(clsParams.getTargetClass()) + "_A_QUOTE_START_F", clsParams.getTargetClass());
+                        targetclassStr.ignorePrefix = true;
+                        clsGroup.children.add(targetclassStr);                    
+
+                  	    addClassifierParameters(clsGroup, clsParams);
+                  	    
+                  	    HyperoptString dashStr2 = new HyperoptString(true, clsGroup.prefix+"_00__"+clsGroup.children.size()+"_QUOTE_END", "REMOVED");
+                        dashStr2.ignorePrefix = true;
+                        clsGroup.children.add(dashStr2);
+
+                  	    metaFilterChoice.choices.add(clsGroup);
+                  	    didMetaFilter = true;
+                  	}
                 }
             }
 
