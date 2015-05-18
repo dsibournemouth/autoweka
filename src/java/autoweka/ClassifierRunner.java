@@ -10,10 +10,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+
 import weka.attributeSelection.ASEvaluation;
 import weka.attributeSelection.ASSearch;
 import weka.attributeSelection.AttributeSelection;
+
 import java.util.Map;
+
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Class that is responsible for actually running a WEKA classifier from start to finish using the Auto-WEKA argument format.
@@ -43,7 +47,8 @@ public class ClassifierRunner
         //Get the regularizer - experimental to the point of not working
         //mRegularizer = ParameterRegularizer.create(props.getProperty("regularizer"), props.getProperty("regularizerParameterFileName"), props.getProperty("regularizerParams"));
 
-        mVerbose = Boolean.valueOf(props.getProperty("verbose", "true"));
+        //mVerbose = Boolean.valueOf(props.getProperty("verbose", "true"));
+        mVerbose = true;
         mTestOnly = Boolean.valueOf(props.getProperty("onlyTest", "false"));
         mDisableOutput = Boolean.valueOf(props.getProperty("disableOutput", "false"));
         mPredictionsFileName = props.getProperty("predictionsFileName", null);
@@ -257,6 +262,8 @@ public class ClassifierRunner
         try
         {
             classifier.setOptions(argsArray);
+            if(mVerbose)
+            	System.out.println("Classifier: " + classifier.toString() + "      Parameters: " + ArrayUtils.toString(classifier.getOptions()));
         }
         catch(Exception e)
         {
