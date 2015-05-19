@@ -1,1 +1,1 @@
-O {weka.filters.unsupervised.attribute.InterquartileRange,weka.filters.unsupervised.attribute.LOF,weka.filters.unsupervised.attribute.BaggedLOF}[weka.filters.unsupervised.attribute.InterquartileRange]
+O {weka.filters.unsupervised.attribute.InterquartileRange,weka.filters.unsupervised.attribute.BaggedLOF}[weka.filters.unsupervised.attribute.InterquartileRange]
