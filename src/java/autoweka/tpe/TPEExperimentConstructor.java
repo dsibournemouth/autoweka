@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 
+import weka.core.Instances;
 import weka.filters.Filter;
 import autoweka.ExperimentConstructor;
 import autoweka.Conditional;
@@ -255,21 +256,21 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                   	for (ClassParams clsParams: mMetaFilterClassParams) 
                   	{
                   		HyperoptGroup clsGroup = new HyperoptGroup(false, null);
-                        clsGroup.containsNamed = true;
-                        clsGroup.prefix = "_0_" + getPrefix(clsParams.getTargetClass()) + "_F";
+                  		clsGroup.containsNamed = true;
+                  		clsGroup.prefix = "_0_" + getPrefix(clsParams.getTargetClass()) + "_F";
 
-                        HyperoptString targetclassStr = new HyperoptString(true, "_0_" + getPrefix(clsParams.getTargetClass()) + "_A_QUOTE_START_F", clsParams.getTargetClass());
-                        targetclassStr.ignorePrefix = true;
-                        clsGroup.children.add(targetclassStr);                    
+                  		HyperoptString targetclassStr = new HyperoptString(true, "_0_" + getPrefix(clsParams.getTargetClass()) + "_A_QUOTE_START_F", clsParams.getTargetClass());
+                  		targetclassStr.ignorePrefix = true;
+                  		clsGroup.children.add(targetclassStr);                    
 
-                  	    addClassifierParameters(clsGroup, clsParams);
+                  		addClassifierParameters(clsGroup, clsParams);
                   	    
-                  	    HyperoptString dashStr2 = new HyperoptString(true, clsGroup.prefix+"_00__"+clsGroup.children.size()+"_QUOTE_END", "REMOVED");
-                        dashStr2.ignorePrefix = true;
-                        clsGroup.children.add(dashStr2);
+                  		HyperoptString dashStr2 = new HyperoptString(true, clsGroup.prefix+"_00__"+clsGroup.children.size()+"_QUOTE_END", "REMOVED");
+                  		dashStr2.ignorePrefix = true;
+                  		clsGroup.children.add(dashStr2);
 
-                  	    metaFilterChoice.choices.add(clsGroup);
-                  	    didMetaFilter = true;
+                  		metaFilterChoice.choices.add(clsGroup);
+                  		didMetaFilter = true;
                   	}
                 }
             }
@@ -369,50 +370,61 @@ public class TPEExperimentConstructor extends ExperimentConstructor
         {
             Parameter current = params.get(index);
             //Make sure that no one depends on this, and we depend on nothing
+            
+            if (!current.isReady()){
+        	Instances instances = mInstanceGenerator.getTraining();
+        	current.prepare(instances.numAttributes());
+            }
 
             // Recursive expansion of filter parameters
             if (current.type==ParamType.CATEGORICAL && current.defaultCategorical.startsWith("weka")){
             	try {
-    				Class<?> currentClass = Class.forName(current.defaultCategorical);
-    				// Only filters are expanded, but expanding of other classes should be also possible
-    				if (Filter.class.isAssignableFrom(currentClass)){
-    					
-    					HyperoptChoice choice = new HyperoptChoice(true, current.name);
-    					group.children.add(choice);
-    					
-    					for(String allowedFilter: current.categoricalInnards) {
-    						// We assume filter is applicable
-    						ClassParams baseClsParams = new ClassParams(mParamBaseDir + File.separatorChar + "baseFilters" + File.separatorChar + allowedFilter + ".params");
-    						ArrayList<Parameter> params2 = baseClsParams.getParameters();
-    				        ArrayList<Conditional> conditionals2 = baseClsParams.getConditionals();
-    				        
-    				        // Adding quote if the parameter contains more parameters
-    				        String tmpName = current.name;
-    				        boolean quoted = false;
-    				        if(!params2.isEmpty() || !conditionals2.isEmpty()){
-    				        	tmpName = "A_QUOTE_START_" + current.name;
+			Class<?> currentClass = Class.forName(current.defaultCategorical);
+			// Expanding weka classes
+			String tmpFolder = "base";
+			if (Filter.class.isAssignableFrom(currentClass)){
+			  tmpFolder = "baseFilters";
+			}
+			else if(current.defaultCategorical.startsWith("weka.attributeSelection")){
+			  tmpFolder = "attribselection";
+			}
+					
+				HyperoptChoice choice = new HyperoptChoice(true, current.name);
+				group.children.add(choice);
+					
+				for(String allowedFilter: current.categoricalInnards) {
+					// We assume filter is applicable
+					ClassParams baseClsParams = new ClassParams(mParamBaseDir + File.separatorChar + tmpFolder + File.separatorChar + allowedFilter + ".params");
+					ArrayList<Parameter> params2 = baseClsParams.getParameters();
+				        ArrayList<Conditional> conditionals2 = baseClsParams.getConditionals();
+				        
+				        // Adding quote if the parameter contains more parameters
+				        String tmpName = current.name;
+				        boolean quoted = false;
+				        if(!params2.isEmpty() || !conditionals2.isEmpty()){
+				        	tmpName = "A_QUOTE_START_" + current.name;
     				        	quoted = true;
     				        }
-    						HyperoptGroup childGroup = new HyperoptGroup(false, null);
-    		                childGroup.children.add(new HyperoptString(false, tmpName, allowedFilter));
-    		                childGroup.containsNamed = true;
-    		                choice.choices.add(childGroup);
+    					HyperoptGroup childGroup = new HyperoptGroup(false, null);
+    					childGroup.children.add(new HyperoptString(false, tmpName, allowedFilter));
+    					childGroup.containsNamed = true;
+    					choice.choices.add(childGroup);
     		                
 		                	// Recursive add all child parameters
-    				        createParameterTree(childGroup, params2, conditionals2);
-    				        
-    				        // Closing the quote if it was opened
-    				        if(quoted){
-    				        	childGroup.children.add(new HyperoptString(false, "_QUOTE_END", "REMOVED"));
-        		                childGroup.containsNamed = true;
-    				        }
-    				        
-    					}
-    				}
-    			} catch (ClassNotFoundException e) {
-    				System.out.println("Class " + current.defaultCategorical + " not found!");
-    				//e.printStackTrace();
-    			}
+				        createParameterTree(childGroup, params2, conditionals2);
+				        
+				        // Closing the quote if it was opened
+				        if(quoted){
+				        	childGroup.children.add(new HyperoptString(false, "_QUOTE_END", "REMOVED"));
+				        	childGroup.containsNamed = true;
+				        }
+				        
+				}
+			
+    		} catch (ClassNotFoundException e) {
+    			System.out.println("Class " + current.defaultCategorical + " not found!");
+    			//e.printStackTrace();
+    		}
             	
             	index++;
             	
@@ -685,6 +697,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
 
         public void _toCode(StringBuilder sb, String prefix, int depth, int count, boolean inDict)
         {
+          
             switch(param.type)
             {
             case CATEGORICAL:
