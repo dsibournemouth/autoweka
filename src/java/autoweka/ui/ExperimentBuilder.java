@@ -77,6 +77,7 @@ public class ExperimentBuilder extends JFrame
         //Populate all the instance generators;
         mInstanceGeneratorCombo.setModel(new DefaultComboBoxModel());
         mInstanceGeneratorCombo.addItem(new autoweka.ui.instancegenerators.CrossValidation(this));
+        mInstanceGeneratorCombo.addItem(new autoweka.ui.instancegenerators.DensityPreservingSampling(this));
         mInstanceGeneratorCombo.addItem(new autoweka.ui.instancegenerators.RandomSubSampling(this));
         mInstanceGeneratorCombo.addItem(new autoweka.ui.instancegenerators.Default(this));
 
