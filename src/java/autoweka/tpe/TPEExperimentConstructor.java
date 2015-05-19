@@ -1,13 +1,17 @@
 package autoweka.tpe;
 
 import java.util.ArrayList;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
+
+import weka.filters.Filter;
 import autoweka.ExperimentConstructor;
 import autoweka.Conditional;
 import autoweka.Parameter;
 import autoweka.ClassParams;
+import autoweka.Parameter.ParamType;
 
 public class TPEExperimentConstructor extends ExperimentConstructor
 {
@@ -366,32 +370,86 @@ public class TPEExperimentConstructor extends ExperimentConstructor
             Parameter current = params.get(index);
             //Make sure that no one depends on this, and we depend on nothing
 
-            boolean isParent = false;
-            boolean isConditional = false;
-            for(Conditional c: conditionals)
-            {
-                isConditional |= c.parameter == current;
-                isParent      |= c.parent == current;
+            // Recursive expansion of filter parameters
+            if (current.type==ParamType.CATEGORICAL && current.defaultCategorical.startsWith("weka")){
+            	try {
+    				Class<?> currentClass = Class.forName(current.defaultCategorical);
+    				// Only filters are expanded, but expanding of other classes should be also possible
+    				if (Filter.class.isAssignableFrom(currentClass)){
+    					
+    					HyperoptChoice choice = new HyperoptChoice(true, current.name);
+    					group.children.add(choice);
+    					
+    					for(String allowedFilter: current.categoricalInnards) {
+    						// We assume filter is applicable
+    						ClassParams baseClsParams = new ClassParams(mParamBaseDir + File.separatorChar + "baseFilters" + File.separatorChar + allowedFilter + ".params");
+    						ArrayList<Parameter> params2 = baseClsParams.getParameters();
+    				        ArrayList<Conditional> conditionals2 = baseClsParams.getConditionals();
+    				        
+    				        // Adding quote if the parameter contains more parameters
+    				        String tmpName = current.name;
+    				        boolean quoted = false;
+    				        if(!params2.isEmpty() || !conditionals2.isEmpty()){
+    				        	tmpName = "A_QUOTE_START_" + current.name;
+    				        	quoted = true;
+    				        }
+    						HyperoptGroup childGroup = new HyperoptGroup(false, null);
+    		                childGroup.children.add(new HyperoptString(false, tmpName, allowedFilter));
+    		                childGroup.containsNamed = true;
+    		                choice.choices.add(childGroup);
+    		                
+		                	// Recursive add all child parameters
+    				        createParameterTree(childGroup, params2, conditionals2);
+    				        
+    				        // Closing the quote if it was opened
+    				        if(quoted){
+    				        	childGroup.children.add(new HyperoptString(false, "_QUOTE_END", "REMOVED"));
+        		                childGroup.containsNamed = true;
+    				        }
+    				        
+    					}
+    				}
+    			} catch (ClassNotFoundException e) {
+    				System.out.println("Class " + current.defaultCategorical + " not found!");
+    				//e.printStackTrace();
+    			}
+            	
+            	index++;
+            	
             }
-
-            if(!isParent && !isConditional)
-            {
-                group.children.add(new HyperoptParam(current));
-                params.remove(index);
+            else{
+            
+	            boolean isParent = false;
+	            boolean isConditional = false;
+	            for(Conditional c: conditionals)
+	            {
+	                isConditional |= c.parameter == current;
+	                isParent      |= c.parent == current;
+	            }
+	
+	            if(!isParent && !isConditional)
+	            {
+	                group.children.add(new HyperoptParam(current));
+	                params.remove(index);
+	            }
+	            else
+	            {
+	                if(isParent && !isConditional)
+	                {
+	                    branches.add(current);
+	                }
+	                else if(!isParent && isConditional)
+	                {
+	                    children.add(current);
+	                }
+	                index++;
+	            }
             }
-            else
-            {
-                if(isParent && !isConditional)
-                {
-                    branches.add(current);
-                }
-                else if(!isParent && isConditional)
-                {
-                    children.add(current);
-                }
-                index++;
-            }
+            
+            
         }
+        
+        
 
         //We've gotten super messed up - maybe this isn't a tree?
         if(branches.size() == 0 && children.size() > 0)

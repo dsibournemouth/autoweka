@@ -37,6 +37,7 @@ public class WekaArgumentConverter
     {
         String quotedString = null;
         int quoteDepth = 0;
+        int actualQuote = 0;
         Map<String, List<String>> argMap = new HashMap<String, List<String>>();
         HashMap<String, String> propertyMap = new HashMap<String, String>();
 
@@ -56,7 +57,7 @@ public class WekaArgumentConverter
         {
             //What is the current argument?
             if(arg.name.equals("REMOVED") || arg.name.contains("HIDDEN") || arg.value.equals("REMOVE_PREV"))
-            {
+            { 
                 //We don't want to do anything with this arg
                 continue;
             }
@@ -140,6 +141,15 @@ public class WekaArgumentConverter
                 if(arg.name.endsWith("QUOTE_END"))
                 {
                     quotedString = quotedString.trim(); //+ "\"";
+                    if (actualQuote>0){
+                    	String tmpSlash = "";
+	                	if(actualQuote>1){
+	                		for(int i=1; i<actualQuote; i++)
+                				tmpSlash += "\\";
+	                	}
+                    	quotedString += tmpSlash + "\" ";
+                    	actualQuote--;
+                    }
                     quoteDepth--;
                     if(quoteDepth == 0)
                     {
@@ -148,25 +158,42 @@ public class WekaArgumentConverter
                         continue;
                     }
                 }
-
-                //Should we actually be the start of a quote?
-                if(arg.name.endsWith("QUOTE_START"))
-                {
-                    quotedString += "\"";
-                    quoteDepth++;
-                    continue;
+                else{
+	                //Should we actually be the start of a quote?
+	                if(arg.name.endsWith("QUOTE_START"))
+	                {
+	                	String tmpSlash = "";
+	                	if(actualQuote>0){
+	                		for(int i=0; i<actualQuote; i++)
+                				tmpSlash += "\\";
+	                	}
+	                	
+                		quotedString += tmpSlash + "\"";
+	                    quoteDepth++;
+	                    actualQuote++;
+	                    continue;
+	                }
+	                else if(arg.name.contains("QUOTE_START"))
+	                {
+	                	String tmpSlash = "";
+	                	if(actualQuote>0){
+	                		for(int i=0; i<actualQuote; i++)
+                				tmpSlash += "\\";
+	                	}
+	                	
+                		quotedString += sanitizedName + " " + tmpSlash + "\"";
+	                    
+	                    actualQuote++;
+	                    quoteDepth++;
+	                }
+	                else
+	                {
+	                    quotedString += sanitizedName + " ";
+	                }
+	
+	                if(!arg.value.equals("REMOVED"))
+	                    quotedString += arg.value + " ";
                 }
-                else if(arg.name.contains("QUOTE_START"))
-                {
-                    quotedString += sanitizedName + " \"";
-                }
-                else
-                {
-                    quotedString += sanitizedName + " ";
-                }
-
-                if(!arg.value.equals("REMOVED"))
-                    quotedString += arg.value + " ";
             }
         }
         //for(String s: argMap.get("classifier"))
