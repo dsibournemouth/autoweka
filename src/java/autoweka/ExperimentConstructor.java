@@ -512,50 +512,52 @@ public abstract class ExperimentConstructor {
     if (mIncludeBase) {
       for (ClassParams clsParams: mBaseClassParams) {
 	addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams,
-	    "_0_", targetclass);
+	    "_0_", targetclass, true);
       }
     }
     if (mIncludeMeta) {
       for (ClassParams clsParams: mMetaClassParams) {
 	addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams,
-	    "_0_", targetclass);
+	    "_0_", targetclass, true);
       }
     }
     if (mIncludeEnsemble) {
       for (ClassParams clsParams: mEnsembleClassParams) {
 	addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams,
-	    "_0_", targetclass);
+	    "_0_", targetclass, true);
       }
     }
 
     // Add in the meta conditionals
     if (!metaClassifiers.isEmpty()) {
-      Parameter _1_W = new Parameter("_1_W", baseClassifiers);
+      Parameter _1_W = new Parameter("_2_W", baseClassifiers);
       paramGroup.add(_1_W);
       paramGroup.add(new Conditional(_1_W, targetclass, metaClassifiers));
-      Parameter _1_W_0_DASHDASH = new Parameter("_1_W_0_DASHDASH", "REMOVED");
+      Parameter _1_W_0_DASHDASH = new Parameter("_2_W_0_DASHDASH", "REMOVED");
       paramGroup.add(_1_W_0_DASHDASH);
       paramGroup.add(new Conditional(_1_W_0_DASHDASH, targetclass,
 	  metaClassifiers));
       for (ClassParams clsParams: mBaseClassParams) {
 	addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams,
-	    "_1_W_1_", _1_W);
+	    "_2_W_1_", _1_W, true);
       }
 
       // Add filters
       if (!metaFilters.isEmpty()) {
 
-	Parameter _1_F = new Parameter("_1_F", metaFilters);
+	Parameter _1_F = new Parameter("_1_0_QUOTE_START_F", metaFilters);
 	paramGroup.add(_1_F);
 	paramGroup.add(new Conditional(_1_F, targetclass, metaClassifiers));
-	Parameter _1_F_0_DASHDASH = new Parameter("_1_F_0_DASHDASH", "REMOVED");
-	paramGroup.add(_1_F_0_DASHDASH);
-	paramGroup.add(new Conditional(_1_F_0_DASHDASH, targetclass,
-	    metaClassifiers));
+
 	for (ClassParams clsParams: mMetaFilterClassParams) {
 	  addClassifierToParameterConditionalGroupForDAG(paramGroup, clsParams,
-	      "_1_F_1_", _1_F, true);
+	      "_1_1_F_1_", _1_F, true);
 	}
+	Parameter _1_QUOTE_END = new Parameter("_1__QUOTE_END", "REMOVED");
+	paramGroup.add(_1_QUOTE_END);
+	paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
+	    metaClassifiers));
+
       }
     }
 
@@ -624,15 +626,27 @@ public abstract class ExperimentConstructor {
     for (Parameter oldParam: clsParams.getParameters()) {
       // Add in these parameters - but update a map so we can do the
       // conditionals properly in a sec...
+
       String tempPrefix = prefix + String.format("%02d", i++) + "_";
-      Parameter param = new Parameter(tempPrefix + oldParam.name, oldParam);
+      String newPrefix = tempPrefix;
+      boolean quoted = false;
+      if (recursive && oldParam.type == ParamType.CATEGORICAL
+	  && oldParam.defaultCategorical.startsWith("weka")) {
+	// Adding quote if the parameter contains more parameters
+	newPrefix += "A_QUOTE_START_";
+	quoted = true;
+      }
+
+      Parameter param = new Parameter(newPrefix + oldParam.name, oldParam);
       if (!param.isReady()) {
 	Instances instances = mInstanceGenerator.getTraining();
 	param.prepare(instances.numAttributes());
       }
+
       paramMap.put(oldParam, param);
       paramGroup.add(param);
 
+      
       paramGroup
 	  .add(new Conditional(param, parent, clsParams.getTargetClass()));
 
@@ -653,13 +667,14 @@ public abstract class ExperimentConstructor {
 	  }
 
 	  for (String allowedFilter: param.categoricalInnards) {
-	    // We assume filter is applicable
+
 	    ClassParams baseClsParams = new ClassParams(mParamBaseDir
 		+ File.separatorChar + tmpFolder + File.separatorChar
 		+ allowedFilter + ".params");
 	    addClassifierToParameterConditionalGroupForDAG(paramGroup,
 		baseClsParams, tempPrefix + oldParam.name + "_", param,
 		recursive);
+
 	  }
 
 	}
@@ -670,7 +685,17 @@ public abstract class ExperimentConstructor {
 	}
 
       }
+
+      if (quoted) {
+
+	Parameter paramEnd = new Parameter(tempPrefix + "_QUOTE_END", "REMOVED");
+	paramGroup.add(paramEnd);
+
+	paramGroup.add(new Conditional(paramEnd, parent, clsParams
+	    .getTargetClass()));
+      }
     }
+
     for (Conditional cond: clsParams.getConditionals()) {
       paramGroup.add(new Conditional(paramMap.get(cond.parameter), paramMap
 	  .get(cond.parent), cond));
