@@ -138,6 +138,10 @@ public class SMACExperimentConstructor extends ExperimentConstructor
             args.add("--executionMode");
             args.add(props.getProperty("executionMode"));
         }
+        
+        // Showing the real calls
+        args.add("--cli-log-all-call-strings");
+        args.add("true");
 
         return args;
     }
