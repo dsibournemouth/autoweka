@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import weka.core.DenseInstance;
 import weka.core.Instances;
 
 import com.mathworks.toolbox.javabuilder.*;
@@ -84,31 +85,48 @@ public class DensityPreservingSampling extends InstanceGenerator
         Instances randData = getTraining();
         randData.randomize(rand);
         
+        Instances outputData = getTraining();
+        outputData.delete();
+        double data[][] = null;
+        
         try {
 	  DPS d = new DPS();
-	  Object[] output = new Object[2]; //R, H
-	  Object[] input = new Object[2]; //A, LEVELS
-	  // TODO check that the input matrix is the expected for dps, otherwise, maybe transpose it in matlab
+	  Object[] output = new Object[1]; //data
+	  Object[] input = new Object[4]; //A, LEVELS, FOLD, TRANSPOSE
+
+	  // Transform the Instances to a double matrix
 	  double matrix[][] = new double[randData.numAttributes()][randData.numInstances()];
 	  for(int i=0; i<randData.numAttributes(); i++){
 	    matrix[i] = randData.attributeToDoubleArray(i);
 	  }
-	  input[0] = matrix;
-	  input[1] = numLevels;
-	  d.dps(output, input);
-	  System.out.println(output[0]);
+	  
+	  // Set DPS parameters
+	  input[0] = matrix; //input matrix
+	  input[1] = numLevels; // levels (so num_folds = 2^levels)
+	  if(trainingFold)
+	    input[2] = -currentFold; //all but this one
+	  else
+	    input[2] = currentFold;
+	  input[3] = 1; //transpose the matrix
+	  
+	  // Run DPS to get the actual fold
+	  d.get_dps_folds(output, input);
+
+	  // Transform from matlab matrix to double matrix
+	  data = (double[][]) ((MWNumericArray)output[0]).toDoubleArray();
+	  
+	  // Transform the instances back from double to DenseInstance
+	  for(int i=0; i<data.length; i++){
+	    outputData.add(new DenseInstance(1.0, data[i]));
+	  }
 	}
 	catch (MWException e) {
-	  // TODO Auto-generated catch block
 	  e.printStackTrace();
+	  outputData = null;
 	}
         
-        // TODO: return the DPS folds
-
-        if(trainingFold)
-            return randData.trainCV(numFolds, currentFold);
-        else
-            return randData.testCV(numFolds, currentFold);
+        return outputData;
+        
     }
 
     public List<String> getAllInstanceStrings(String paramStr)
