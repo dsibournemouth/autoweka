@@ -47,8 +47,8 @@ public class ClassifierRunner
         //Get the regularizer - experimental to the point of not working
         //mRegularizer = ParameterRegularizer.create(props.getProperty("regularizer"), props.getProperty("regularizerParameterFileName"), props.getProperty("regularizerParams"));
 
-        //mVerbose = Boolean.valueOf(props.getProperty("verbose", "true"));
-        mVerbose = true;
+        mVerbose = Boolean.valueOf(props.getProperty("verbose", "true"));
+        //mVerbose = true;
         mTestOnly = Boolean.valueOf(props.getProperty("onlyTest", "false"));
         mDisableOutput = Boolean.valueOf(props.getProperty("disableOutput", "false"));
         mPredictionsFileName = props.getProperty("predictionsFileName", null);
@@ -261,12 +261,15 @@ public class ClassifierRunner
         //Give the classifier it's options
         try
         {
+            //if(mVerbose)
+            //  System.out.println("ArgsArray: " + ArrayUtils.toString(argsArray));
+            
             classifier.setOptions(argsArray);
-            if(mVerbose){
-            	System.out.println("Classifier: " + classifier.toString());
-            	System.out.println("ArgsArray: " + ArrayUtils.toString(argsArray));
-            	System.out.println("Parameters: " + ArrayUtils.toString(classifier.getOptions()));
-            }
+//            if(mVerbose){
+//            	System.out.println("Classifier: " + classifier.toString());
+//            	System.out.println("ArgsArray: " + ArrayUtils.toString(argsArray));
+//            	System.out.println("Parameters: " + ArrayUtils.toString(classifier.getOptions()));
+//            }
         }
         catch(Exception e)
         {
@@ -354,7 +357,7 @@ public class ClassifierRunner
             }
 
             if(mVerbose)
-                System.out.println("Completed evaluation on (" + (instances.numInstances() - eval.unclassified()) + "/" + instances.numInstances() + ")");
+                System.out.println("Completed evaluation on (" +  eval.numInstances() + "/" + instances.numInstances() + ") unclassified: " + eval.unclassified());
 
             //Make sure that if we terminated the eval, we crap out accordingly
             res.setCompleted(!evalThread.terminated());
