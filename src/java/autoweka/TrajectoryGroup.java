@@ -16,7 +16,9 @@ public class TrajectoryGroup extends XmlSerializable
     private Experiment mExperiment;
     @XmlElement(name="trajectories")
     private ArrayList<Trajectory> mTrajectories = new ArrayList<Trajectory>();
-
+    @XmlElement(name="numEvaluations")
+    private int mNumEvaluations;
+    
     public TrajectoryGroup()
     {
     }
@@ -49,6 +51,16 @@ public class TrajectoryGroup extends XmlSerializable
     public List<Trajectory> getTrajectories()
     {
         return new ArrayList<Trajectory>(mTrajectories);
+    }
+    
+    public int getNumEvaluations()
+    {
+        return mNumEvaluations;
+    }
+
+    public void setNumEvaluations(int numEvaluations)
+    {
+        mNumEvaluations = numEvaluations;
     }
 
     public List<String> getSeeds()

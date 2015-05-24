@@ -34,6 +34,8 @@ public class TrajectoryMerger
 
             TrajectoryGroup group = new TrajectoryGroup(experiment);
 
+            int numEvaluations = 0;
+            
             System.out.println("Experiment " + experimentPath);
             //Now, figure out what trajectories are there
             File[] experimentDirFiles = new File(experimentPath + File.separator).listFiles();
@@ -45,9 +47,12 @@ public class TrajectoryMerger
                 String seed = f.getName().substring(f.getName().lastIndexOf(".")+1);
 
                 TrajectoryGroup childGroup = TrajectoryGroup.fromXML(new FileInputStream(f));
+                numEvaluations += childGroup.getTrajectory(seed).getNumEvaluations();
                 //TODO: Check to make sure the experiments match
                 group.addTrajectory(childGroup.getTrajectory(seed));
+                
             }
+            group.setNumEvaluations(numEvaluations);
             return group;
         }catch(Exception e){
             throw new RuntimeException(e);

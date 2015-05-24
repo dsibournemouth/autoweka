@@ -60,7 +60,8 @@ public class SMACTrajectoryParser extends TrajectoryParser
                     score = Float.parseFloat(matcher.group(2));
 
                     //System.out.println(time + " " +score);
-                    if(score != currentBest)
+                    //if(score != currentBest) // why != ???
+                    if(score <= currentBest) // modified by Manuel
                     {
                         currentBest = score;
                         argString = filterArgString(params, matcher.group(3));
