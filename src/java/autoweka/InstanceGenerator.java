@@ -5,6 +5,7 @@ import weka.core.Instances;
 import weka.core.DenseInstance;
 import weka.core.Attribute;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -24,6 +25,8 @@ public abstract class InstanceGenerator
 {
     private Instances mTraining = null;
     private Instances mTesting = null;
+    protected String trainArff = "";
+    protected String classIndex = "-1";
 
     /**
      * Clones an InstanceGenerator from another
@@ -139,9 +142,14 @@ public abstract class InstanceGenerator
     
     private void loadTrainTestArff(String trainArff, String testArff, String classIndex)
     {
+      
+        this.trainArff =  trainArff;
+        this.classIndex = classIndex;
+      
+        
         //Get the training data
-        try {
-            mTraining = Util.loadDataSource(new FileInputStream(trainArff));
+        try { 
+            mTraining = Util.loadDataSource( new FileInputStream(trainArff));
             if (mTraining.classIndex() == -1){
                 if(classIndex.equals("last"))
                     mTraining.setClassIndex(mTraining.numAttributes() - 1);
