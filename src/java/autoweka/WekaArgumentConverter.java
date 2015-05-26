@@ -1,6 +1,8 @@
 package autoweka;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,7 +219,19 @@ public class WekaArgumentConverter
             //Is the name actually a double dash?
             argPairs.add(arg);
         }
-        java.util.Collections.sort(argPairs);
+        //java.util.Collections.sort(argPairs;
+        Collections.sort(argPairs, new Comparator<ArgumentPair>() {
+
+	  @Override
+	  public int compare(ArgumentPair o1, ArgumentPair o2) {
+	    return o1.name.toUpperCase().compareTo(o2.name.toUpperCase());
+	  }
+
+      });
+        /*for(ArgumentPair arg : argPairs)
+        {
+           System.out.println(arg.name + " = " + arg.value);
+        }*/
         return argPairs;
     }
 
