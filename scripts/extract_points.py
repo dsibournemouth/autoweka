@@ -63,27 +63,29 @@ import pandas.stats.moments as stats
 
 #colors = ['r', 'g', 'b']
 #fig = plt.figure()
-fig, (ax, ax1) = plt.subplots(2, 1, sharex=True)
+fig, ax1 = plt.subplots(1, 1, sharex=True)
 #title = folder.split("/")[1].split("-")[0]
 title = folder.split("/")[1]
 print title
-ax.set_title(title)
-ax.set_xlabel('Time (h)')
-ax.set_ylabel('RMSE')
+ax1.set_title(title)
+#ax.set_xlabel('Time (h)')
+#ax.set_ylabel('RMSE')
 #ax.set_yscale('log')
-ax.set_xlim(0,30)
+#ax.set_xlim(0,30)
 #colors = sns.color_palette("husl", 25)
-for i in range(0,25):
-   ax.scatter(time_by_seed[i], error_by_seed[i], c=cm.hsv(i/25.,1), s=[30]*len(time_by_seed[i]))
+#for i in range(0,25):
+   #ax.scatter(time_by_seed[i], error_by_seed[i], c=cm.hsv(i/25.,1), s=[30]*len(time_by_seed[i]))
    #ax.scatter(time_by_seed[i], error_by_seed[i], c=[colors[i]]*len(time_by_seed[i]), s=[30]*len(time_by_seed[i]))
 
 ax1.set_xlabel('Time (h)')
 ax1.set_ylabel('RMSE')
-ax1.set_xlim(0,30)
+ax1.set_xlim(-1,30)
 y_mean = stats.rolling_mean(sorted_errors, 5)
 y_std = stats.rolling_std(sorted_errors, 5)
-y_upper = y_mean + 2*y_std
-y_lower = y_mean - 2*y_std
+#y_upper = y_mean + 2*y_std
+y_upper = stats.rolling_max(sorted_errors, 5)
+#y_lower = y_mean - 2*y_std
+y_lower = stats.rolling_min(sorted_errors, 5)
 sorted_data = DataFrame(data=sorted_points, columns=['time', 'binned_time', 'error', 'seed'])
 #sns.jointplot("binned_time", "error", sorted_data)
 #ax1.scatter(sorted_binned_time, sorted_errors)
@@ -95,7 +97,7 @@ ax1.fill_between(sorted_time, y_lower, y_mean, facecolor='gray', interpolate=Tru
 if not os.path.isdir("plots"):
    os.mkdir("plots")
 fig.savefig("plots/points.png", bbox_inches='tight')
-fig.savefig("/home/msalvador/autoweka/plots/points-%s.png" % title, bbox_inches='tight')
+fig.savefig("%s/plots/points-%s.png" % (os.environ['AUTOWEKA_PATH'], title), bbox_inches='tight')
 #plt.show()
 
 
