@@ -449,8 +449,11 @@ public class ExperimentBuilder extends JFrame
             //Setup all the extra args
             expComp.constructorArgs.add("-experimentpath");
             expComp.constructorArgs.add(mExperimentDirText.getText());
-            expComp.constructorArgs.add("-propertyoverride");
-            expComp.constructorArgs.add(Util.propertiesToString(optMethodProps.getGlobalProperties()));
+            Properties prop = optMethodProps.getGlobalProperties();
+            if (prop!=null){
+              expComp.constructorArgs.add("-propertyoverride");
+              expComp.constructorArgs.add(Util.propertiesToString(prop));
+            }
 
             Util.makePath(mExperimentDirText.getText());
             batch.toXML(mExperimentDirText.getText() + File.separator + mExperimentNameText.getText() + ".batch");
