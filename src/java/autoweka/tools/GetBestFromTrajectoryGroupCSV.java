@@ -22,9 +22,13 @@ public class GetBestFromTrajectoryGroupCSV
   public static void main(String[] args) {
     GetBestFromTrajectoryGroupCSV res = new GetBestFromTrajectoryGroupCSV(
 	args[0]);
-    
+
     File trajectoryFile = new File(args[0]);
-    String predictionsFilename = trajectoryFile.getParentFile().getAbsolutePath() + trajectoryFile.separator + "predictions." + res.seed + ".csv";
+    String predictionsFilename = trajectoryFile.getParentFile()
+	.getAbsolutePath()
+	+ trajectoryFile.separator
+	+ "predictions."
+	+ res.seed + ".csv";
     double testError = rmse(loadErrors(predictionsFilename));
 
     // Output:
@@ -33,12 +37,16 @@ public class GetBestFromTrajectoryGroupCSV
     // Number of trajectories,
     // Number of evaluations (for the best seed),
     // Number of evaluations (in total),
+    // Number of MemOut evaluations
+    // Number of TimeOut evaluations
     // CV Error (for the best configuration),
     // Test Error (for the best configuration)
-    
+    // Best configuration
+
     System.out.println(res.experiment.name + "," + res.seed + ","
 	+ res.numTrajectories + "," + res.numEval + "," + res.totalNumEval
-	+ "," + res.errorEstimate + "," + testError);
+	+ "," + res.numMemOut + "," + res.numTimeOut + "," + res.errorEstimate
+	+ "," + testError + "," + res.classifierArgs);
   }
 
   private static ArrayList<Double> loadErrors(String filename) {
@@ -50,15 +58,16 @@ public class GetBestFromTrajectoryGroupCSV
     try {
 
       br = new BufferedReader(new FileReader(filename));
-      line = br.readLine(); //ignore header
+      line = br.readLine(); // ignore header
       while ((line = br.readLine()) != null) {
 
 	// use comma as separator
 	String[] prediction = line.split(cvsSplitBy);
 
-	try{
+	try {
 	  error.add(Double.parseDouble(prediction[3]));
-	}catch(NumberFormatException e){
+	}
+	catch (NumberFormatException e) {
 	  error.add(Double.NaN);
 	}
 
