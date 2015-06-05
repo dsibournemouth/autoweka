@@ -65,7 +65,7 @@ import pandas.stats.moments as stats
 #fig = plt.figure()
 fig, ax1 = plt.subplots(1, 1, sharex=True)
 #title = folder.split("/")[1].split("-")[0]
-title = folder.split("/")[1]
+title = folder.split("/")[-1]
 print title
 ax1.set_title(title)
 #ax.set_xlabel('Time (h)')
