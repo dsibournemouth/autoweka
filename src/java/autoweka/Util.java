@@ -1,22 +1,20 @@
 package autoweka;
 
-import java.util.ArrayList;
-import java.util.Properties;
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -24,7 +22,6 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
-import weka.core.converters.Loader;
 
 /**
  * Bunches of random stuff that seems to be handy in all sorts of places
@@ -702,5 +699,14 @@ public class Util
         }catch(Exception e){
             throw new RuntimeException(e);
         }
+    }
+    
+    public static Collection<String> escapeQuotes(Collection<String> collection){
+      Collection<String> newCollection = new ArrayList<String>();
+      for(String s : collection){
+	newCollection.add(s.replace("\"", "\\\""));
+      }
+      return newCollection;
+      
     }
 }

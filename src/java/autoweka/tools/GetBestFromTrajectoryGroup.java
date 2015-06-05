@@ -73,7 +73,7 @@ public class GetBestFromTrajectoryGroup {
 
     classifierClass = wekaArgs.propertyMap.get("targetclass");
     classifierArgs = Util.joinStrings(" ",
-	Util.quoteStrings(wekaArgs.argMap.get("classifier")));
+	Util.quoteStrings(Util.escapeQuotes(wekaArgs.argMap.get("classifier"))));
 
     // Is there a AS search method?
     if (wekaArgs.propertyMap.containsKey("attributesearch")
