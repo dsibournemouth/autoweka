@@ -704,7 +704,9 @@ public class Util
     public static Collection<String> escapeQuotes(Collection<String> collection){
       Collection<String> newCollection = new ArrayList<String>();
       for(String s : collection){
-	newCollection.add(s.replace("\"", "\\\""));
+	s = s.replace("\\", "\\\\");
+	s = s.replace("\"", "\\\"");
+	newCollection.add(s);
       }
       return newCollection;
       
