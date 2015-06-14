@@ -1,4 +1,5 @@
 import sqlite3
+import subprocess
 
 conn = sqlite3.connect('results.db')
 c = conn.cursor()
@@ -6,27 +7,41 @@ c = conn.cursor()
 create_tables = False
 insert_datasets = False
 insert_experiments = False
+insert_results_all = False
+insert_results_random = False
+insert_results_default = True
+pretend = False
 
-
-def insert_results(f):
-    for line in f:
+def insert_results(file, convert_configuration=False):
+    for line in file:
         tmp = line.split('.')
         dataset = tmp[0]
         strategy = tmp[1]
         generation = tmp[2].split('-')[0]
         fields = line.replace('NaN', 'NULL').split(',')
         seed = fields[1]
+        configuration = fields[-1].rstrip('\n')
+        if convert_configuration:
+            # transform autoweka config to weka config
+            command = 'cd $AUTOWEKA_PATH && $MY_JAVA_PATH/java -Xmx2000M -cp autoweka.jar autoweka.WekaArgumentConverter "%s"' % (
+            configuration.lstrip().rstrip())
+            output = subprocess.check_output(command, shell=True)
+            configuration = output.rstrip()
+
         select_full_cv_error = '''SELECT full_cv_error FROM results
                                   WHERE dataset='%s' AND strategy='%s' AND generation='%s' AND seed=%s''' % (
             dataset, strategy, generation, seed)
         newline = "'%s','%s','%s',%s" % (dataset, strategy, generation, ','.join(fields[1:-1]))
         newline = "%s,(%s),'%s'" % (
-            newline, select_full_cv_error, fields[-1].rstrip('\n'))  # weka quotes can be a problem here
+            newline, select_full_cv_error, configuration)  # weka quotes can be a problem here
         # print newline
-        c.execute('''INSERT OR REPLACE INTO results(
-                     dataset, strategy, generation, seed, num_trajectories, num_evaluations, total_evaluations,
-                     memout_evaluations, timeout_evaluations, error, test_error, full_cv_error, configuration)
-                     VALUES (%s)''' % newline)
+        if not pretend:
+            c.execute('''INSERT OR REPLACE INTO results(
+                         dataset, strategy, generation, seed, num_trajectories, num_evaluations, total_evaluations,
+                         memout_evaluations, timeout_evaluations, error, test_error, full_cv_error, configuration)
+                         VALUES (%s)''' % newline)
+        else:
+            print newline
     conn.commit()
 
 
@@ -82,16 +97,22 @@ if insert_experiments:
     conn.commit()
 
 # --------- Insert SMAC, ROAR and TPE results ---------
-
-f = open('results.csv', 'r')
-insert_results(f)
-f.close()
+if insert_results_all:
+    f = open('results.csv', 'r')
+    insert_results(f)
+    f.close()
 
 # --------- Insert RANDOM results ---------
+if insert_results_random:
+    f = open('results_random.csv', 'r')
+    insert_results(f, convert_configuration=True)
+    f.close()
 
-f = open('results_random.csv', 'r')
-insert_results(f)
-f.close()
+# --------- Insert DEFAULT results ---------
+if insert_results_default:
+    f = open('results_default.csv', 'r')
+    insert_results(f)
+    f.close()
 
 # --------- Close DB ---------
 

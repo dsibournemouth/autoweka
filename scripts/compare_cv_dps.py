@@ -1,16 +1,9 @@
 import sqlite3
 from pylab import *
+from datasets import datasets
 
 conn = sqlite3.connect('results.db')
 c = conn.cursor()
-
-datasets = ['absorber',
-            'catalyst_activation',
-            'debutanizer',
-            'oxeno-hourly',
-            'sulfur',
-            'IndustrialDrier',
-            'ThermalOxidizerConv']
 
 strategy = 'SMAC'
 
