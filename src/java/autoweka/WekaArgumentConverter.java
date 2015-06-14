@@ -1,6 +1,7 @@
 package autoweka;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,6 +19,13 @@ public class WekaArgumentConverter
     public static Arguments convert(List<String> args){
         List<ArgumentPair> sortedArgPairs = sortArgs(args);
         return processArgs(sortedArgPairs);
+    }
+    
+    public static String convertToString(String args){
+        List<String> listArgs = Arrays.asList(args.split(" "));
+        Arguments wekaArgs = WekaArgumentConverter.convert(listArgs);
+        return Util.joinStrings(" ",
+        	Util.quoteStrings(Util.escapeQuotes(wekaArgs.argMap.get("classifier"))));
     }
 
     public static class Arguments{
@@ -215,6 +223,7 @@ public class WekaArgumentConverter
         ArrayList<ArgumentPair> argPairs = new ArrayList<ArgumentPair>();
         for(int i = 0; i < args.size(); i+=2)
         {
+            //System.out.println(args.get(i));
             ArgumentPair arg = new ArgumentPair(args.get(i), args.get(i+1));
             //Is the name actually a double dash?
             argPairs.add(arg);
@@ -260,6 +269,10 @@ public class WekaArgumentConverter
         }
         public String prefix;
         public String mapName;
+    }
+    
+    public static void main(String[] args) {
+      System.out.println(WekaArgumentConverter.convertToString(args[0]));
     }
 
 }
