@@ -76,10 +76,20 @@ class RandomSearchWorker
         System.out.println("Evaluating point with hash '" + res.argHash + "'");
 
         for(String instance : mInstances){
+          try{
             SubProcessWrapper.ErrorAndTime errAndTime = SubProcessWrapper.getErrorAndTime(mExperimentDir, mExperiment, instance, argString, mSeed);
             res.addInstanceResult(instance, errAndTime);
             mTimeRemaining -= errAndTime.time;
             System.out.println("Spent " + errAndTime.time + " getting a response of " + errAndTime.error);
+            // Stop processing folds if one of them is not working
+            if (errAndTime.error>=1.0E10){
+              break;
+            }
+          }
+          catch(Exception e){
+            e.printStackTrace();
+            break;
+          }
         }
 
         res.saveResultFile(mExperimentDir);
