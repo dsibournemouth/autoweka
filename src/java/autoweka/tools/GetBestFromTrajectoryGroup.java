@@ -2,6 +2,7 @@
 package autoweka.tools;
 
 import java.util.Arrays;
+import java.util.List;
 
 import autoweka.Experiment;
 import autoweka.Trajectory;
@@ -58,6 +59,15 @@ public class GetBestFromTrajectoryGroup {
       Trajectory.Point pt = traj.getLastPoint();
       if (pt == null)
 	continue;
+      
+      // SMAC problem:
+      // If the errorEstimate is 0.0 it means that the incumbent has crashed 
+      List<Trajectory.Point> allPoints = traj.getPoints();
+      int index = allPoints.size()-1;
+      while(!(pt.mErrorEstimate>0) && index>0){
+	pt = allPoints.get(index-1);
+	index--;
+      }
 
       if (bestPt.mErrorEstimate > pt.mErrorEstimate) {
 	bestPt = pt;

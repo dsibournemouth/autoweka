@@ -1,6 +1,7 @@
 package autoweka;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 public class TrajectoryPointPredictionRunner
@@ -69,8 +70,19 @@ public class TrajectoryPointPredictionRunner
         //For every trajectory, we need to compute the best score
         for(Trajectory traj: trajGroup.getTrajectories())
         {
-            //Get the point where the tuner time hits us
-            Trajectory.Point point = traj.getPointAtTime(timeout);
+            Trajectory.Point point = traj.getLastPoint();
+            if (point == null)
+      		continue;	
+            
+            // SMAC problem:
+            // If the errorEstimate is 0.0 it means that the incumbent has crashed 
+            List<Trajectory.Point> allPoints = traj.getPoints();
+            int index = allPoints.size()-1;
+            while(!(point.mErrorEstimate>0) && index>0){
+                point = allPoints.get(index-1);
+        	index--;
+            }
+            
             Properties props = new Properties();
             props.put("predictionsFileName", experimentDir.getAbsolutePath() + "/predictions." + traj.getSeed() + ".csv");
             if(saveModel)
