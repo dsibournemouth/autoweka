@@ -1,16 +1,14 @@
-import os
-from os import listdir, system
-from os.path import isfile, isdir, join
+from os import system
 from datasets import datasets
-
-mypath = '%s/experiments' % os.environ['AUTOWEKA_PATH']
-experiments = [f for f in listdir(mypath) if isdir(join(mypath, f))]
-for e in experiments:
-    folder = "%s/%s" % (mypath, e)
-    if isfile(join(folder, "%s.trajectories.0" % e)):
-        system("python extract_points.py %s" % folder)
+from strategies import strategies
+from generations import generations
 
 for d in datasets:
     system("python boxplot.py %s error" % d)
     system("python boxplot.py %s test_error" % d)
     system("python boxplot.py %s full_cv_error" % d)
+    for s in strategies:
+        if s not in ['DEFAULT', 'RAND']:
+            system("python plot_cv.vs.dps.py --dataset=%s --strategy=%s" % (d, s))
+            for g in generations:
+                system("python plot_trajectories.vs.time.py --dataset=%s --strategy=%s --generation=%s" % (d, s, g))

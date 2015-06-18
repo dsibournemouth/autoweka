@@ -4,12 +4,14 @@ import subprocess
 conn = sqlite3.connect('results.db')
 c = conn.cursor()
 
+# TODO: transform to options
 create_tables = False
 insert_datasets = False
 insert_experiments = False
 insert_results_all = False
 insert_results_random = False
-insert_results_default = True
+insert_results_default = False
+insert_results_independent = True
 pretend = False
 
 def insert_results(file, convert_configuration=False):
@@ -111,6 +113,12 @@ if insert_results_random:
 # --------- Insert DEFAULT results ---------
 if insert_results_default:
     f = open('results_default.csv', 'r')
+    insert_results(f)
+    f.close()
+
+# --------- Insert independent results ---------
+if insert_results_independent:
+    f = open('results.sulfur.NoPreprocessing.SMAC.CV.csv', 'r')
     insert_results(f)
     f.close()
 
