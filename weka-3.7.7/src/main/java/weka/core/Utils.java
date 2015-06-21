@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.text.BreakIterator;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Random;
@@ -2131,7 +2132,45 @@ public final class Utils
    * @param ops some dummy options
    */
   public static void main(String[] ops) {
-
+    
+    if (ops[0].equals("parseOptions")){
+    
+      try {
+	String[] wekaOptions = Arrays.copyOfRange(ops, 1, ops.length);
+	String filters = getOption("F", wekaOptions);
+	String [] filterSpec = Utils.splitOptions(filters);
+	String M = getOption("M", filterSpec);
+	String O = getOption("O", filterSpec);
+	String T = getOption("T", filterSpec);
+	String R = getOption("R", filterSpec);
+	String S = getOption("S", filterSpec);
+	String predictor = getOption("W", wekaOptions);
+	String[] predictorSpec = Utils.partitionOptions(wekaOptions);
+	
+	System.out.println("missing_values=" + M);
+	System.out.println("outliers=" + O);
+	System.out.println("transformation=" + T);
+	System.out.println("dimensionality_reduction=" + R);
+	System.out.println("sampling=" + S);
+	System.out.println("predictor=" + predictor + " " + Arrays.toString(predictorSpec));
+      }
+      catch (Exception e) {
+	e.printStackTrace();
+      }
+      
+      return;
+    }
+    
+    if (ops[0].equals("getOption")){
+      try {
+	System.out.println(getOption(ops[1], Arrays.copyOfRange(ops, 2, ops.length)));
+      }
+      catch (Exception e) {
+	e.printStackTrace();
+      }
+      return;
+    }
+    
     double[] doublesWithNaN = {4.5, 6.7, Double.NaN, 3.4, 4.8, 1.2, 3.4};
     double[] doubles = {4.5, 6.7, 6.7, 3.4, 4.8, 1.2, 3.4, 6.7, 6.7, 3.4};
     int[] ints = {12, 6, 2, 18, 16, 6, 7, 5, 18, 18, 17};
