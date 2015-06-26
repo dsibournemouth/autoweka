@@ -68,7 +68,7 @@ def table_header(complete):
     if complete:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>missing values</th><th>outliers</th><th>transformation</th><th>dimensionality reduction</th> \
-              <th>sampling</th><th>predictor</th><th>CV RMSE</th><th>Test RMSE</th></tr></thead>'
+              <th>sampling</th><th>predictor</th><th>CV RMSE</th><th>Test RMSE</th><th>Evaluations</th></tr></thead>'
     else:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>predictor</th><th>CV RMSE</th><th>Test RMSE</th></tr></thead>'
@@ -76,8 +76,9 @@ def table_header(complete):
     return table
 
 
-def table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, complete):
+def table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations, complete):
     if complete:
+        signal_plot = '../plots/signal.%s.%s.%s.%s.png' % (dataset, strategy, generation, seed)
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
@@ -85,7 +86,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td><td>%s</td></tr>' % (
+               '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['missing_values']['method'], params['missing_values']['params'],
                    params['outliers']['method'], params['outliers']['params'],
@@ -93,7 +94,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                    params['dimensionality_reduction']['method'], params['dimensionality_reduction']['params'],
                    params['sampling']['method'], params['sampling']['params'],
                    params['predictor']['method'], params['predictor']['params'],
-                   error, test_error)
+                   error, signal_plot, test_error, num_evaluations)
     else:
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
@@ -117,13 +118,14 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
         params = parse_configuration(result[4], complete)
         error = result[5]
         test_error = result[6]
+        num_evaluations = result[7]
         tr_class = ''
         if seed is best_error_seed:
             tr_class = 'border: 2px solid lightgreen;'
         elif seed is best_test_error_seed:
             tr_class = 'border: 2px solid lightblue;'
 
-        table += table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, complete)
+        table += table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations, complete)
 
         # update frequencies
         for key in params.keys():
@@ -146,7 +148,7 @@ def get_results(dataset, strategy, generation):
     conn = sqlite3.connect('results.db')
     c = conn.cursor()
 
-    c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error
+    c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error, num_evaluations
                  FROM results WHERE dataset='%s' AND strategy='%s' AND generation='%s'
                  ''' % (dataset, strategy, generation))
     results = c.fetchall()
@@ -189,6 +191,9 @@ def main():
     print "Creating table for %s %s %s" % (dataset, strategy, generation)
 
     results, best_error_seed, best_test_error_seed = get_results(dataset, strategy, generation)
+
+    if not results:
+        raise Exception("No results for %s.%s.%s" % (dataset, strategy, generation))
 
     table = create_table(results, best_error_seed, best_test_error_seed, strategy != 'DEFAULT')
 

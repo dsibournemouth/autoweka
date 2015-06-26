@@ -1,21 +1,17 @@
+import argparse
+import os
 import sqlite3
 import subprocess
+from datasets import datasets
+from strategies import strategies
+from generations import generations
 
-conn = sqlite3.connect('results.db')
-c = conn.cursor()
 
-# TODO: transform to options
-create_tables = False
-insert_datasets = False
-insert_experiments = False
-insert_results_all = False
-insert_results_random = False
-insert_results_default = False
-insert_results_independent = True
-pretend = False
-
-def insert_results(file, convert_configuration=False):
-    for line in file:
+def insert_results(conn, file, convert_configuration=False, pretend=False):
+    print "Inserting results from %s (convert=%s, pretend=%s)" % (file, convert_configuration, pretend)
+    c = conn.cursor()
+    f = open(file, 'r')
+    for line in f:
         tmp = line.split('.')
         dataset = tmp[0]
         strategy = tmp[1]
@@ -26,7 +22,7 @@ def insert_results(file, convert_configuration=False):
         if convert_configuration:
             # transform autoweka config to weka config
             command = 'cd $AUTOWEKA_PATH && $MY_JAVA_PATH/java -Xmx2000M -cp autoweka.jar autoweka.WekaArgumentConverter "%s"' % (
-            configuration.lstrip().rstrip())
+                configuration.lstrip().rstrip())
             output = subprocess.check_output(command, shell=True)
             configuration = output.rstrip()
 
@@ -35,93 +31,107 @@ def insert_results(file, convert_configuration=False):
             dataset, strategy, generation, seed)
         newline = "'%s','%s','%s',%s" % (dataset, strategy, generation, ','.join(fields[1:-1]))
         newline = "%s,(%s),'%s'" % (
-            newline, select_full_cv_error, configuration)  # weka quotes can be a problem here
-        # print newline
-        if not pretend:
-            c.execute('''INSERT OR REPLACE INTO results(
+            newline, select_full_cv_error, configuration)
+
+        insert_sql = '''INSERT OR REPLACE INTO results(
                          dataset, strategy, generation, seed, num_trajectories, num_evaluations, total_evaluations,
                          memout_evaluations, timeout_evaluations, error, test_error, full_cv_error, configuration)
-                         VALUES (%s)''' % newline)
+                         VALUES (%s)''' % newline
+        if not pretend:
+            c.execute(insert_sql)
         else:
-            print newline
+            print insert_sql
     conn.commit()
+    f.close()
 
 
-if create_tables:
-    c.execute('''CREATE TABLE datasets (name PRIMARY KEY, train, test)''')
+def create_tables(conn, pretend=False):
+    c = conn.cursor()
 
-    c.execute('''CREATE TABLE experiments
-                (dataset, strategy, generation,
-                 FOREIGN KEY(dataset) REFERENCES datasets(name),
-                 PRIMARY KEY(dataset, strategy, generation)
-                 )''')
+    create_datasets = "CREATE TABLE datasets (name PRIMARY KEY, train, test)"
+    create_experiments = '''CREATE TABLE experiments
+                            (dataset, strategy, generation,
+                             FOREIGN KEY(dataset) REFERENCES datasets(name),
+                             PRIMARY KEY(dataset, strategy, generation)
+                             )'''
+    create_results = '''CREATE TABLE results
+                     (dataset, strategy, generation, seed, num_trajectories,
+                      num_evaluations, total_evaluations, memout_evaluations, timeout_evaluations,
+                      error, test_error, full_cv_error, configuration,
+                      FOREIGN KEY(dataset) REFERENCES experiments(dataset),
+                      FOREIGN KEY(strategy) REFERENCES experiments(strategy),
+                      FOREIGN KEY(generation) REFERENCES experiments(generation),
+                      UNIQUE(dataset, strategy, generation, seed) ON CONFLICT REPLACE
+                      )'''
 
-    c.execute('''CREATE TABLE results
-                 (dataset, strategy, generation, seed, num_trajectories,
-                  num_evaluations, total_evaluations, memout_evaluations, timeout_evaluations,
-                  error, test_error, full_cv_error, configuration,
-                  FOREIGN KEY(dataset) REFERENCES experiments(dataset),
-                  FOREIGN KEY(strategy) REFERENCES experiments(strategy),
-                  FOREIGN KEY(generation) REFERENCES experiments(generation),
-                  UNIQUE(dataset, strategy, generation, seed) ON CONFLICT REPLACE
-                  )''')
+    if not pretend:
+        c.execute(create_datasets)
+        c.execute(create_experiments)
+        c.execute(create_results)
+    else:
+        print create_datasets
+        print create_experiments
+        print create_results
+
 
 # --------- Insert datasets ---------
 
-if insert_datasets:
-    datasets = ['absorber',
-                'catalyst_activation',
-                'debutanizer',
-                'oxeno-hourly',
-                'sulfur',
-                'IndustrialDrier',
-                'ThermalOxidizerConv']
+def insert_datasets(conn, pretend=False):
+    c = conn.cursor()
 
     for dataset in datasets:
         trainfile = "%s-train70perc.arff" % dataset
         testfile = "%s-test30perc.arff" % dataset
-        c.execute("INSERT INTO datasets VALUES(?,?,?)", (dataset, trainfile, testfile))
+        insert_sql = "INSERT INTO datasets VALUES('%s','%s','%s')" % (dataset, trainfile, testfile)
+        if not pretend:
+            c.execute(insert_sql)
+        else:
+            print insert_sql
 
     conn.commit()
+
 
 # --------- Insert experiments ---------
 
-if insert_experiments:
-    strategies = ['DEFAULT', 'RANDOM', 'SMAC', 'ROAR', 'TPE']
-    generations = ['CV', 'DPS']
-
+def insert_experiments(conn, pretend=False):
+    c = conn.cursor()
     for dataset in datasets:
         for strategy in strategies:
             for generation in generations:
-                c.execute("INSERT INTO experiments(dataset, strategy, generation) VALUES(?,?,?)",
-                          (dataset, strategy, generation))
+                insert_sql = "INSERT INTO experiments(dataset, strategy, generation) VALUES('%s','%s','%s')" % (
+                    dataset, strategy, generation)
+                if not pretend:
+                    c.execute(insert_sql)
+                else:
+                    print insert_sql
 
     conn.commit()
 
-# --------- Insert SMAC, ROAR and TPE results ---------
-if insert_results_all:
-    f = open('results.csv', 'r')
-    insert_results(f)
-    f.close()
 
-# --------- Insert RANDOM results ---------
-if insert_results_random:
-    f = open('results_random.csv', 'r')
-    insert_results(f, convert_configuration=True)
-    f.close()
+def main():
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    parser.add_argument('--create-tables', action='store_true')
+    parser.add_argument('--insert-datasets', action='store_true')
+    parser.add_argument('--insert-experiments', action='store_true')
+    parser.add_argument('--insert')
+    parser.add_argument('--convert-configuration', action='store_true')
+    parser.add_argument('--pretend', action='store_true')
 
-# --------- Insert DEFAULT results ---------
-if insert_results_default:
-    f = open('results_default.csv', 'r')
-    insert_results(f)
-    f.close()
+    args = parser.parse_args()
 
-# --------- Insert independent results ---------
-if insert_results_independent:
-    f = open('results.sulfur.NoPreprocessing.SMAC.CV.csv', 'r')
-    insert_results(f)
-    f.close()
+    conn = sqlite3.connect('results.db')
 
-# --------- Close DB ---------
+    if args.create_tables:
+        create_tables(conn, pretend=args.pretend)
+    if args.insert_datasets:
+        insert_datasets(conn, pretend=args.pretend)
+    if args.insert_experiments:
+        insert_experiments(conn, pretend=args.pretend)
+    if args.insert:
+        insert_results(conn, args.insert, convert_configuration=args.convert_configuration, pretend=args.pretend)
 
-conn.close()
+    conn.close()
+
+
+if __name__ == "__main__":
+    main()

@@ -77,11 +77,12 @@ def main():
     plots = '<table id="plots"><thead>' \
             '<tr><th>Estimated error (70% dataset)</th><th>Test error (30% dataset)</th></tr>' \
             '</thead><tbody>'
-    plots += '<tr><td><img src="../plots/boxplot.error.%s.png" /></td>' % dataset
-    plots += '<td><img src="../plots/boxplot.test_error.%s.png" /></td></tr>' % dataset
+    plots += '<tr><td><img src="../plots/boxplot.error.%s.png" width="100%%"/></td>' % dataset
+    plots += '<td><img src="../plots/boxplot.test_error.%s.png" width="100%%"/></td></tr>' % dataset
     plots += '</tbody></table>'
 
     css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
+
     javascript = '<script type="text/javascript" src="js/jquery-latest.js"></script>' \
                  '<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>' \
                  '<script>$(document).ready(function(){$("#myTable").tablesorter();});</script>'

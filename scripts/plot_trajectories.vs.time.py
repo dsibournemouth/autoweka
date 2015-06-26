@@ -8,6 +8,10 @@ import matplotlib.cm as cm
 import pandas.stats.moments as stats
 from operator import itemgetter
 from datasets import datasets
+from strategies import strategies
+from generations import generations
+
+TIME_LIMIT = 30 * 60 * 60  # 30 hours
 
 
 def scatter_all_seeds(results, title):
@@ -26,7 +30,7 @@ def scatter_all_seeds(results, title):
 
     plt.title(title)
     plt.savefig("%s/plots/trajectories-%s.scatter.png" % (os.environ['AUTOWEKA_PATH'], title))
-    #plt.show()
+    # plt.show()
 
 
 def aggregated_line_seeds(results, title):
@@ -52,14 +56,14 @@ def aggregated_line_seeds(results, title):
 
     plt.title(title)
     plt.savefig("%s/plots/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], title), bbox_inches='tight')
-    #plt.show()
+    # plt.show()
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='plot_trajectories.vs.time.py')
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     parser.add_argument('--dataset', choices=datasets, required=True)
-    parser.add_argument('--strategy', required=True)
-    parser.add_argument('--generation', required=True)
+    parser.add_argument('--strategy', choices=strategies, required=True)
+    parser.add_argument('--generation', choices=generations, required=True)
 
     args = parser.parse_args()
 
@@ -70,8 +74,10 @@ def main():
     conn = sqlite3.connect('results.db')
     c = conn.cursor()
 
-    query = "SELECT seed, time, error FROM trajectories WHERE dataset='%s' AND strategy='%s' AND (generation='%s' or generation='%s-%s') AND error<1000000000" % (
-        dataset, strategy, generation, generation, dataset)
+    query = "SELECT seed, time, error FROM trajectories WHERE dataset='%s' AND strategy='%s' " \
+            "AND (generation='%s' or generation='%s-%s') AND error<1000000000 " \
+            "AND time<=%d" % (
+                dataset, strategy, generation, generation, dataset, TIME_LIMIT)
 
     results = c.execute(query).fetchall()
 
