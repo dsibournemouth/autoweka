@@ -1,8 +1,7 @@
 import argparse
 import sqlite3
 from pylab import *  # includes np and plt
-from datasets import datasets
-from strategies import strategies
+from config import *
 import matplotlib.cm as cm
 
 

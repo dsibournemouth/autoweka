@@ -1,6 +1,6 @@
 import os
 import sys
-from datasets import datasets
+from config import *
 
 if len(sys.argv) < 2:
     print 'Syntax: python create_experiments.py experiments/template.xml'

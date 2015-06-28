@@ -1,1 +1,0 @@
-generations = ['CV', 'DPS']

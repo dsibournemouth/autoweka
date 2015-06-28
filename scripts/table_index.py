@@ -1,4 +1,4 @@
-from datasets import datasets
+from config import *
 
 
 def table_header():

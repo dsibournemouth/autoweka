@@ -1,6 +1,6 @@
 import sqlite3
 from pylab import *
-from datasets import datasets
+from config import *
 
 conn = sqlite3.connect('results.db')
 c = conn.cursor()

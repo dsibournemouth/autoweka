@@ -1,7 +1,8 @@
 import sqlite3
 from os.path import join
 import subprocess
-import sys, os
+import sys
+import os
 from numpy import median
 
 if len(sys.argv) < 5:
@@ -50,7 +51,7 @@ for result in results:
             seed, trainfile, config)
         pipes_call = "| grep 'Root mean squared error' | tail -1 | awk '{print $5}'"
         command = "cd $AUTOWEKA_PATH && %s %s" % (weka_call, pipes_call)
-        #print command
+        # print command
         output = subprocess.check_output(command, shell=True)
         try:
             local_rmse = float(output.rstrip())

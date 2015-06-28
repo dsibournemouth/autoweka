@@ -1,10 +1,5 @@
 from os import system
-from datasets import datasets
-
-# strategies = ['DEFAULT', 'RAND', 'SMAC', 'ROAR', 'TPE']
-strategies = ['RAND']
-generations = ['CV']
-seeds = range(0, 25)
+from config import *
 
 for dataset in datasets:
     for strategy in strategies:

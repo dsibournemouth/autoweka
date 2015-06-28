@@ -17,14 +17,15 @@ type_error = sys.argv[2]
 if type_error not in ['error', 'test_error', 'full_cv_error']:
     raise Exception('Invalid type_error: %s. Options are: error, test_error or full_cv_error' % type_error)
 
-skip_keys = ['TPE-CV', 'TPE-DPS']
+skip_keys = ['TPE-DPS']
 
 dataset = sys.argv[1]
 
 conn = sqlite3.connect('results.db')
 c = conn.cursor()
 
-query = "SELECT strategy,generation,%s FROM results WHERE dataset='%s' AND %s<100000 AND %s!=0.0" % (type_error, dataset, type_error, type_error)
+query = "SELECT strategy,generation,%s FROM results WHERE dataset='%s' AND %s<100000 AND %s!=0.0" % (
+    type_error, dataset, type_error, type_error)
 
 results = c.execute(query).fetchall()
 
@@ -58,7 +59,7 @@ fig.canvas.draw()
 bp = plt.boxplot(data.values())  # , labels=data.keys())
 xtickNames = plt.setp(ax, xticklabels=data.keys())
 plt.setp(xtickNames, rotation=45, fontsize=8)
-#ylim(ymin=0)
+# ylim(ymin=0)
 plt.margins(0.05, 0.05)
 ylabel('Error')
 xlabel('Strategy')

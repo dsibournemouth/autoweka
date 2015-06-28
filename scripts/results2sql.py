@@ -2,9 +2,7 @@ import argparse
 import os
 import sqlite3
 import subprocess
-from datasets import datasets
-from strategies import strategies
-from generations import generations
+from config import *
 
 
 def insert_results(conn, file, convert_configuration=False, pretend=False):

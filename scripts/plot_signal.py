@@ -2,10 +2,7 @@ import os
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from datasets import datasets
-from strategies import strategies
-from generations import generations
-from seeds import seeds
+from config import *
 
 
 def plot_target_vs_prediction(targets, predictions, limit, title):

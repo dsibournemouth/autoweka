@@ -1,11 +1,7 @@
 import os
 import sqlite3
-import subprocess
 import argparse
-import operator
-from datasets import datasets
-from strategies import strategies
-from generations import generations
+from config import *
 
 
 def table_header():

@@ -1,7 +1,5 @@
 from os import system
-from datasets import datasets
-from strategies import strategies
-from generations import generations
+from config import *
 
 system("python table_index.py")
 for d in datasets:

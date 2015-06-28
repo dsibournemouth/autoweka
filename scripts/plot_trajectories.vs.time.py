@@ -7,9 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import pandas.stats.moments as stats
 from operator import itemgetter
-from datasets import datasets
-from strategies import strategies
-from generations import generations
+from config import *
 
 TIME_LIMIT = 30 * 60 * 60  # 30 hours
 
