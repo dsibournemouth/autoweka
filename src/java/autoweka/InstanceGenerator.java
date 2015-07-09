@@ -1,22 +1,16 @@
 package autoweka;
 
-import weka.core.converters.ConverterUtils.DataSource;
-import weka.core.Instances;
-import weka.core.DenseInstance;
-import weka.core.Attribute;
-
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.Enumeration;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import weka.core.Instances;
 
 /**
  * Abstract class for partitioning a dataset (consisting of training and testing data) into 'instances' that are given to the SMBO method
@@ -61,6 +55,7 @@ public abstract class InstanceGenerator
             {
                 props = Util.parsePropertyString(datasetString);
             }catch(Exception e){
+              	e.printStackTrace();
                 System.out.println("It looks like you're using an old experiment that doesn't indicate the type of dataset that it is using");
                 loadZipFile(datasetString, "last");
                 return;
@@ -94,18 +89,19 @@ public abstract class InstanceGenerator
                 ZipEntry entry = (ZipEntry)entries.nextElement();
 
                 String name = entry.getName();
-                if (name.equals("train.arff"))
+                if (name.endsWith("train.arff"))
                 {
                     trainSource = zipFile.getInputStream(entry);
                 }
-                else if(name.equals("test.arff"))
+                else if(name.endsWith("test.arff"))
                 {
                     testSource = zipFile.getInputStream(entry);
                 }
                 else
                 {
                     //What is this?
-                    throw new RuntimeException("Unknown file in zip dataset '" + name + "'");
+                    //throw new RuntimeException("Unknown file in zip dataset '" + name + "'");
+                    System.err.println("Unknown file in zip dataset '" + name + "'");
                 }
             }
         } catch (java.io.IOException e) {
