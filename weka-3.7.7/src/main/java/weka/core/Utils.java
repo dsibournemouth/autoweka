@@ -2137,22 +2137,39 @@ public final class Utils
     
       try {
 	String[] wekaOptions = Arrays.copyOfRange(ops, 1, ops.length);
-	String filters = getOption("F", wekaOptions);
-	String [] filterSpec = Utils.splitOptions(filters);
-	String M = getOption("M", filterSpec);
-	String O = getOption("O", filterSpec);
-	String T = getOption("T", filterSpec);
-	String R = getOption("R", filterSpec);
-	String S = getOption("S", filterSpec);
-	String predictor = getOption("W", wekaOptions);
-	String[] predictorSpec = Utils.partitionOptions(wekaOptions);
-	
-	System.out.println("missing_values=" + M);
-	System.out.println("outliers=" + O);
-	System.out.println("transformation=" + T);
-	System.out.println("dimensionality_reduction=" + R);
-	System.out.println("sampling=" + S);
-	System.out.println("predictor=" + predictor + " " + Arrays.toString(predictorSpec));
+	String meta = wekaOptions[0];
+	if (meta.equals("weka.classifiers.meta.AdaBoostM1") ||
+	    meta.equals("weka.classifiers.meta.AttributeSelectedClassifier") ||
+	    meta.equals("weka.classifiers.meta.Bagging") ||
+	    meta.equals("weka.classifiers.meta.ClassificationViaRegression") ||
+	    meta.equals("weka.classifiers.meta.LogitBoost") ||
+	    meta.equals("weka.classifiers.meta.MultiClassClassifier") ||
+	    meta.equals("weka.classifiers.meta.MyFilteredClassifier") ||
+	    meta.equals("weka.classifiers.meta.RandomCommittee") ||
+	    meta.equals("weka.classifiers.meta.RandomSubSpace") ||
+	    meta.equals("weka.classifiers.lazy.LWL")
+	    ){
+	  String filters = getOption("F", wekaOptions);
+	  String [] filterSpec = Utils.splitOptions(filters);
+	  String M = getOption("M", filterSpec);
+	  String O = getOption("O", filterSpec);
+	  String T = getOption("T", filterSpec);
+	  String R = getOption("R", filterSpec);
+	  String S = getOption("S", filterSpec);
+	  String predictor = getOption("W", wekaOptions);
+	  String[] predictorSpec = Utils.partitionOptions(wekaOptions);
+	  
+	  System.out.println("missing_values=" + M);
+	  System.out.println("outliers=" + O);
+	  System.out.println("transformation=" + T);
+	  System.out.println("dimensionality_reduction=" + R);
+	  System.out.println("sampling=" + S);
+	  System.out.println("predictor=" + predictor + " " + Arrays.toString(predictorSpec));
+	  System.out.println("meta=" + meta);
+	}
+	else{
+	  System.out.println("meta=" + Arrays.toString(wekaOptions));
+	}
       }
       catch (Exception e) {
 	e.printStackTrace();
