@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class GetBestFromTrajectoryGroupCSV
   extends GetBestFromTrajectoryGroup {
 
+  protected boolean isRegression = true;
+
   public GetBestFromTrajectoryGroupCSV(String trajGroupFileName) {
     super(trajGroupFileName);
   }
@@ -23,13 +25,25 @@ public class GetBestFromTrajectoryGroupCSV
     GetBestFromTrajectoryGroupCSV res = new GetBestFromTrajectoryGroupCSV(
 	args[0]);
 
+    res.isRegression = res.experiment.resultMetric.equals("rmse") ? true
+	: false;
+
     File trajectoryFile = new File(args[0]);
     String predictionsFilename = trajectoryFile.getParentFile()
 	.getAbsolutePath()
 	+ trajectoryFile.separator
 	+ "predictions."
 	+ res.seed + ".csv";
-    double testError = rmse(loadErrors(predictionsFilename));
+
+    ArrayList<Double> errors = loadErrors(predictionsFilename, res.isRegression);
+
+    double testError = -1;
+    if (res.isRegression) {
+      testError = rmse(errors);
+    }
+    else {
+      testError = misclassificationRate(errors);
+    }
 
     // Output:
     // Experiment name,
@@ -46,10 +60,12 @@ public class GetBestFromTrajectoryGroupCSV
     System.out.println(res.experiment.name + "," + res.seed + ","
 	+ res.numTrajectories + "," + res.numEval + "," + res.totalNumEval
 	+ "," + res.numMemOut + "," + res.numTimeOut + "," + res.errorEstimate
-	+ "," + testError + "," + res.classifierArgs);
+	+ "," + testError + "," + res.classifierClass + " "
+	+ res.classifierArgs);
   }
 
-  private static ArrayList<Double> loadErrors(String filename) {
+  private static ArrayList<Double> loadErrors(String filename,
+      boolean isRegression) {
     BufferedReader br = null;
     String line = "";
     String cvsSplitBy = ",";
@@ -64,11 +80,16 @@ public class GetBestFromTrajectoryGroupCSV
 	// use comma as separator
 	String[] prediction = line.split(cvsSplitBy);
 
-	try {
-	  error.add(Double.parseDouble(prediction[3]));
+	if (isRegression) {
+	  try {
+	    error.add(Double.parseDouble(prediction[3]));
+	  }
+	  catch (NumberFormatException e) {
+	    error.add(Double.NaN);
+	  }
 	}
-	catch (NumberFormatException e) {
-	  error.add(Double.NaN);
+	else {
+	  error.add(prediction[3].equals("+") ? 1.0 : 0.0);
 	}
 
       }
@@ -104,7 +125,14 @@ public class GetBestFromTrajectoryGroupCSV
     }
     rmse = Math.sqrt(rmse / (error.size() - numMissing));
     return rmse;
+  }
 
+  private static double misclassificationRate(ArrayList<Double> error) {
+    double rate = 0;
+    for (Double e: error) {
+      rate += e;
+    }
+    return 100 * rate / error.size(); // return percentage
   }
 
 }
