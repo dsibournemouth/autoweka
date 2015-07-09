@@ -1,6 +1,7 @@
 import os
 import argparse
 from os import system
+import sqlite3
 from config import *
 
 def main():
@@ -37,14 +38,9 @@ def main():
                     for seed in selected_seeds:
                         d = {"dataset": dataset, "strategy": strategy, "generation": generation}
                         experiment = "{dataset}.{strategy}.{generation}-{dataset}".format(**d)
-                        d2 = {"seed": seed, "dataset": dataset, "experiment": experiment}
 
-                        command = '''$MY_JAVA_PATH/java -cp $AUTOWEKA_PATH/autoweka.jar weka.classifiers.meta.MyFilteredClassifier \
-                               -l $AUTOWEKA_PATH/experiments/{experiment}/trained.{seed}.model \
-                               -T $AUTOWEKA_PATH/datasets/{dataset}-train70perc.arff \
-                               -classifications "weka.classifiers.evaluation.output.prediction.CSV \
-                               -file $AUTOWEKA_PATH/experiments/{experiment}/training.predictions.{seed}.csv"
-                               '''.format(**d2)
+                        command = 'qsub -N %s -l q=compute ./launch_training_prediction.sh %s %s %s' % (
+                            experiment, experiment, dataset, seed)
                         print command
                         system(command)
 

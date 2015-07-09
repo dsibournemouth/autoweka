@@ -15,7 +15,8 @@ def parse_configuration(configuration, complete):
               'transformation': {'method': '', 'params': ''},
               'dimensionality_reduction': {'method': '', 'params': ''},
               'sampling': {'method': '', 'params': ''},
-              'predictor': {'method': '', 'params': ''}}
+              'predictor': {'method': '', 'params': ''},
+              'meta': {'method': '', 'params': ''}}
 
     command = "$MY_JAVA_PATH/java -cp $AUTOWEKA_PATH/autoweka.jar weka.core.Utils parseOptions %s" % configuration
     output = subprocess.check_output(command, shell=True)
@@ -40,7 +41,7 @@ def create_frequency_table(frequency):
     # iterating over a predefined array for custom formatting
     if len(frequency.keys()) > 1:
         custom_keys = ['missing_values', 'outliers', 'transformation',
-                       'dimensionality_reduction', 'sampling', 'predictor']
+                       'dimensionality_reduction', 'sampling', 'predictor', 'meta']
     else:
         custom_keys = ['predictor']
 
@@ -66,7 +67,7 @@ def table_header(complete):
     if complete:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>missing values</th><th>outliers</th><th>transformation</th><th>dimensionality reduction</th> \
-              <th>sampling</th><th>predictor</th><th>CV RMSE</th><th>Test RMSE</th><th>Evaluations</th></tr></thead>'
+              <th>sampling</th><th>predictor</th><th>meta</th><th>CV RMSE</th><th>Test RMSE</th><th>Evaluations</th></tr></thead>'
     else:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>predictor</th><th>CV RMSE</th><th>Test RMSE</th></tr></thead>'
@@ -84,6 +85,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
+               '<td>%s<br/><small>%s</small></td>' \
                '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['missing_values']['method'], params['missing_values']['params'],
@@ -92,6 +94,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                    params['dimensionality_reduction']['method'], params['dimensionality_reduction']['params'],
                    params['sampling']['method'], params['sampling']['params'],
                    params['predictor']['method'], params['predictor']['params'],
+                   params['meta']['method'], params['meta']['params'],
                    error, signal_plot, test_error, num_evaluations)
     else:
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \

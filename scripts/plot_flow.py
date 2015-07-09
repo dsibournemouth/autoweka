@@ -18,7 +18,7 @@ def get_results(dataset, strategy, generation):
 
     if not results:
         conn.close()
-        raise Exception('No results!')
+        raise Exception('No results for dataset=%s strategy=%s generation=%s' % (dataset, strategy, generation))
 
     conn.close()
 
@@ -46,7 +46,7 @@ def main():
     params = parse_configuration(result[4], True)
 
     custom_keys = ['missing_values', 'outliers', 'transformation',
-                   'dimensionality_reduction', 'sampling', 'predictor']
+                   'dimensionality_reduction', 'sampling', 'predictor', 'meta']
 
     flowchart = pgv.AGraph(directed=True)
     flowchart.node_attr['shape'] = 'box'

@@ -26,11 +26,11 @@ for d in datasets:
 
     for s in strategies:
         if s not in ['DEFAULT', 'RAND']:
-            if trajectories:
+            if cv_dps:
                 system("python plot_cv.vs.dps.py --dataset=%s --strategy=%s" % (d, s))
 
             for g in generations:
-                if cv_dps:
+                if trajectories:
                     system("python plot_trajectories.vs.time.py --dataset=%s --strategy=%s --generation=%s" % (
                         d, s, g))
 

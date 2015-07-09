@@ -15,6 +15,9 @@ best_points_default:
 best_points_random:
 	$(PYTHON) get_best_points_random.py > results_random.csv && $(PYTHON) results2sql.py --insert results_random.csv --convert-configuration
 
+trajectories:
+	$(PYTHON) trajectories2sql.py true
+
 training_predictions:
 	$(PYTHON) generate_training_predictions.py
 

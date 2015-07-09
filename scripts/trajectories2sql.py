@@ -6,13 +6,14 @@ import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import isdir, join
 import subprocess
+from config import *
 
 
 def create_table():
     conn = sqlite3.connect('results.db')
     c = conn.cursor()
 
-    c.execute('DROP TABLE trajectories')
+    c.execute('DROP TABLE IF EXISTS trajectories')
 
     c.execute('''CREATE TABLE trajectories
                  (dataset, strategy, generation, seed, time, error, configuration,
@@ -43,30 +44,34 @@ def parse_trajectories(folder, c):
         strategy = tmp[1]
         generation = tmp[2].split('-')[0]
 
-        e = ET.parse(file).getroot()
-        traj = e.find('trajectories')
-        if traj is not None:
-            seed = int(traj.find('seed').text)  # should be only 1 element
-            # numEvaluatedEvaluations = traj.find('numEvaluatedEvaluations').text
-            # numMemOutEvaluations = traj.find('numMemOutEvaluations').text
-            # numTimeOutEvaluations = traj.find('numTimeOutEvaluations').text
+        if dataset in datasets:
+            e = ET.parse(file).getroot()
+            traj = e.find('trajectories')
+            if traj is not None:
+                seed = int(traj.find('seed').text)  # should be only 1 element
+                # numEvaluatedEvaluations = traj.find('numEvaluatedEvaluations').text
+                # numMemOutEvaluations = traj.find('numMemOutEvaluations').text
+                # numTimeOutEvaluations = traj.find('numTimeOutEvaluations').text
 
-            for point in traj.findall('point'):
-                time = float(point.find('time').text)
-                error = float(point.find('errorEstimate').text)
-                configuration = point.find('args').text
+                for point in traj.findall('point'):
+                    time = float(point.find('time').text)
+                    error = float(point.find('errorEstimate').text)
+                    configuration = point.find('args').text
 
-                # transform autoweka config to weka config
-                command = '$MY_JAVA_PATH/java -Xmx2000M -cp $AUTOWEKA_PATH/autoweka.jar autoweka.WekaArgumentConverter "%s"' % (
-                    configuration.lstrip().rstrip())
-                output = subprocess.check_output(command, shell=True)
-                configuration = output.rstrip()
+                    # transform autoweka config to weka config
+                    command = '$MY_JAVA_PATH/java -Xmx2000M -cp $AUTOWEKA_PATH/autoweka.jar autoweka.WekaArgumentConverter "%s"' % (
+                        configuration.lstrip().rstrip())
+                    try:
+                        output = subprocess.check_output(command, shell=True)
+                        configuration = output.rstrip()
+                    except:
+                        configuration = ''
 
-                sql_query = '''INSERT OR REPLACE INTO trajectories(
-                                 dataset, strategy, generation, seed, time, error, configuration)
-                                 VALUES ('%s', '%s', '%s', %d, %f, %f, '%s')''' % (
-                    dataset, strategy, generation, seed, time, error, configuration)
-                c.execute(sql_query)
+                    sql_query = '''INSERT OR REPLACE INTO trajectories(
+                                     dataset, strategy, generation, seed, time, error, configuration)
+                                     VALUES ('%s', '%s', '%s', %d, %f, %f, '%s')''' % (
+                        dataset, strategy, generation, seed, time, error, configuration)
+                    c.execute(sql_query)
 
 
 def main():

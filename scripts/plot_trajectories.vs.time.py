@@ -1,5 +1,4 @@
 import os
-import sys
 import argparse
 import sqlite3
 import numpy as np
@@ -19,12 +18,20 @@ def scatter_all_seeds(results, title):
     for seed in range(0, 25):
         mask = results[:, 0] == seed
         time = results[mask, 1] / 60 / 60
-        error = np.log10(results[mask, 2])
+        error = results[mask, 2]
+        if is_regression:
+            error = np.log10(error)
+
         plt.scatter(time, error, c=cm.hsv(seed / 25., 1))
 
-    plt.margins(0.1, 0)
     plt.xlabel("Time (h)")
-    plt.ylabel("log(RMSE)")
+    if is_regression:
+        plt.ylabel("log(RMSE)")
+    else:
+        plt.ylabel("% class. error")
+        plt.ylim(0, 100)
+
+    plt.margins(0.1, 0.1)
 
     plt.title(title)
     plt.savefig("%s/plots/trajectories-%s.scatter.png" % (os.environ['AUTOWEKA_PATH'], title))
@@ -35,7 +42,9 @@ def aggregated_line_seeds(results, title):
     plt.close()
     sorted_points = np.array(sorted(results, key=itemgetter(1)))
     sorted_time = sorted_points[:, 1] / 60 / 60
-    sorted_errors = np.log10(sorted_points[:, 2])
+    sorted_errors = sorted_points[:, 2]
+    if is_regression:
+        sorted_errors = np.log10(sorted_errors)
 
     y_mean = stats.rolling_mean(sorted_errors, 5)
     # y_std = stats.rolling_std(sorted_errors, 5)
@@ -48,9 +57,14 @@ def aggregated_line_seeds(results, title):
     plt.fill_between(sorted_time, y_mean, y_upper, facecolor='gray', interpolate=True, alpha=0.5)
     plt.fill_between(sorted_time, y_lower, y_mean, facecolor='gray', interpolate=True, alpha=0.5)
 
-    plt.margins(0.05, 0.05)
     plt.xlabel("Time (h)")
-    plt.ylabel("log(RMSE)")
+    if is_regression:
+        plt.ylabel("log(RMSE)")
+    else:
+        plt.ylabel("% class. error")
+        plt.ylim(0, 100)
+
+    plt.margins(0.05, 0.05)
 
     plt.title(title)
     plt.savefig("%s/plots/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], title), bbox_inches='tight')

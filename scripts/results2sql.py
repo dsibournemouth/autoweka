@@ -78,8 +78,8 @@ def insert_datasets(conn, pretend=False):
     c = conn.cursor()
 
     for dataset in datasets:
-        trainfile = "%s-train70perc.arff" % dataset
-        testfile = "%s-test30perc.arff" % dataset
+        trainfile = "%s/train.arff" % dataset
+        testfile = "%s/test.arff" % dataset
         insert_sql = "INSERT INTO datasets VALUES('%s','%s','%s')" % (dataset, trainfile, testfile)
         if not pretend:
             c.execute(insert_sql)
