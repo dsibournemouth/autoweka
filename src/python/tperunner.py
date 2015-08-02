@@ -18,7 +18,7 @@ parser.add_option("-s", "--seed", dest="seed", help="Random number seed", defaul
 parser.add_option("-e", "--executable", dest="executable", help="Executable")
 parser.add_option("-i", "--instancefile", dest="instanceFile", help="instance file")
 parser.add_option("-t", "--tunertimeout", dest="tunerTimeout", help="Tuner timeout (seconds)", type="float")
-parser.add_option("-f", "--maxfailcount", dest="maxFailCount", help="Max consecutive fails", type="int", default=3)
+parser.add_option("-f", "--maxfailcount", dest="maxFailCount", help="Max consecutive fails", type="int", default=1)
 (options, args) = parser.parse_args()
 
 #The regexes we need to get the result
@@ -76,9 +76,11 @@ def executeableWrapper(args):
     failed = False
     for instance in instances:
         execcmd = "%s %s %s" % (options.executable, instance.replace("|", "\\|"), argString)
-        #print execcmd
-        res = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True).strip().split("\n")[-1].strip()
-
+        # print "EXEC", execcmd
+        try:
+            res = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True).strip().split("\n")[-1].strip()
+        except:
+            res = 'FAILED'
 
         match = resultRegex.match(res)
         if match:
