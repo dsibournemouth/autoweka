@@ -24,8 +24,8 @@ dataset = sys.argv[1]
 conn = sqlite3.connect('results.db')
 c = conn.cursor()
 
-query = "SELECT strategy,generation,%s FROM results WHERE dataset='%s' AND %s<100000 AND %s!=0.0" % (
-    type_error, dataset, type_error, type_error)
+query = "SELECT strategy,generation,%s FROM results WHERE dataset='%s' AND %s<100000" % (
+    type_error, dataset, type_error)
 
 results = c.execute(query).fetchall()
 

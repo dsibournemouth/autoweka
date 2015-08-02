@@ -4,6 +4,7 @@ from os import system
 import sqlite3
 from config import *
 
+
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     parser.add_argument('--dataset', choices=datasets, required=False)
@@ -35,14 +36,17 @@ def main():
         for strategy in selected_strategies:
             if strategy not in ['DEFAULT', 'RAND']:
                 for generation in selected_generations:
+                    d = {"dataset": dataset, "strategy": strategy, "generation": generation}
+                    experiment = "{dataset}.{strategy}.{generation}-{dataset}".format(**d)
+                    folder = '%s/experiments/%s' % (os.environ['AUTOWEKA_PATH'], experiment)
                     for seed in selected_seeds:
-                        d = {"dataset": dataset, "strategy": strategy, "generation": generation}
-                        experiment = "{dataset}.{strategy}.{generation}-{dataset}".format(**d)
-
-                        command = 'qsub -N %s -l q=compute ./launch_training_prediction.sh %s %s %s' % (
-                            experiment, experiment, dataset, seed)
-                        print command
-                        system(command)
+                        filename = 'training.predictions.%s.csv' % seed
+                        # avoid computing existing predictions
+                        if not os.path.isfile(os.path.join(folder, filename)):
+                            command = 'qsub -N %s -l q=compute ./launch_training_prediction.sh %s %s %s' % (
+                                experiment, experiment, dataset, seed)
+                            print command
+                            system(command)
 
 
 if __name__ == "__main__":

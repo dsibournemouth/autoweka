@@ -6,8 +6,7 @@ from os import listdir
 from os.path import isfile, isdir, join
 import subprocess
 import xml.etree.ElementTree as ET
-
-NUM_FOLDS_CONFIG = 8
+from config import *
 
 
 def info(*objs):
@@ -70,6 +69,10 @@ def main():
     for e in experiments:
         if "RAND" in e:
             info(e)
+            dataset = e.split('.')[0]
+            if dataset not in datasets:
+                continue
+
             points_path = "%s/experiments/%s/points" % (os.environ['AUTOWEKA_PATH'], e)
             logs_path = "%s/experiments/%s/out/hashes" % (os.environ['AUTOWEKA_PATH'], e)
             if not isdir(points_path):
