@@ -13,12 +13,15 @@ class ExperimentRunner
 {
     public static void main(String[] args)
     {
-        if(args.length != 2){
-            System.out.println("ExperimentRunner requires 2 arguments - the experiment folder and the seed");
+        if(args.length < 2){
+            System.out.println("ExperimentRunner requires at least 2 arguments - the experiment folder and the seed (and optionally skip-run option)");
             System.exit(1);
         }
         File expFolderFile = new File(args[0]);
         String seed = args[1];
+        boolean skipRun = false;
+        if (args.length > 2)
+          skipRun = args[2].equals("skip-run") ? true : false;
 
         if(!expFolderFile.exists() || !expFolderFile.isDirectory()){
             System.out.println("The first argument does not appear to be an experiment folder");
@@ -43,8 +46,10 @@ class ExperimentRunner
         }
 
         //Run the experiment
-        String[] expArgs = new String[]{"-noexit", expFolder, seed};
-        Experiment.main(expArgs);
+        if(!skipRun){
+          String[] expArgs = new String[]{"-noexit", expFolder, seed};
+          Experiment.main(expArgs);
+        }
 
         //Extract the trajectory
         String[] trajParseArgs = new String[]{"-single", expFolder, seed};
