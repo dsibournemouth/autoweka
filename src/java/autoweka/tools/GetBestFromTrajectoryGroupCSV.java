@@ -8,6 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
+
+import autoweka.InstanceGenerator;
+
 public class GetBestFromTrajectoryGroupCSV
   extends GetBestFromTrajectoryGroup {
 
@@ -28,12 +32,16 @@ public class GetBestFromTrajectoryGroupCSV
     res.isRegression = res.experiment.resultMetric.equals("rmse") ? true
 	: false;
 
+    InstanceGenerator mInstanceGenerator = InstanceGenerator.create(res.experiment.instanceGenerator, res.experiment.datasetString);
+    int sizeTestingSet = mInstanceGenerator.getTesting().size();
+    
     File trajectoryFile = new File(args[0]);
     String predictionsFilename = trajectoryFile.getParentFile()
 	.getAbsolutePath()
 	+ trajectoryFile.separator
 	+ "predictions."
 	+ res.seed + ".csv";
+    
 
     ArrayList<Double> errors = loadErrors(predictionsFilename, res.isRegression);
 
@@ -42,7 +50,7 @@ public class GetBestFromTrajectoryGroupCSV
       testError = rmse(errors);
     }
     else {
-      testError = misclassificationRate(errors);
+      testError = misclassificationRate(errors, sizeTestingSet);
     }
 
     // Output:
@@ -79,6 +87,9 @@ public class GetBestFromTrajectoryGroupCSV
 
 	// use comma as separator
 	String[] prediction = line.split(cvsSplitBy);
+	
+	if (prediction.length < 3)
+	  continue;
 
 	if (isRegression) {
 	  try {
@@ -89,7 +100,7 @@ public class GetBestFromTrajectoryGroupCSV
 	  }
 	}
 	else {
-	  error.add(prediction[3].equals("+") ? 1.0 : 0.0);
+	  error.add(prediction[3].equals("") && !prediction[2].equals("?") ? 0.0 : 1.0);
 	}
 
       }
@@ -127,12 +138,20 @@ public class GetBestFromTrajectoryGroupCSV
     return rmse;
   }
 
-  private static double misclassificationRate(ArrayList<Double> error) {
+  private static double misclassificationRate(ArrayList<Double> error, int sizeTestingSet) {
+    if (error.size() > sizeTestingSet){
+      return -1; //something went wrong
+    }
+    
     double rate = 0;
     for (Double e: error) {
       rate += e;
     }
-    return 100 * rate / error.size(); // return percentage
+    
+    // consider missing predictions as error
+    rate += sizeTestingSet - error.size();
+    
+    return 100 * rate / sizeTestingSet; // return percentage
   }
 
 }
