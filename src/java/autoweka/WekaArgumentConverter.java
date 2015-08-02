@@ -24,7 +24,7 @@ public class WekaArgumentConverter
     public static String convertToString(String args){
         List<String> listArgs = Arrays.asList(args.split(" "));
         Arguments wekaArgs = WekaArgumentConverter.convert(listArgs);
-        return Util.joinStrings(" ",
+        return wekaArgs.propertyMap.get("targetclass") + " " + Util.joinStrings(" ",
         	Util.quoteStrings(Util.escapeQuotes(wekaArgs.argMap.get("classifier"))));
     }
 
