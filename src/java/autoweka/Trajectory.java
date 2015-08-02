@@ -102,6 +102,18 @@ public class Trajectory
      */
     @XmlElement(name="numTimeOutEvaluations")
     private int mNumTimeOutEvaluations = -1;
+    
+    /**
+     * The number of configurations that have been evaluated in all the folds
+     */
+    @XmlElement(name="numCompletedEvaluations")
+    private int mNumCompletedEvaluations = -1;
+    
+    /**
+     * The number of evaluations that have crashed
+     */
+    @XmlElement(name="numCrashedEvaluations")
+    private int mNumCrashedEvaluations = -1;
 
     //Needed for the XML stuff
     private Trajectory() {}
@@ -202,6 +214,12 @@ public class Trajectory
         mNumMemOutEvaluations = numMemOutEvaluations;
         mNumTimeOutEvaluations = numTimeOutEvaluations;
     }
+    
+    public void setEvaluationCounts(int numTotalEvaluations, int numMemOutEvaluations, int numTimeOutEvaluations, int numCompletedEvaluations, int numCrashedEvaluations) {
+      setEvaluationCounts(numTotalEvaluations, numMemOutEvaluations, numTimeOutEvaluations);
+      mNumCompletedEvaluations = numCompletedEvaluations;
+      mNumCrashedEvaluations = numCrashedEvaluations;
+  }
 
     /**
      * Gets the total number of evaluations that were performed
