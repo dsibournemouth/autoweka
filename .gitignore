@@ -23,7 +23,8 @@ weka.log
 autoweka.ui.properties
 /datasets/
 /build/
-/smac-v2.08.00-master-731/
-/hyperopt-f8275df/
-/plots/
-/tables/
+/smac*
+/hyperopt*
+/plots*
+/tables*
+/flowcharts*
