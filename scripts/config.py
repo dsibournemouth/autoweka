@@ -4,7 +4,7 @@ datasets = [
     'semeion', 'shuttle', 'waveform', 'winequalitywhite', 'yeast'
 ]
 
-generations = ['CV', 'DPS']
+generations = ['CV']
 
 strategies = ['DEFAULT',
               'RAND',
@@ -12,7 +12,8 @@ strategies = ['DEFAULT',
               # 'ROAR',
               'TPE']
 
-seeds = [str(s) for s in range(0, 25)]
+number_seeds = 25
+seeds = [str(s) for s in range(0, number_seeds)]
 
 methods = [
     'weka.classifiers.bayes.BayesNet',

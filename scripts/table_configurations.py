@@ -3,6 +3,7 @@ import sqlite3
 import subprocess
 import argparse
 import operator
+import numpy as np
 from config import *
 
 
@@ -26,6 +27,7 @@ def parse_configuration(configuration, complete):
         if len(option) == 2:
             tmp = option[1].split(" ")
             this_method = tmp[0].replace("weka.filters.AllFilter", "Nothing")
+            if this_method == "": this_method = "Nothing"
             this_params = tmp[1:-1] if len(tmp) > 1 else ''
             if option[0] != 'predictor' and len(this_params) > 0:
                 this_params = " ".join(this_params)
@@ -62,15 +64,45 @@ def create_frequency_table(frequency):
     return table
 
 
+def create_percentage_used_table(frequency):
+    # iterating over a predefined array for custom formatting
+    if len(frequency.keys()) > 1:
+        custom_keys = ['missing_values', 'outliers', 'transformation',
+                       'dimensionality_reduction', 'sampling', 'predictor', 'meta']
+    else:
+        return ""
+
+    percentage_used = dict()
+    line = ""
+
+    for key in custom_keys:
+        # try:
+        total = 0
+        total_nothing = 0
+        for element in frequency[key]:
+            total += element[1]
+            if element[0] == "Nothing":
+                total_nothing += 1
+
+        percentage_used[key] = (1 - float(total_nothing) / total) * 100
+        line += "%0.2f," % percentage_used[key]
+
+        # except:
+        #   line += "0,"
+        #  pass
+
+    return line[:-1]
+
+
 def table_header(complete):
-    table = '<table id="myTable" class="tablesorter" style="border-collapse: collapse;">'
+    table = '<table id="myTable" class="tablesorter" style="border-collapse: collapse;">\n'
     if complete:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>missing values</th><th>outliers</th><th>transformation</th><th>dimensionality reduction</th> \
-              <th>sampling</th><th>predictor</th><th>meta</th><th>CV RMSE</th><th>Test RMSE</th><th>Evaluations</th></tr></thead>'
+              <th>sampling</th><th>predictor</th><th>meta</th><th>CV RMSE</th><th>Test RMSE</th><th>Evaluations</th></tr></thead>\n'
     else:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
-              <th>predictor</th><th>CV RMSE</th><th>Test RMSE</th></tr></thead>'
+              <th>predictor</th><th>CV RMSE</th><th>Test RMSE</th></tr></thead>\n'
 
     return table
 
@@ -86,7 +118,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>' % (
+               '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>\n' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['missing_values']['method'], params['missing_values']['params'],
                    params['outliers']['method'], params['outliers']['params'],
@@ -99,17 +131,40 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
     else:
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td><td>%s</td></tr>' % (
+               '<td>%s</td><td>%s</td></tr>\n' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['predictor']['method'], params['predictor']['params'],
                    error, test_error)
 
 
+def average_similarity(matrix):
+    rows = len(matrix)
+    if rows == 0:
+        return 0
+
+    columns = len(matrix[0])
+
+    similarities = []
+    for i in range(0, rows):
+        for j in range(i + 1, rows):
+            row_similarity = 0
+            for k in range(0, columns):
+                row_similarity += 1 if matrix[i][k] == matrix[j][k] else 0
+            similarities.append(float(row_similarity) / columns)
+
+    return np.mean(similarities)
+
+
 def create_table(results, best_error_seed, best_test_error_seed, complete):
     table = table_header(complete)
-    table += '<tbody>'
+    table += '<tbody>\n'
 
     frequency = dict()
+    matrix = []
+    matrix_preprocessing = []
+    matrix_predictor = []
+
+    cv_errors = []
 
     for result in results:
         dataset = result[0]
@@ -126,7 +181,35 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
         elif seed is best_test_error_seed:
             tr_class = 'border: 2px solid lightblue;'
 
-        table += table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations, complete)
+        table += table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations,
+                           complete)
+        if complete:
+            matrix.append([
+                params['missing_values']['method'],
+                params['outliers']['method'],
+                params['transformation']['method'],
+                params['dimensionality_reduction']['method'],
+                params['sampling']['method'],
+                params['predictor']['method'],
+                params['meta']['method']
+            ])
+            matrix_preprocessing.append([
+                params['missing_values']['method'],
+                params['outliers']['method'],
+                params['transformation']['method'],
+                params['dimensionality_reduction']['method'],
+                params['sampling']['method']
+            ])
+            matrix_predictor.append([params['predictor']['method']])
+        else:
+            matrix.append([
+                params['predictor']['method']
+            ])
+
+        try:
+            cv_errors.append(float(error))
+        except:
+            pass
 
         # update frequencies
         for key in params.keys():
@@ -136,11 +219,24 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
                 frequency[key][params[key]['method']] = 0
             frequency[key][params[key]['method']] += 1
 
-    table += '</tbody></table>'
+    table += '</tbody></table>\n'
+
+    sim = average_similarity(matrix)
+    table += '<strong>Average flow similarity: %0.2f &#37;</strong><br/>\n' % (sim * 100)
+
+    sim_predictor = average_similarity(matrix_predictor)
+    table += '<strong>Average predictor similarity: %0.2f &#37;</strong><br/>\n' % (sim_predictor * 100)
+
+    sim_preprocessing = average_similarity(matrix_preprocessing)
+    table += '<strong>Average preprocessing similarity: %0.2f &#37;</strong><br/>\n' % (sim_preprocessing * 100)
+
+    cv_variance = np.var(cv_errors)
+    table += '<strong>CV error variance: %0.4f</strong><br/>\n' % cv_variance
 
     frequency_table = create_frequency_table(frequency)
-
     table += frequency_table
+
+    table += "\n<div>Percentage used: " + create_percentage_used_table(frequency) + "</div>\n"
 
     return table
 
@@ -200,16 +296,16 @@ def main():
 
     plots = ''
     if strategy not in ['DEFAULT', 'RAND']:
-        plots = '<img src="../plots/trajectories-%s.%s.%s.scatter.png" />' % (dataset, strategy, generation)
+        plots = '<img src="../plots/trajectories-%s.%s.%s.scatter.png" />\n' % (dataset, strategy, generation)
 
     css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
     javascript = '<script type="text/javascript" src="js/jquery-latest.js"></script>' \
                  '<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>' \
                  '<script>$(document).ready(function(){$("#myTable").tablesorter();});</script>'
 
-    html = '<html><head>%s%s</head>' % (css, javascript)
-    html += '<body><h1>Components of best configurations</h1>' \
-            '<h2>Dataset: %s - Strategy: %s - Generation: %s</h2>' % (dataset, strategy, generation)
+    html = '<html><head>%s%s</head>\n' % (css, javascript)
+    html += '<body><h1>Components of best configurations</h1>\n' \
+            '<h2>Dataset: %s - Strategy: %s - Generation: %s</h2>\n' % (dataset, strategy, generation)
     html += table
     html += plots
     html += '</body></html>'
