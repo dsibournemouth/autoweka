@@ -27,6 +27,7 @@ import java.util.Vector;
 import weka.classifiers.Classifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.UpdateableClassifier;
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
@@ -117,7 +118,7 @@ import weka.core.neighboursearch.NearestNeighbourSearch;
  * @version $Revision: 8034 $ 
  */
 public class LWL 
-  extends SingleClassifierEnhancer
+  extends FilteredClassifier
   implements UpdateableClassifier, WeightedInstancesHandler, 
              TechnicalInformationHandler {
 

@@ -24,6 +24,7 @@ package weka.classifiers;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Option;
 import weka.core.Randomizable;
 import weka.core.Utils;
@@ -36,7 +37,7 @@ import weka.core.Utils;
  * @version $Revision: 8034 $
  */
 public abstract class RandomizableSingleClassifierEnhancer
-  extends SingleClassifierEnhancer implements Randomizable {
+  extends FilteredClassifier implements Randomizable {
 
   /** for serialization */
   private static final long serialVersionUID = 558286687096157160L;

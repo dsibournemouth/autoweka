@@ -100,7 +100,7 @@ import weka.filters.unsupervised.attribute.MakeIndicator;
  * @version $Revision: 8034 $ 
 */
 public class ClassificationViaRegression 
-  extends SingleClassifierEnhancer
+  extends FilteredClassifier
   implements TechnicalInformationHandler {
 
   /** for serialization */
