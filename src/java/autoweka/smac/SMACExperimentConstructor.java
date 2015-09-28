@@ -1,22 +1,20 @@
 package autoweka.smac;
 
-import java.util.ArrayList;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import autoweka.Conditional;
 import autoweka.ExperimentConstructor;
 import autoweka.Parameter;
-import autoweka.ClassParams;
 import autoweka.ParameterConditionalGroup;
 import autoweka.Util;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Map;
 
 public class SMACExperimentConstructor extends ExperimentConstructor
 {
