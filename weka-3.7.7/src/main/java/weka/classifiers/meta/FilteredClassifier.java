@@ -276,7 +276,7 @@ public class FilteredClassifier
       filterSpec[0] = "";
       setFilter((Filter) Utils.forName(Filter.class, filterName, filterSpec));
     } else {
-      setFilter(new weka.filters.supervised.attribute.Discretize());
+      setFilter(new weka.filters.AllFilter());
     }
 
     super.setOptions(options);
