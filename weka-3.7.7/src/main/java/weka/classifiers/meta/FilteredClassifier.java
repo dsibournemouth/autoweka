@@ -24,6 +24,8 @@ package weka.classifiers.meta;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import weka.classifiers.AbstractClassifier;
+import weka.classifiers.Classifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
@@ -33,6 +35,7 @@ import weka.core.Instances;
 import weka.core.Option;
 import weka.core.OptionHandler;
 import weka.core.RevisionUtils;
+import weka.core.SerializedObject;
 import weka.core.Utils;
 import weka.filters.Filter;
 
@@ -106,10 +109,10 @@ public class FilteredClassifier
   implements Drawable {
 
   /** for serialization */
-  static final long serialVersionUID = -4523450618538717400L;
+  private static final long serialVersionUID = -7114868260359395521L;
   
   /** The filter */
-  protected Filter m_Filter = new weka.filters.supervised.attribute.AttributeSelection();
+  protected Filter m_Filter = new weka.filters.AllFilter();
 
   /** The instance structure of the filtered instances */
   protected Instances m_FilteredInstances;
@@ -118,7 +121,7 @@ public class FilteredClassifier
    * Returns a string describing this classifier
    * @return a description of the classifier suitable for
    * displaying in the explorer/experimenter gui
-   */
+ */
   public String globalInfo() {
     return   "Class for running an arbitrary classifier on data that has been passed "
       + "through an arbitrary filter. Like the classifier, the structure of the filter "
@@ -132,17 +135,20 @@ public class FilteredClassifier
    * @return the default classifier classname
    */
   protected String defaultClassifierString() {
-    
-    return "weka.classifiers.trees.J48";
+    return "weka.classifiers.rules.ZeroR";
   }
 
   /**
    * Default constructor.
    */
   public FilteredClassifier() {
-
-    m_Classifier = new weka.classifiers.trees.J48();
-    m_Filter = new weka.filters.supervised.attribute.Discretize();
+    m_Classifier = new weka.classifiers.rules.ZeroR();
+    m_Filter = new weka.filters.AllFilter();
+  }
+  
+  public FilteredClassifier(Classifier classifier, Filter filter) throws Exception {
+    m_Classifier = AbstractClassifier.makeCopy(classifier);
+    m_Filter = Filter.makeCopy(filter);
   }
 
   /**
@@ -333,6 +339,9 @@ public class FilteredClassifier
   protected String getFilterSpec() {
     
     Filter c = getFilter();
+    if (c == null) {
+      return "weka.filters.AllFilter";
+    }
     if (c instanceof OptionHandler) {
       return c.getClass().getName() + " "
 	+ Utils.joinOptions(((OptionHandler)c).getOptions());
@@ -462,15 +471,47 @@ public class FilteredClassifier
     if (m_FilteredInstances == null) {
       return "FilteredClassifier: No model built yet.";
     }
-
+    
+    String classifierSpec = "";
+    try {
+      classifierSpec = getClassifierSpec();
+    }
+    catch(Exception e){
+      classifierSpec = "[ERROR] " + e.getMessage();
+    }
+    
+    String classifierString = "";
+    try{
+      classifierString = m_Classifier.toString();
+    }
+    catch(Exception e){
+      classifierString = "[ERROR] " + e.getMessage();
+    }
+    
+    String filterSpec = "";
+    try{
+      filterSpec = getFilterSpec();
+    }
+    catch(Exception e){
+      filterSpec = "[ERROR] " + e.getMessage();
+    }
+    
+    String filterString = "";
+    try {
+      filterString = m_FilteredInstances.toString();
+    }
+    catch(Exception e){
+      filterString = "[ERROR] " + e.getMessage();
+    }
+    
     String result = "FilteredClassifier using "
-      + getClassifierSpec()
+      + classifierSpec
       + " on data filtered through "
-      + getFilterSpec()
+      + filterSpec
       + "\n\nFiltered Header\n"
-      + m_FilteredInstances.toString()
+      + filterString
       + "\n\nClassifier Model\n"
-      + m_Classifier.toString();
+      + classifierString;
     return result;
   }
   
@@ -481,6 +522,26 @@ public class FilteredClassifier
    */
   public String getRevision() {
     return RevisionUtils.extract("$Revision: 8034 $");
+  }
+  
+  /**
+   * Creates a given number of deep copies of the given classifier using serialization.
+   *
+   * @param model the classifier to copy
+   * @param num the number of classifier copies to create.
+   * @return an array of classifiers.
+   * @exception Exception if an error occurs
+   */
+  public static FilteredClassifier [] makeCopies(FilteredClassifier model, int num) throws Exception {
+
+    if (model == null) {
+      throw new Exception("No model classifier set");
+    }
+    FilteredClassifier [] classifiers = new FilteredClassifier [num];
+    for(int i = 0; i < classifiers.length; i++) {
+      classifiers[i] = new FilteredClassifier(model.m_Classifier, model.m_Filter);
+    }
+    return classifiers;
   }
 
   /**

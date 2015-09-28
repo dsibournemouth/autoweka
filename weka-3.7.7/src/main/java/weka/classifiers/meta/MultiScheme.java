@@ -28,6 +28,7 @@ import java.util.Vector;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.RandomizableMultipleClassifiersCombiner;
+import weka.classifiers.RandomizableMultipleFilteredClassifiersCombiner;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
@@ -68,13 +69,13 @@ import weka.core.Utils;
  * @version $Revision: 8034 $
  */
 public class MultiScheme 
-  extends RandomizableMultipleClassifiersCombiner {
+  extends RandomizableMultipleFilteredClassifiersCombiner {
 
   /** for serialization */
-  static final long serialVersionUID = 5710744346128957520L;
+  private static final long serialVersionUID = 3987322782203939531L;
   
   /** The classifier that had the best performance on training data. */
-  protected Classifier m_Classifier;
+  protected FilteredClassifier m_Classifier;
  
   /** The index into the vector for the selected scheme */
   protected int m_ClassifierIndex;
@@ -193,7 +194,7 @@ public class MultiScheme
    *
    * @param classifiers an array of classifiers with all options set.
    */
-  public void setClassifiers(Classifier [] classifiers) {
+  public void setClassifiers(FilteredClassifier [] classifiers) {
 
     m_Classifiers = classifiers;
   }
@@ -203,7 +204,7 @@ public class MultiScheme
    *
    * @return the array of Classifiers
    */
-  public Classifier [] getClassifiers() {
+  public FilteredClassifier [] getClassifiers() {
 
     return m_Classifiers;
   }
@@ -214,7 +215,7 @@ public class MultiScheme
    * @param index the index of the classifier wanted
    * @return the Classifier
    */
-  public Classifier getClassifier(int index) {
+  public FilteredClassifier getClassifier(int index) {
 
     return m_Classifiers[index];
   }
@@ -233,7 +234,7 @@ public class MultiScheme
     if (m_Classifiers.length < index) {
       return "";
     }
-    Classifier c = getClassifier(index);
+    FilteredClassifier c = getClassifier(index);
     if (c instanceof OptionHandler) {
       return c.getClass().getName() + " "
 	+ Utils.joinOptions(((OptionHandler)c).getOptions());
@@ -370,12 +371,12 @@ public class MultiScheme
     }
     Instances train = newData;               // train on all data by default
     Instances test = newData;               // test on training data by default
-    Classifier bestClassifier = null;
+    FilteredClassifier bestClassifier = null;
     int bestIndex = -1;
     double bestPerformance = Double.NaN;
     int numClassifiers = m_Classifiers.length;
     for (int i = 0; i < numClassifiers; i++) {
-      Classifier currentClassifier = getClassifier(i);
+      FilteredClassifier currentClassifier = getClassifier(i);
       Evaluation evaluation;
       if (m_NumXValFolds > 1) {
 	evaluation = new Evaluation(newData);

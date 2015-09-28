@@ -104,10 +104,10 @@ public class ClassificationViaRegression
   implements TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = 4500023123618669859L;
-  
+  private static final long serialVersionUID = 7371309864359080058L;
+
   /** The classifiers. (One for each class.) */
-  private Classifier[] m_Classifiers;
+  private FilteredClassifier[] m_Classifiers;
 
   /** The filters used to transform the class. */
   private MakeIndicator[] m_ClassFilters;
@@ -117,7 +117,7 @@ public class ClassificationViaRegression
    */
   public ClassificationViaRegression() {
     
-    m_Classifier = new weka.classifiers.trees.M5P();
+    m_Classifier = new FilteredClassifier();
   }
     
   /**
@@ -162,7 +162,7 @@ public class ClassificationViaRegression
    */
   protected String defaultClassifierString() {
     
-    return "weka.classifiers.trees.M5P";
+    return "weka.classifiers.meta.FilteredClassifier";
   }
 
   /**
@@ -198,7 +198,7 @@ public class ClassificationViaRegression
     insts = new Instances(insts);
     insts.deleteWithMissingClass();
     
-    m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, insts.numClasses());
+    m_Classifiers = FilteredClassifier.makeCopies(this, insts.numClasses());
     m_ClassFilters = new MakeIndicator[insts.numClasses()];
     for (int i = 0; i < insts.numClasses(); i++) {
       m_ClassFilters[i] = new MakeIndicator();

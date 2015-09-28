@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import weka.classifiers.Classifier;
-import weka.classifiers.RandomizableMultipleClassifiersCombiner;
+import weka.classifiers.RandomizableMultipleFilteredClassifiersCombiner;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Environment;
@@ -121,12 +120,11 @@ import weka.core.Utils;
  * @version $Revision: 8034 $
  */
 public class Vote
-  extends RandomizableMultipleClassifiersCombiner
+  extends RandomizableMultipleFilteredClassifiersCombiner
   implements TechnicalInformationHandler, EnvironmentHandler {
     
   /** for serialization */
-  static final long serialVersionUID = -637891196294399624L;
-  
+  private static final long serialVersionUID = -2313609890290174819L;
   /** combination rule: Average of Probabilities */
   public static final int AVERAGE_RULE = 1;
   /** combination rule: Product of Probabilities (only nominal classes) */
@@ -160,7 +158,7 @@ public class Vote
   protected List<String> m_classifiersToLoad = new ArrayList<String>();
   
   /** List of de-serialized pre-built classifiers to include in the ensemble */
-  protected List<Classifier> m_preBuiltClassifiers = new ArrayList<Classifier>();
+  protected List<FilteredClassifier> m_preBuiltClassifiers = new ArrayList<FilteredClassifier>();
   
   /** Environment variables */
   protected transient Environment m_env = Environment.getSystemWide();
@@ -385,9 +383,9 @@ public class Vote
       
       int index = 0;
       if (m_Classifiers.length == 1 && 
-          m_Classifiers[0] instanceof weka.classifiers.rules.ZeroR) {
+          m_Classifiers[0].getClassifier() instanceof weka.classifiers.rules.ZeroR) {
         // remove the single ZeroR
-        m_Classifiers = new Classifier[0];
+        m_Classifiers = new FilteredClassifier[0];
       }
     }
     
@@ -424,7 +422,7 @@ public class Vote
       ObjectInputStream is = 
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(toLoad)));
       Object c = is.readObject();
-      if (!(c instanceof Classifier)) {
+      if (!(c instanceof FilteredClassifier)) {
         throw new Exception("\"" + path + "\" does not contain a classifier!");
       }
       Object header = null;
@@ -440,7 +438,7 @@ public class Vote
             + path + "\"");
       }
 
-      m_preBuiltClassifiers.add((Classifier) c);        
+      m_preBuiltClassifiers.add((FilteredClassifier) c);        
     }
   }
 
@@ -864,7 +862,7 @@ public class Vote
       result += '\t' + getClassifierSpec(i) + '\n';
     }
     
-    for (Classifier c : m_preBuiltClassifiers) {
+    for (FilteredClassifier c : m_preBuiltClassifiers) {
       result += "\t" + c.getClass().getName() 
         + Utils.joinOptions(((OptionHandler)c).getOptions()) + "\n";  
     }

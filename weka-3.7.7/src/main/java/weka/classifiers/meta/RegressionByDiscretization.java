@@ -125,11 +125,11 @@ import weka.filters.unsupervised.attribute.Discretize;
  * @version $Revision: 8034 $
  */
 public class RegressionByDiscretization 
-  extends SingleClassifierEnhancer implements IntervalEstimator, ConditionalDensityEstimator {
+  extends FilteredClassifier implements IntervalEstimator, ConditionalDensityEstimator {
   
   /** for serialization */
-  static final long serialVersionUID = 5066426153134050378L;
-  
+  private static final long serialVersionUID = -2546427369060453746L;
+
   /** The discretization filter. */
   protected Discretize m_Discretizer = new Discretize();
 

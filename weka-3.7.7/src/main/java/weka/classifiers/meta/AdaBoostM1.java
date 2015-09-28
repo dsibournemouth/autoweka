@@ -27,7 +27,7 @@ import java.util.Vector;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.RandomizableIteratedSingleClassifierEnhancer;
+import weka.classifiers.RandomizableIteratedFilteredClassifierEnhancer;
 import weka.classifiers.Sourcable;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
@@ -112,11 +112,11 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $ 
  */
 public class AdaBoostM1 
-  extends RandomizableIteratedSingleClassifierEnhancer 
+  extends RandomizableIteratedFilteredClassifierEnhancer 
   implements WeightedInstancesHandler, Sourcable, TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -7378107808933117974L;
+  private static final long serialVersionUID = 4770107372367586832L;
   
   /** Max num iterations tried to find classifier with non-zero error. */ 
   private static int MAX_NUM_RESAMPLING_ITERATIONS = 10;
@@ -145,6 +145,7 @@ public class AdaBoostM1
   public AdaBoostM1() {
     
     m_Classifier = new weka.classifiers.trees.DecisionStump();
+    m_Filter = new weka.filters.AllFilter();
   }
     
   /**
@@ -750,8 +751,13 @@ public class AdaBoostM1
     } else {
       text.append("AdaBoostM1: Base classifiers and their weights: \n\n");
       for (int i = 0; i < m_NumIterationsPerformed ; i++) {
-	text.append(m_Classifiers[i].toString() + "\n\n");
-	text.append("Weight: " + Utils.roundDouble(m_Betas[i], 2) + "\n\n");
+	try{
+	  text.append(m_Classifiers[i].toString() + "\n\n");
+	  text.append("Weight: " + Utils.roundDouble(m_Betas[i], 2) + "\n\n");
+	}
+	catch(NullPointerException e){
+	  text.append("Unable to load classifier #" + i + "\n\n");
+	}
       }
       text.append("Number of performed Iterations: " 
 		  + m_NumIterationsPerformed + "\n");

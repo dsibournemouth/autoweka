@@ -32,7 +32,7 @@ import java.util.Vector;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.CostMatrix;
-import weka.classifiers.RandomizableSingleClassifierEnhancer;
+import weka.classifiers.RandomizableFilteredClassifierEnhancer;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Drawable;
@@ -101,12 +101,11 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $
  */
 public class CostSensitiveClassifier 
-  extends RandomizableSingleClassifierEnhancer
+  extends RandomizableFilteredClassifierEnhancer
   implements OptionHandler, Drawable {
 
   /** for serialization */
-  static final long serialVersionUID = -720658209263002404L;
-  
+  private static final long serialVersionUID = -6640073407322171147L;
   /** load cost matrix on demand */
   public static final int MATRIX_ON_DEMAND = 1;
   /** use explicit cost matrix */
@@ -145,14 +144,14 @@ public class CostSensitiveClassifier
    */
   protected String defaultClassifierString() {
     
-    return "weka.classifiers.rules.ZeroR";
+    return "weka.classifiers.meta.FilteredClassifier";
   }
 
   /**
    * Default constructor.
    */
   public CostSensitiveClassifier() {
-    m_Classifier = new weka.classifiers.rules.ZeroR();
+    m_Classifier = new FilteredClassifier();
   }
 
   /**

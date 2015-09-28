@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import weka.classifiers.Classifier;
-import weka.classifiers.IteratedSingleClassifierEnhancer;
+import weka.classifiers.IteratedFilteredClassifierEnhancer;
 import weka.classifiers.rules.ZeroR;
 import weka.core.AdditionalMeasureProducer;
 import weka.core.Capabilities;
@@ -99,14 +99,14 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $
  */
 public class AdditiveRegression 
-  extends IteratedSingleClassifierEnhancer 
+  extends IteratedFilteredClassifierEnhancer 
   implements OptionHandler,
 	     AdditionalMeasureProducer,
 	     WeightedInstancesHandler,
 	     TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -2368937577670527151L;
+  private static final long serialVersionUID = -6968788780513583708L;
   
   /**
    * Shrinkage (Learning rate). Default = no shrinkage.

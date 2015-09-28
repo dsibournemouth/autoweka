@@ -28,7 +28,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import weka.classifiers.Classifier;
-import weka.classifiers.RandomizableParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.RandomizableParallelIteratedFilteredClassifierEnhancer;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Option;
@@ -127,12 +127,12 @@ import weka.filters.unsupervised.attribute.Remove;
  * @version $Revision: 8034 $
  */
 public class RandomSubSpace
-  extends RandomizableParallelIteratedSingleClassifierEnhancer 
+  extends RandomizableParallelIteratedFilteredClassifierEnhancer 
   implements WeightedInstancesHandler, TechnicalInformationHandler {
 
   /** for serialization */
-  private static final long serialVersionUID = 1278172513912424947L;
-  
+  private static final long serialVersionUID = -2890400415151441724L;
+
   /** The size of each bag sample, as a percentage of the training size */
   protected double m_SubSpaceSize = 0.5;
 

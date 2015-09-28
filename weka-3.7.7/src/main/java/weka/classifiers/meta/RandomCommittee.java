@@ -23,8 +23,7 @@ package weka.classifiers.meta;
 
 import java.util.Random;
 
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.RandomizableParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.RandomizableParallelIteratedFilteredClassifierEnhancer;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Randomizable;
@@ -88,11 +87,11 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $
  */
 public class RandomCommittee 
-  extends RandomizableParallelIteratedSingleClassifierEnhancer
+  extends RandomizableParallelIteratedFilteredClassifierEnhancer
   implements WeightedInstancesHandler {
     
   /** for serialization */
-  static final long serialVersionUID = -9204394360557300092L;
+  private static final long serialVersionUID = -5974651715454964832L;
   
   /** training data */
   protected Instances m_data;
@@ -149,7 +148,7 @@ public class RandomCommittee
       throw new IllegalArgumentException("Base learner must implement Randomizable!");
     }
 
-    m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, m_NumIterations);
+    m_Classifiers = FilteredClassifier.makeCopies(this, m_NumIterations);
 
     Random random = m_data.getRandomNumberGenerator(m_Seed);
     for (int j = 0; j < m_Classifiers.length; j++) {
@@ -218,6 +217,8 @@ public class RandomCommittee
    * @return description of the committee as a string
    */
   public String toString() {
+    
+    super.toString();
     
     if (m_Classifiers == null) {
       return "RandomCommittee: No model built yet.";

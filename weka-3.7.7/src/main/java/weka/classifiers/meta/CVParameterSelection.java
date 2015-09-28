@@ -22,14 +22,12 @@
 package weka.classifiers.meta;
 
 import java.io.Serializable;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
 import weka.classifiers.Evaluation;
-import weka.classifiers.RandomizableSingleClassifierEnhancer;
+import weka.classifiers.RandomizableFilteredClassifierEnhancer;
 import weka.core.Capabilities;
 import weka.core.Drawable;
 import weka.core.FastVector;
@@ -115,11 +113,11 @@ import weka.core.Utils;
  * @version $Revision: 8181 $ 
 */
 public class CVParameterSelection 
-  extends RandomizableSingleClassifierEnhancer
+  extends RandomizableFilteredClassifierEnhancer
   implements Drawable, Summarizable, TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -6529603380876641265L;
+  private static final long serialVersionUID = -6426767615902707657L;
   
   /**
    * A data structure to hold values associated with a single

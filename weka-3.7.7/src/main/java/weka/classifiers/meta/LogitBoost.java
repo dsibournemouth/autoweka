@@ -28,8 +28,9 @@ import java.util.Vector;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.RandomizableIteratedSingleClassifierEnhancer;
+import weka.classifiers.RandomizableIteratedFilteredClassifierEnhancer;
 import weka.classifiers.Sourcable;
+import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
@@ -128,15 +129,15 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $ 
  */
 public class LogitBoost 
-  extends RandomizableIteratedSingleClassifierEnhancer
+  extends RandomizableIteratedFilteredClassifierEnhancer
   implements Sourcable, WeightedInstancesHandler, TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -3905660358715833753L;
-  
+  private static final long serialVersionUID = 2360546571426069394L;
+
   /** Array for storing the generated base classifiers. 
    Note: we are hiding the variable from IteratedSingleClassifierEnhancer*/
-  protected Classifier [][] m_Classifiers;
+  protected FilteredClassifier [][] m_Classifiers;
 
   /** The number of classes */
   protected int m_NumClasses;
@@ -179,7 +180,7 @@ public class LogitBoost
   protected double m_Offset = 0.0;
     
   /** a ZeroR model in case no model can be built from the data */
-  protected Classifier m_ZeroR;
+  protected ZeroR m_ZeroR;
     
   /**
    * Returns a string describing classifier
@@ -232,7 +233,7 @@ public class LogitBoost
    */
   protected String defaultClassifierString() {
     
-    return "weka.classifiers.trees.DecisionStump";
+    return "weka.classifiers.meta.FilteredClassifier";
   }
 
   /**
@@ -686,7 +687,7 @@ public class LogitBoost
       System.err.println(
 	  "Cannot build model (only class attribute present in data!), "
 	  + "using ZeroR model instead!");
-      m_ZeroR = new weka.classifiers.rules.ZeroR();
+      m_ZeroR = new ZeroR();
       m_ZeroR.buildClassifier(data);
       return;
     }
@@ -701,9 +702,9 @@ public class LogitBoost
     if (m_Debug) {
       System.err.println("Creating base classifiers");
     }
-    m_Classifiers = new Classifier [m_NumClasses][];
+    m_Classifiers = new FilteredClassifier [m_NumClasses][];
     for (int j = 0; j < m_NumClasses; j++) {
-      m_Classifiers[j] = AbstractClassifier.makeCopies(m_Classifier,
+      m_Classifiers[j] = FilteredClassifier.makeCopies(this,
 					       getNumIterations());
     }
 
@@ -968,10 +969,10 @@ public class LogitBoost
    * 
    * @return the built classifiers
    */
-  public Classifier[][] classifiers() {
+  public FilteredClassifier[][] classifiers() {
 
-    Classifier[][] classifiers = 
-      new Classifier[m_NumClasses][m_NumGenerated];
+    FilteredClassifier[][] classifiers = 
+      new FilteredClassifier[m_NumClasses][m_NumGenerated];
     for (int j = 0; j < m_NumClasses; j++) {
       for (int i = 0; i < m_NumGenerated; i++) {
 	classifiers[j][i] = m_Classifiers[j][i];

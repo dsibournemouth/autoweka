@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
-import weka.classifiers.RandomizableParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.RandomizableParallelIteratedFilteredClassifierEnhancer;
 import weka.core.AdditionalMeasureProducer;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -124,12 +124,12 @@ import weka.core.WeightedInstancesHandler;
  * @version $Revision: 8034 $
  */
 public class Bagging
-  extends RandomizableParallelIteratedSingleClassifierEnhancer 
+  extends RandomizableParallelIteratedFilteredClassifierEnhancer 
   implements WeightedInstancesHandler, AdditionalMeasureProducer,
              TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -505879962237199703L;
+  private static final long serialVersionUID = 1152207284926620045L;
   
   /** The size of each bag sample, as a percentage of the training size */
   protected int m_BagSizePercent = 100;

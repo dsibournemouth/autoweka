@@ -29,6 +29,7 @@ import java.util.Vector;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.RandomizableParallelMultipleClassifiersCombiner;
+import weka.classifiers.RandomizableParallelMultipleFilteredClassifiersCombiner;
 import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
 import weka.core.Capabilities;
@@ -99,11 +100,11 @@ import weka.core.Utils;
  * @version $Revision: 8034 $ 
  */
 public class Stacking 
-  extends RandomizableParallelMultipleClassifiersCombiner
+  extends RandomizableParallelMultipleFilteredClassifiersCombiner
   implements TechnicalInformationHandler {
 
   /** for serialization */
-  static final long serialVersionUID = 5134738557155845452L;
+  private static final long serialVersionUID = 5685368630396543400L;
   
   /** The meta classifier */
   protected Classifier m_MetaClassifier = new ZeroR();

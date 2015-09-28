@@ -28,7 +28,7 @@ import java.util.Vector;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-import weka.classifiers.RandomizableSingleClassifierEnhancer;
+import weka.classifiers.RandomizableFilteredClassifierEnhancer;
 import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
 import weka.core.Capabilities;
@@ -101,14 +101,14 @@ import weka.filters.unsupervised.instance.RemoveWithValues;
  * @version $Revision: 8034 $
  */
 public class MultiClassClassifier 
-  extends RandomizableSingleClassifierEnhancer 
+  extends RandomizableFilteredClassifierEnhancer 
   implements OptionHandler {
 
   /** for serialization */
-  static final long serialVersionUID = -3879602011542849141L;
+  private static final long serialVersionUID = -4585169258546707727L;
   
   /** The classifiers. */
-  protected Classifier [] m_Classifiers;
+  protected FilteredClassifier [] m_Classifiers;
 
   /** Use pairwise coupling with 1-vs-1 */
   protected boolean m_pairwiseCoupling = false;
@@ -168,7 +168,7 @@ public class MultiClassClassifier
    */
   protected String defaultClassifierString() {
     
-    return "weka.classifiers.functions.Logistic";
+    return "weka.classifiers.meta.FilteredClassifier";
   }
 
   /** 
@@ -446,7 +446,7 @@ public class MultiClassClassifier
     int numClassifiers = insts.numClasses();
     if (numClassifiers <= 2) {
 
-      m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, 1);
+      m_Classifiers = FilteredClassifier.makeCopies(this, 1);
       m_Classifiers[0].buildClassifier(insts);
 
       m_ClassFilters = null;
@@ -464,7 +464,7 @@ public class MultiClassClassifier
       }
 
       numClassifiers = pairs.size();
-      m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, numClassifiers);
+      m_Classifiers = FilteredClassifier.makeCopies(this, numClassifiers);
       m_ClassFilters = new Filter[numClassifiers];
       m_SumOfWeights = new double[numClassifiers];
 
@@ -520,7 +520,7 @@ public class MultiClassClassifier
         throw new Exception("Unrecognized correction code type");
       }
       numClassifiers = code.size();
-      m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, numClassifiers);
+      m_Classifiers = FilteredClassifier.makeCopies(this, numClassifiers);
       m_ClassFilters = new MakeIndicator[numClassifiers];
       for (int i = 0; i < m_Classifiers.length; i++) {
 	m_ClassFilters[i] = new MakeIndicator();
