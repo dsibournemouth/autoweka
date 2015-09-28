@@ -12,6 +12,9 @@ import autoweka.Experiment;
 import autoweka.InstanceGenerator;
 import autoweka.Parameter;
 import autoweka.SubProcessWrapper;
+import autoweka.Trajectory;
+import autoweka.Trajectory.Point;
+import autoweka.TrajectoryGroup;
 import autoweka.Util;
 
 class RandomSearchWorker
@@ -23,6 +26,8 @@ class RandomSearchWorker
     ClassParams mParams;
     File mExperimentDir;
     List<String> mInstances;
+    Trajectory trajectory;
+    TrajectoryGroup trajectoryGroup;
 
     public static void main(String[] args){
         RandomSearchWorker worker = new RandomSearchWorker(new File(args[0]).getAbsoluteFile().getParentFile(), Experiment.fromXML(args[0]), args[1]);
@@ -43,19 +48,45 @@ class RandomSearchWorker
         mExperiment = experiment;
         mExperimentDir = experimentDir;
         mTimeRemaining = experiment.tunerTimeout;
+        trajectory = new Trajectory(seed);
+        trajectoryGroup = new TrajectoryGroup(experiment);
 
         mParams = new ClassParams(experimentDir.getAbsolutePath() + File.separator + "autoweka.params");
     }
 
     public void run()
     {
+      	
+      	RandomSearchResult bestResult = null;
+      	double bestError = 1E10;
+      	double totalTime = 0;
+      	int numTotalEvaluations = 0;
+      	
         while(mTimeRemaining > 0)
         {
-            evaluatePoint();
+          RandomSearchResult res = evaluatePoint();
+          double error = 0;
+          // Skip test error (the last element in the results array)
+          for(RandomSearchResult.InstanceResult instanceResult : res.results.subList(0, res.results.size()-1)){
+            error += instanceResult.error;
+            totalTime += instanceResult.time;
+          }
+          error /= res.results.size()-1;
+          numTotalEvaluations += res.results.size();
+          
+          if (error < bestError) {
+            bestError = error;
+            bestResult = res;
+            trajectory.addPoint(new Point(totalTime, error, res.argString));
+          }
         }
+        trajectory.setEvaluationCounts(numTotalEvaluations, -1, -1);
+        
+        trajectoryGroup.addTrajectory(trajectory);
+        trajectoryGroup.toXML(mExperimentDir + File.separator + mExperimentDir.getName() + ".trajectories." + mSeed);
     }
 
-    private void evaluatePoint(){
+    private RandomSearchResult evaluatePoint(){
         boolean resultExists = true;
         String argString = null;
         RandomSearchResult res = null;
@@ -93,5 +124,6 @@ class RandomSearchWorker
         }
 
         res.saveResultFile(mExperimentDir);
+        return res;
     }
 }
