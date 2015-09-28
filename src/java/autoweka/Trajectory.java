@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement(name="trajectory")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Trajectory
+public class Trajectory extends XmlSerializable
 {
     /** Representation of a single point along the optimisation run
      */
