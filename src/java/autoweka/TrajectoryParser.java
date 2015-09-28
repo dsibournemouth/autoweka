@@ -9,6 +9,7 @@ import java.util.List;
  */
 public abstract class TrajectoryParser
 {
+    
     /** Does the work for a specific trajectory */
     public abstract Trajectory parseTrajectory(Experiment experiment, File folder, String seed);
 
@@ -47,6 +48,9 @@ public abstract class TrajectoryParser
             //Get me the experiment
             File folder = new File(experimentPath);
             Experiment experiment = Experiment.fromXML(experimentPath + File.separator + folder.getName() + ".experiment");
+            
+            if (experiment.type.equals("RandomSearch"))
+              continue;
 
             TrajectoryGroup group = new TrajectoryGroup(experiment);
 
