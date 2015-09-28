@@ -24,6 +24,7 @@ package weka.classifiers;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.Utils;
@@ -35,15 +36,16 @@ import weka.core.Utils;
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @version $Revision: 8034 $
  */
-public abstract class IteratedSingleClassifierEnhancer
-  extends SingleClassifierEnhancer {
+public abstract class IteratedFilteredClassifierEnhancer
+  extends FilteredClassifier {
 
   /** for serialization */
-  private static final long serialVersionUID = -6217979135443319724L;
+  private static final long serialVersionUID = -788415224870968962L;
 
   /** Array for storing the generated base classifiers. */
-  protected Classifier[] m_Classifiers;
+  protected FilteredClassifier[] m_Classifiers;
 
+  
   /** The number of iterations. */
   protected int m_NumIterations = 10;
 
@@ -59,7 +61,7 @@ public abstract class IteratedSingleClassifierEnhancer
     if (m_Classifier == null) {
       throw new Exception("A base classifier has not been specified!");
     }
-    m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, m_NumIterations);
+    m_Classifiers = FilteredClassifier.makeCopies(this, m_NumIterations);
   }
 
   /**

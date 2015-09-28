@@ -14,7 +14,7 @@
  */
 
 /*
- *    ParallelIteratedSingleClassifierEnhancer.java
+ *    ParallelMultipleClassifiersCombiner.java
  *    Copyright (C) 2009-2012 University of Waikato, Hamilton, New Zealand
  *
  */
@@ -27,23 +27,24 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.Utils;
 
 /**
  * Abstract utility class for handling settings common to
- * meta classifiers that build an ensemble in parallel from a single
- * base learner.
+ * meta classifiers that build an ensemble in parallel using multiple
+ * classifiers.
  *
  * @author Mark Hall (mhall{[at]}pentaho{[dot]}com)
  * @version $Revision: 8034 $
  */
-public abstract class ParallelIteratedSingleClassifierEnhancer extends
-    IteratedSingleClassifierEnhancer {
+public abstract class ParallelMultipleFilteredClassifiersCombiner extends
+    MultipleFilteredClassifiersCombiner {
 
   /** For serialization */
-  private static final long serialVersionUID = -5026378741833046436L;
+  private static final long serialVersionUID = 3400331087756380462L;
 
   /** The number of threads to have executing at any one time */
   protected int m_numExecutionSlots = 1;
@@ -161,13 +162,16 @@ public abstract class ParallelIteratedSingleClassifierEnhancer extends
    * @exception Exception if the classifier could not be built successfully
    */
   public void buildClassifier(Instances data) throws Exception {
-    super.buildClassifier(data);
 
     if (m_numExecutionSlots < 1) {
       throw new Exception("Number of execution slots needs to be >= 1!");
     }
 
     if (m_numExecutionSlots > 1) {
+      if (m_Debug) {
+        System.out.println("Starting executor pool with " + m_numExecutionSlots
+            + " slots...");
+      }
       startExecutorPool();
     }
     m_completed = 0;
@@ -205,20 +209,22 @@ public abstract class ParallelIteratedSingleClassifierEnhancer extends
    * @throws Exception if something goes wrong during the training
    * process
    */
-  protected synchronized void buildClassifiers() throws Exception {
+  protected synchronized void buildClassifiers(final Instances data) throws Exception {
 
     for (int i = 0; i < m_Classifiers.length; i++) {
       if (m_numExecutionSlots > 1) {
-	// Manuel: if this is a FilteredClassifier, all good.
-        final Classifier currentClassifier = m_Classifiers[i];
+        final FilteredClassifier currentClassifier = m_Classifiers[i];
         final int iteration = i;
-        if (m_Debug) {
-          System.out.print("Training classifier (" + (i +1) + ")");
-        }
         Runnable newTask = new Runnable() {
           public void run() {
             try {
-              currentClassifier.buildClassifier(getTrainingSet(iteration));
+              if (m_Debug) {
+                System.out.println("Training classifier (" + (iteration +1) + ")");
+              }
+              currentClassifier.buildClassifier(data);
+              if (m_Debug) {
+                System.out.println("Finished classifier (" + (iteration +1) + ")");
+              }
               completedClassifier(iteration, true);
             } catch (Exception ex) {
               ex.printStackTrace();
@@ -230,7 +236,7 @@ public abstract class ParallelIteratedSingleClassifierEnhancer extends
         // launch this task
         m_executorPool.execute(newTask);
       } else {
-        m_Classifiers[i].buildClassifier(getTrainingSet(i));
+        m_Classifiers[i].buildClassifier(data);
       }
     }
 
@@ -272,15 +278,4 @@ public abstract class ParallelIteratedSingleClassifierEnhancer extends
       block(false);
     }
   }
-
-  /**
-   * Gets a training set for a particular iteration. Implementations need
-   * to be careful with thread safety and should probably be synchronized
-   * to be on the safe side.
-   *
-   * @param iteration the number of the iteration for the requested training set
-   * @return the training set for the supplied iteration number
-   * @throws Exception if something goes wrong.
-   */
-  protected abstract Instances getTrainingSet(int iteration) throws Exception;
 }

@@ -14,7 +14,7 @@
  */
 
 /*
- *    IteratedSingleClassifierEnhancer.java
+ *    RandomizableSingleClassifierEnhancer.java
  *    Copyright (C) 2004-2012 University of Waikato, Hamilton, New Zealand
  *
  */
@@ -24,43 +24,26 @@ package weka.classifiers;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.core.Instances;
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Option;
+import weka.core.Randomizable;
 import weka.core.Utils;
 
 /**
- * Abstract utility class for handling settings common to
+ * Abstract utility class for handling settings common to randomizable
  * meta classifiers that build an ensemble from a single base learner.
  *
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @version $Revision: 8034 $
  */
-public abstract class IteratedSingleClassifierEnhancer
-  extends SingleClassifierEnhancer {
+public abstract class RandomizableFilteredClassifierEnhancer
+  extends FilteredClassifier implements Randomizable {
 
   /** for serialization */
-  private static final long serialVersionUID = -6217979135443319724L;
+  private static final long serialVersionUID = 58852642456556691L;
 
-  /** Array for storing the generated base classifiers. */
-  protected Classifier[] m_Classifiers;
-
-  /** The number of iterations. */
-  protected int m_NumIterations = 10;
-
-  /**
-   * Stump method for building the classifiers.
-   *
-   * @param data the training data to be used for generating the
-   * bagged classifier.
-   * @exception Exception if the classifier could not be built successfully
-   */
-  public void buildClassifier(Instances data) throws Exception {
-
-    if (m_Classifier == null) {
-      throw new Exception("A base classifier has not been specified!");
-    }
-    m_Classifiers = AbstractClassifier.makeCopies(m_Classifier, m_NumIterations);
-  }
+  /** The random number seed. */
+  protected int m_Seed = 1;
 
   /**
    * Returns an enumeration describing the available options.
@@ -72,9 +55,9 @@ public abstract class IteratedSingleClassifierEnhancer
     Vector newVector = new Vector(2);
 
     newVector.addElement(new Option(
-          "\tNumber of iterations.\n"
-          + "\t(default 10)",
-          "I", 1, "-I <num>"));
+          "\tRandom number seed.\n"
+          + "\t(default 1)",
+          "S", 1, "-S <num>"));
 
     Enumeration enu = super.listOptions();
     while (enu.hasMoreElements()) {
@@ -92,6 +75,9 @@ public abstract class IteratedSingleClassifierEnhancer
    * -I num <br>
    * Set the number of iterations (default 10). <p>
    *
+   * -S num <br>
+   * Set the random number seed (default 1). <p>
+   *
    * Options after -- are passed to the designated classifier.<p>
    *
    * @param options the list of options as an array of strings
@@ -99,11 +85,11 @@ public abstract class IteratedSingleClassifierEnhancer
    */
   public void setOptions(String[] options) throws Exception {
 
-    String iterations = Utils.getOption('I', options);
-    if (iterations.length() != 0) {
-      setNumIterations(Integer.parseInt(iterations));
+    String seed = Utils.getOption('S', options);
+    if (seed.length() != 0) {
+      setSeed(Integer.parseInt(seed));
     } else {
-      setNumIterations(10);
+      setSeed(1);
     }
 
     super.setOptions(options);
@@ -120,8 +106,8 @@ public abstract class IteratedSingleClassifierEnhancer
     String [] options = new String [superOptions.length + 2];
 
     int current = 0;
-    options[current++] = "-I";
-    options[current++] = "" + getNumIterations();
+    options[current++] = "-S";
+    options[current++] = "" + getSeed();
 
     System.arraycopy(superOptions, 0, options, current,
         superOptions.length);
@@ -134,25 +120,27 @@ public abstract class IteratedSingleClassifierEnhancer
    * @return tip text for this property suitable for
    * displaying in the explorer/experimenter gui
    */
-  public String numIterationsTipText() {
-    return "The number of iterations to be performed.";
+  public String seedTipText() {
+    return "The random number seed to be used.";
   }
 
   /**
-   * Sets the number of bagging iterations
-   */
-  public void setNumIterations(int numIterations) {
-
-    m_NumIterations = numIterations;
-  }
-
-  /**
-   * Gets the number of bagging iterations
+   * Set the seed for random number generation.
    *
-   * @return the maximum number of bagging iterations
+   * @param seed the seed
    */
-  public int getNumIterations() {
+  public void setSeed(int seed) {
 
-    return m_NumIterations;
+    m_Seed = seed;
+  }
+
+  /**
+   * Gets the seed for the random number generations
+   *
+   * @return the seed for the random number generation
+   */
+  public int getSeed() {
+
+    return m_Seed;
   }
 }

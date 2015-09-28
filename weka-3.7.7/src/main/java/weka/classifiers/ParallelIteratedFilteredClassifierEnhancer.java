@@ -27,6 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.Utils;
@@ -39,11 +40,11 @@ import weka.core.Utils;
  * @author Mark Hall (mhall{[at]}pentaho{[dot]}com)
  * @version $Revision: 8034 $
  */
-public abstract class ParallelIteratedSingleClassifierEnhancer extends
-    IteratedSingleClassifierEnhancer {
+public abstract class ParallelIteratedFilteredClassifierEnhancer extends
+    IteratedFilteredClassifierEnhancer {
 
   /** For serialization */
-  private static final long serialVersionUID = -5026378741833046436L;
+  private static final long serialVersionUID = 8165422779143272644L;
 
   /** The number of threads to have executing at any one time */
   protected int m_numExecutionSlots = 1;
@@ -210,7 +211,7 @@ public abstract class ParallelIteratedSingleClassifierEnhancer extends
     for (int i = 0; i < m_Classifiers.length; i++) {
       if (m_numExecutionSlots > 1) {
 	// Manuel: if this is a FilteredClassifier, all good.
-        final Classifier currentClassifier = m_Classifiers[i];
+        final FilteredClassifier currentClassifier = m_Classifiers[i];
         final int iteration = i;
         if (m_Debug) {
           System.out.print("Training classifier (" + (i +1) + ")");
