@@ -2145,6 +2145,7 @@ public final class Utils
 	    meta.equals("weka.classifiers.meta.LogitBoost") ||
 	    meta.equals("weka.classifiers.meta.MultiClassClassifier") ||
 	    meta.equals("weka.classifiers.meta.MyFilteredClassifier") ||
+	    meta.equals("weka.classifiers.meta.FilteredClassifier") ||
 	    meta.equals("weka.classifiers.meta.RandomCommittee") ||
 	    meta.equals("weka.classifiers.meta.RandomSubSpace") ||
 	    meta.equals("weka.classifiers.lazy.LWL")
