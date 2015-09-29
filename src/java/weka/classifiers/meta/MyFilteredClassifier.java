@@ -114,7 +114,7 @@ public class MyFilteredClassifier
    */
   protected String defaultClassifierString() {
     
-    return "weka.classifiers.functions.LinearRegression";
+    return "weka.classifiers.rules.ZeroR";
   }
 
   /**
@@ -122,7 +122,7 @@ public class MyFilteredClassifier
    */
   public MyFilteredClassifier() {
 
-    m_Classifier = new weka.classifiers.functions.LinearRegression();
+    m_Classifier = new weka.classifiers.rules.ZeroR();
     m_Filter = new weka.filters.AllFilter();
   }
 
