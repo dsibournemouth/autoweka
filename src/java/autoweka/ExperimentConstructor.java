@@ -533,39 +533,59 @@ public abstract class ExperimentConstructor {
 
         // Add in the meta conditionals
         if (!metaClassifiers.isEmpty()) {
-            Parameter _1_W = new Parameter("_2_W", baseClassifiers);
+            Parameter _1_W = new Parameter("_1_0_QUOTE_START_W",
+                    "weka.classifiers.meta.MyFilteredClassifier");
             paramGroup.add(_1_W);
             paramGroup.add(new Conditional(_1_W, targetclass, metaClassifiers));
-            Parameter _1_W_0_DASHDASH = new Parameter("_2_W_0_DASHDASH",
-                    "REMOVED");
-            paramGroup.add(_1_W_0_DASHDASH);
-            paramGroup.add(new Conditional(_1_W_0_DASHDASH, targetclass,
-                    metaClassifiers));
-            for (ClassParams clsParams : mBaseClassParams) {
-                addClassifierToParameterConditionalGroupForDAG(paramGroup,
-                        clsParams, "_2_W_1_", _1_W, true);
-            }
 
-            // Add filters
+            // Currently only meta-filters are considered.
+            // TODO: Think if base filters should be included.
             if (!metaFilters.isEmpty()) {
-
-                Parameter _1_F = new Parameter("_1_0_QUOTE_START_F",
+                // Add filters
+                Parameter _1_1_F = new Parameter("_1_1_0_QUOTE_START_F",
                         metaFilters);
-                paramGroup.add(_1_F);
-                paramGroup.add(new Conditional(_1_F, targetclass,
+                paramGroup.add(_1_1_F);
+                paramGroup.add(new Conditional(_1_1_F, targetclass,
                         metaClassifiers));
 
+                // Add parameters of filters
                 for (ClassParams clsParams : mMetaFilterClassParams) {
                     addClassifierToParameterConditionalGroupForDAG(paramGroup,
-                            clsParams, "_1_1_F_1_", _1_F, true);
+                            clsParams, "_1_1_F_1_", _1_1_F, true);
                 }
-                Parameter _1_QUOTE_END = new Parameter("_1__QUOTE_END",
+
+                // Close quotes of Filters
+                Parameter _1_1__QUOTE_END = new Parameter("_1_1__QUOTE_END",
                         "REMOVED");
-                paramGroup.add(_1_QUOTE_END);
-                paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
+                paramGroup.add(_1_1__QUOTE_END);
+                paramGroup.add(new Conditional(_1_1__QUOTE_END, targetclass,
                         metaClassifiers));
 
             }
+
+            // Add base classifier
+            Parameter _1_2_W = new Parameter("_1_2_W", baseClassifiers);
+            paramGroup.add(_1_2_W);
+            paramGroup.add(new Conditional(_1_2_W, _1_W,
+                    "weka.classifiers.meta.MyFilteredClassifier"));
+
+            // Add parameters of base classifier
+            Parameter _1_2_W_0_DASHDASH = new Parameter("_1_2_W_0_DASHDASH",
+                    "REMOVED");
+            paramGroup.add(_1_2_W_0_DASHDASH);
+            paramGroup.add(new Conditional(_1_2_W_0_DASHDASH, targetclass,
+                    metaClassifiers));
+
+            for (ClassParams clsParams : mBaseClassParams) {
+                addClassifierToParameterConditionalGroupForDAG(paramGroup,
+                        clsParams, "_1_2_W_1_", _1_2_W, true);
+            }
+
+            // Close quotes of MyFilteredClassifier
+            Parameter _1_QUOTE_END = new Parameter("_1__QUOTE_END", "REMOVED");
+            paramGroup.add(_1_QUOTE_END);
+            paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
+                    metaClassifiers));
         }
 
         // Add in the ensemble conditionals
@@ -585,11 +605,54 @@ public abstract class ExperimentConstructor {
             for (int i = 0; i < mEnsembleMaxNum; i++) {
                 String prefix = "_1_" + String.format("%02d", i);
                 Parameter gateParam = new Parameter(
-                        prefix + "_0_QUOTE_START_B", baseClassifiers);
+                        prefix + "_0_QUOTE_START_B",
+                        "weka.classifiers.meta.MyFilteredClassifier");
                 paramGroup.add(gateParam);
+                paramGroup.add(new Conditional(gateParam, targetclass,
+                        ensembleClassifiers));
+
+                // Currently only meta-filters are considered.
+                // TODO: Think if base filters should be included.
+                Parameter _1_1_F = null;
+                Parameter _1_1__QUOTE_END = null;
+                if (!metaFilters.isEmpty()) {
+                    // Add filters
+                    _1_1_F = new Parameter(prefix + "_1_0_QUOTE_START_F",
+                            metaFilters);
+                    paramGroup.add(_1_1_F);
+                    paramGroup.add(new Conditional(_1_1_F, targetclass,
+                            ensembleClassifiers));
+
+                    // Add parameters of filters
+                    for (ClassParams clsParams : mMetaFilterClassParams) {
+                        addClassifierToParameterConditionalGroupForDAG(
+                                paramGroup, clsParams, prefix + "_1_F_1_",
+                                _1_1_F, true);
+                    }
+
+                    // Close quotes of Filters
+                    _1_1__QUOTE_END = new Parameter(prefix + "_1_F__QUOTE_END",
+                            "REMOVED");
+                    paramGroup.add(_1_1__QUOTE_END);
+                    paramGroup.add(new Conditional(_1_1__QUOTE_END,
+                            targetclass, ensembleClassifiers));
+                }
+
+                Parameter _1_W = new Parameter(prefix + "_1_W", baseClassifiers);
+                paramGroup.add(_1_W);
+                paramGroup.add(new Conditional(_1_W, targetclass,
+                        ensembleClassifiers));
+
+                // Add parameters of base classifier
+                Parameter _1_W_0_DASHDASH = new Parameter(prefix
+                        + "_1_W_0_DASHDASH", "REMOVED");
+                paramGroup.add(_1_W_0_DASHDASH);
+                paramGroup.add(new Conditional(_1_W_0_DASHDASH, targetclass,
+                        ensembleClassifiers));
+
                 for (ClassParams clsParams : mBaseClassParams) {
                     addClassifierToParameterConditionalGroupForDAG(paramGroup,
-                            clsParams, prefix + "_1_", gateParam);
+                            clsParams, prefix + "_1_W_", _1_W, true);
                 }
 
                 // Add this level for everything beneath us
@@ -599,9 +662,21 @@ public abstract class ExperimentConstructor {
                 }
                 paramGroup.add(new Conditional(gateParam,
                         _HIDDEN_ensemble_depth, levels));
+                if (_1_1_F != null)
+                    paramGroup.add(new Conditional(_1_1_F,
+                            _HIDDEN_ensemble_depth, levels));
+                if (_1_1__QUOTE_END != null)
+                    paramGroup.add(new Conditional(_1_1__QUOTE_END,
+                            _HIDDEN_ensemble_depth, levels));
+
+                paramGroup.add(new Conditional(_1_W, _HIDDEN_ensemble_depth,
+                        levels));
+                paramGroup.add(new Conditional(_1_W_0_DASHDASH,
+                        _HIDDEN_ensemble_depth, levels));
+
                 // Make the dummy param to close the quote
                 Parameter endQuote = new Parameter("_1_"
-                        + String.format("%02d", i) + "_2_QUOTE_END", "REMOVED");
+                        + String.format("%02d", i) + "___QUOTE_END", "REMOVED");
                 paramGroup.add(endQuote);
                 paramGroup.add(new Conditional(endQuote,
                         _HIDDEN_ensemble_depth, levels));
