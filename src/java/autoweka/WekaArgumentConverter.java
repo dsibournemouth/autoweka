@@ -215,6 +215,16 @@ public class WekaArgumentConverter
         if(quotedString != null)
             throw new RuntimeException("Unbalanced QUOTE markers in arguments" + quoteDepth);
         
+        // Regex to remove backslashes and quotes of elements without parameters
+        List<String> classifierParams = argMap.get("classifier");
+        for(int i=0; i<classifierParams.size(); i++) {
+            String current = classifierParams.get(i);
+            String currentModified = current.replaceAll("\\\\+\"([a-zA-Z0-9\\.]+)\\\\+\"", "$1");
+            classifierParams.set(i, currentModified);
+        }
+        
+        argMap.put("classifier", classifierParams);
+
         return new Arguments(propertyMap, argMap);
     }
 
