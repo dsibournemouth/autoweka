@@ -533,10 +533,18 @@ public abstract class ExperimentConstructor {
 
         // Add in the meta conditionals
         if (!metaClassifiers.isEmpty()) {
-            Parameter _1_W = new Parameter("_1_0_QUOTE_START_W",
-                    "weka.classifiers.meta.MyFilteredClassifier");
+//            Parameter _1_W = new Parameter("_1_0_QUOTE_START_W",
+//                    "weka.classifiers.meta.FilteredClassifier");
+            Parameter _1_W = new Parameter("_1_0_W",
+                    "weka.classifiers.meta.FilteredClassifier");
             paramGroup.add(_1_W);
             paramGroup.add(new Conditional(_1_W, targetclass, metaClassifiers));
+            
+            Parameter _1_0_W_0_DASHDASH = new Parameter("_1_0_W_0_DASHDASH",
+                    "REMOVED");
+            paramGroup.add(_1_0_W_0_DASHDASH);
+            paramGroup.add(new Conditional(_1_0_W_0_DASHDASH, targetclass,
+                    metaClassifiers));
 
             // Currently only meta-filters are considered.
             // TODO: Think if base filters should be included.
@@ -567,7 +575,7 @@ public abstract class ExperimentConstructor {
             Parameter _1_2_W = new Parameter("_1_2_W", baseClassifiers);
             paramGroup.add(_1_2_W);
             paramGroup.add(new Conditional(_1_2_W, _1_W,
-                    "weka.classifiers.meta.MyFilteredClassifier"));
+                    "weka.classifiers.meta.FilteredClassifier"));
 
             // Add parameters of base classifier
             Parameter _1_2_W_0_DASHDASH = new Parameter("_1_2_W_0_DASHDASH",
@@ -582,10 +590,10 @@ public abstract class ExperimentConstructor {
             }
 
             // Close quotes of MyFilteredClassifier
-            Parameter _1_QUOTE_END = new Parameter("_1__QUOTE_END", "REMOVED");
-            paramGroup.add(_1_QUOTE_END);
-            paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
-                    metaClassifiers));
+//            Parameter _1_QUOTE_END = new Parameter("_1__QUOTE_END", "REMOVED");
+//            paramGroup.add(_1_QUOTE_END);
+//            paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
+//                    metaClassifiers));
         }
 
         // Add in the ensemble conditionals
@@ -604,11 +612,20 @@ public abstract class ExperimentConstructor {
             // Now actually insert all the levels
             for (int i = 0; i < mEnsembleMaxNum; i++) {
                 String prefix = "_1_" + String.format("%02d", i);
+//                Parameter gateParam = new Parameter(
+//                        prefix + "_0_QUOTE_START_B",
+//                        "weka.classifiers.meta.FilteredClassifier");
                 Parameter gateParam = new Parameter(
-                        prefix + "_0_QUOTE_START_B",
-                        "weka.classifiers.meta.MyFilteredClassifier");
+                        prefix + "_0_B",
+                        "weka.classifiers.meta.FilteredClassifier");
                 paramGroup.add(gateParam);
                 paramGroup.add(new Conditional(gateParam, targetclass,
+                        ensembleClassifiers));
+                
+                Parameter _0_W_DASHDASH = new Parameter(prefix + "_0_B_DASHDASH",
+                        "REMOVED");
+                paramGroup.add(_0_W_DASHDASH);
+                paramGroup.add(new Conditional(_0_W_DASHDASH, targetclass,
                         ensembleClassifiers));
 
                 // Currently only meta-filters are considered.
@@ -675,11 +692,11 @@ public abstract class ExperimentConstructor {
                         _HIDDEN_ensemble_depth, levels));
 
                 // Make the dummy param to close the quote
-                Parameter endQuote = new Parameter("_1_"
-                        + String.format("%02d", i) + "___QUOTE_END", "REMOVED");
-                paramGroup.add(endQuote);
-                paramGroup.add(new Conditional(endQuote,
-                        _HIDDEN_ensemble_depth, levels));
+//                Parameter endQuote = new Parameter("_1_"
+//                        + String.format("%02d", i) + "___QUOTE_END", "REMOVED");
+//                paramGroup.add(endQuote);
+//                paramGroup.add(new Conditional(endQuote,
+//                        _HIDDEN_ensemble_depth, levels));
             }
         }
 
