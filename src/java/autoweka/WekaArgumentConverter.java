@@ -198,6 +198,9 @@ public class WekaArgumentConverter
 	                }
 	                else
 	                {
+	                    if(sanitizedName.equals("-DASHDASH")){
+	                        sanitizedName = "--";
+	                    }
 	                    quotedString += sanitizedName + " ";
 	                }
 	
@@ -211,8 +214,7 @@ public class WekaArgumentConverter
 
         if(quotedString != null)
             throw new RuntimeException("Unbalanced QUOTE markers in arguments" + quoteDepth);
-
-
+        
         return new Arguments(propertyMap, argMap);
     }
 
