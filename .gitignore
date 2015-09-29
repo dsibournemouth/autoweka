@@ -1,4 +1,6 @@
 *.class
+.idea/
+*~
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -28,3 +30,6 @@ autoweka.ui.properties
 /plots*
 /tables*
 /flowcharts*
+*.csv
+*.db
+*.pyc
