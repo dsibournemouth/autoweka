@@ -226,7 +226,7 @@ public class ApplicabilityTester
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("'" + method + "' not supported");
         }
         return false;
