@@ -137,6 +137,12 @@ public class SMACExperimentConstructor extends ExperimentConstructor
             args.add(props.getProperty("executionMode"));
         }
         
+        if(props.containsKey("intensificationPercentage"))
+        {
+            args.add("--intensification-percentage");
+            args.add(props.getProperty("intensificationPercentage")); // should be between 0 and 1, def: 0.5
+        }
+        
         // Showing the real calls
         args.add("--cli-log-all-call-strings");
         args.add("true");
@@ -145,11 +151,9 @@ public class SMACExperimentConstructor extends ExperimentConstructor
         args.add("--clean-old-state-on-success");
         args.add("true");
         
-        if(props.containsKey("intensificationPercentage"))
-        {
-            args.add("--intensification-percentage");
-            args.add(props.getProperty("intensificationPercentage")); // should be between 0 and 1, def: 0.5
-        }
+        // Avoid to abort if the first run crash
+        args.add("--abort-on-first-run-crash");
+        args.add("false");
 
         return args;
     }
