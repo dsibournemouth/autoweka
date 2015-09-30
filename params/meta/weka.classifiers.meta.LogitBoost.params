@@ -6,7 +6,6 @@ INT_R [1,5][1]i
 f_HIDDEN {0,1}[0]
     1_F {0}[0]
     2_INT_F [1,5][1]i
-Q {REMOVED,REMOVE_PREV}[REMOVE_PREV]
 p_HIDDEN {0,1}[0]
     1_P {100}[100]
     2_INT_P [50,100][100]i
