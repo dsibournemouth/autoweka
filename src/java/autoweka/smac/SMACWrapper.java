@@ -53,7 +53,7 @@ public class SMACWrapper extends Wrapper
         String resultStr = "SAT";
         if(!res.getCompleted())
         {
-            resultStr = "TIMEOUT";
+            resultStr = "CRASHED";
         }
 
         StringBuilder extraResultsSB = new StringBuilder();
