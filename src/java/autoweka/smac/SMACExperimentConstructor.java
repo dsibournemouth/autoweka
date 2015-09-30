@@ -141,6 +141,16 @@ public class SMACExperimentConstructor extends ExperimentConstructor
         args.add("--cli-log-all-call-strings");
         args.add("true");
 
+        // Clean old states on success
+        args.add("--clean-old-state-on-success");
+        args.add("true");
+        
+        if(props.containsKey("intensificationPercentage"))
+        {
+            args.add("--intensification-percentage");
+            args.add(props.getProperty("intensificationPercentage")); // should be between 0 and 1, def: 0.5
+        }
+
         return args;
     }
 
