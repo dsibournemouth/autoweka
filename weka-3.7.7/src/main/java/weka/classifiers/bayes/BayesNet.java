@@ -20,7 +20,10 @@
  */
 package weka.classifiers.bayes;
 
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import weka.classifiers.AbstractClassifier;
@@ -483,11 +486,29 @@ public class BayesNet
 
     String searchAlgorithmName = Utils.getOption('Q', options);
     if (searchAlgorithmName.length() != 0) {
+      
+      String [] searchAlgorithmOptions = searchAlgorithmName.split(" ");
+      String [] rightOptions;
+      
+      // Hack to include double dash and parse options correctly
+      if (searchAlgorithmOptions.length > 1) {
+	searchAlgorithmName = searchAlgorithmOptions[0];
+	searchAlgorithmOptions = Arrays.copyOfRange(searchAlgorithmOptions, 1, searchAlgorithmOptions.length);
+	List<String> temp = new LinkedList<String>(Arrays.asList(searchAlgorithmOptions));
+	temp.add(0, "--");
+	searchAlgorithmOptions = temp.toArray(new String[temp.size()]);
+	rightOptions = partitionOptions(searchAlgorithmOptions);
+      }
+      else{
+	rightOptions = partitionOptions(options);
+      }
+      
       setSearchAlgorithm(
 	  (SearchAlgorithm) Utils.forName(
 	      SearchAlgorithm.class,
 	      searchAlgorithmName,
-	      partitionOptions(options)));
+	      rightOptions));
+      
     }
     else {
       setSearchAlgorithm(new K2());
