@@ -116,6 +116,7 @@ abstract class WorkerThread extends Thread
                 pollInterval = (long)(timeout * Math.max(0, (msTimeoutMultiplyer - 1)))/1000000;
                 System.out.println(getOpName() + " interrupted");
                 interrupted = true;
+                break;
             }
             else if(!stopped && (mOSBean.getProcessCpuTime() - startTime > timeout * msTimeoutMultiplyer /*|| wallTime > timeout * mWalltimeMultiplyer * mTimeoutMultiplyer*/))
             {
