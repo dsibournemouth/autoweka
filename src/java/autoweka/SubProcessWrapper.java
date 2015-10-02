@@ -60,7 +60,11 @@ public class SubProcessWrapper extends Wrapper
     @Override
     protected void _processResults(ClassifierResult res)
     {
-        System.out.print("SubProcessWrapper: Time(" + res.getTime() + ") Score(" + res.getScore() + ")");
+        float score = res.getScore();
+        if (!res.getCompleted()){
+          score = (float) 1.0E10;
+        }
+        System.out.print("SubProcessWrapper: Time(" + res.getTime() + ") Score(" + score + ")");
         String outputFilePrefix = mProperties.getProperty("modelOutputFilePrefix", null);
         if(outputFilePrefix != null){
             try{
