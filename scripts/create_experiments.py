@@ -1,15 +1,21 @@
+import argparse
 import os
-import sys
 from config import *
 
-if len(sys.argv) < 2:
-    print 'Syntax: python create_experiments.py experiments/template.xml'
-    exit(1)
+parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+parser.add_argument('--template', required=True)
+parser.add_argument('--dataset', choices=datasets, required=False)
 
-f_input = open(sys.argv[1], 'r')
+args = parser.parse_args()
+
+template_file = args.template
+# override default values
+selected_datasets = [args.dataset] if args.dataset else datasets
+
+f_input = open(template_file, 'r')
 template = f_input.read()
 
-for d in datasets:
+for d in selected_datasets:
     print d
     f_output_name = '%s/experiments/%s.batch' % (os.environ['AUTOWEKA_PATH'], d)
     f_output = open(f_output_name, 'w')
