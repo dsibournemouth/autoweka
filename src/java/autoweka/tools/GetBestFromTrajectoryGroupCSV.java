@@ -8,8 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import autoweka.InstanceGenerator;
 
 public class GetBestFromTrajectoryGroupCSV
