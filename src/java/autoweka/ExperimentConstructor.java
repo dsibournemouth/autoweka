@@ -531,6 +531,11 @@ public abstract class ExperimentConstructor {
             }
         }
 
+        /*******************
+         * 
+         * META-PREDICTORS
+         * 
+         *******************/
         // Add in the meta conditionals
         if (!metaClassifiers.isEmpty()) {
 //            Parameter _1_W = new Parameter("_1_0_QUOTE_START_W",
@@ -595,6 +600,12 @@ public abstract class ExperimentConstructor {
 //            paramGroup.add(new Conditional(_1_QUOTE_END, targetclass,
 //                    metaClassifiers));
         }
+        
+        /********************
+         * 
+         * ENSEMBLES
+         * 
+         ********************/
 
         // Add in the ensemble conditionals
         if (!ensembleClassifiers.isEmpty()) {
@@ -616,17 +627,17 @@ public abstract class ExperimentConstructor {
 //                        prefix + "_0_QUOTE_START_B",
 //                        "weka.classifiers.meta.FilteredClassifier");
                 Parameter gateParam = new Parameter(
-                        prefix + "_0_B",
+                        prefix + "_0_QUOTE_START_B",
                         "weka.classifiers.meta.FilteredClassifier");
                 paramGroup.add(gateParam);
                 paramGroup.add(new Conditional(gateParam, targetclass,
                         ensembleClassifiers));
                 
-                Parameter _0_W_DASHDASH = new Parameter(prefix + "_0_B_DASHDASH",
-                        "REMOVED");
-                paramGroup.add(_0_W_DASHDASH);
-                paramGroup.add(new Conditional(_0_W_DASHDASH, targetclass,
-                        ensembleClassifiers));
+//                Parameter _0_W_DASHDASH = new Parameter(prefix + "_0_B_DASHDASH",
+//                        "REMOVED");
+//                paramGroup.add(_0_W_DASHDASH);
+//                paramGroup.add(new Conditional(_0_W_DASHDASH, targetclass,
+//                        ensembleClassifiers));
 
                 // Currently only meta-filters are considered.
                 // TODO: Think if base filters should be included.
@@ -679,6 +690,9 @@ public abstract class ExperimentConstructor {
                 }
                 paramGroup.add(new Conditional(gateParam,
                         _HIDDEN_ensemble_depth, levels));
+//                paramGroup.add(new Conditional(_0_W_DASHDASH,
+//                        _HIDDEN_ensemble_depth, levels));
+                
                 if (_1_1_F != null)
                     paramGroup.add(new Conditional(_1_1_F,
                             _HIDDEN_ensemble_depth, levels));
@@ -692,11 +706,11 @@ public abstract class ExperimentConstructor {
                         _HIDDEN_ensemble_depth, levels));
 
                 // Make the dummy param to close the quote
-//                Parameter endQuote = new Parameter("_1_"
-//                        + String.format("%02d", i) + "___QUOTE_END", "REMOVED");
-//                paramGroup.add(endQuote);
-//                paramGroup.add(new Conditional(endQuote,
-//                        _HIDDEN_ensemble_depth, levels));
+                Parameter endQuote = new Parameter("_1_"
+                        + String.format("%02d", i) + "___QUOTE_END", "REMOVED");
+                paramGroup.add(endQuote);
+                paramGroup.add(new Conditional(endQuote,
+                        _HIDDEN_ensemble_depth, levels));
             }
         }
 
