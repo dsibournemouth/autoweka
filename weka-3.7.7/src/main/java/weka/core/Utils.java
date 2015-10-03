@@ -2138,38 +2138,123 @@ public final class Utils
       try {
 	String[] wekaOptions = Arrays.copyOfRange(ops, 1, ops.length);
 	String meta = wekaOptions[0];
-	if (meta.equals("weka.classifiers.meta.AdaBoostM1") ||
-	    meta.equals("weka.classifiers.meta.AttributeSelectedClassifier") ||
-	    meta.equals("weka.classifiers.meta.Bagging") ||
-	    meta.equals("weka.classifiers.meta.ClassificationViaRegression") ||
-	    meta.equals("weka.classifiers.meta.LogitBoost") ||
-	    meta.equals("weka.classifiers.meta.MultiClassClassifier") ||
-	    meta.equals("weka.classifiers.meta.MyFilteredClassifier") ||
-	    meta.equals("weka.classifiers.meta.FilteredClassifier") ||
-	    meta.equals("weka.classifiers.meta.RandomCommittee") ||
-	    meta.equals("weka.classifiers.meta.RandomSubSpace") ||
-	    meta.equals("weka.classifiers.lazy.LWL")
-	    ){
-	  String filters = getOption("F", wekaOptions);
-	  String [] filterSpec = Utils.splitOptions(filters);
-	  String M = getOption("M", filterSpec);
-	  String O = getOption("O", filterSpec);
-	  String T = getOption("T", filterSpec);
-	  String R = getOption("R", filterSpec);
-	  String S = getOption("S", filterSpec);
-	  String predictor = getOption("W", wekaOptions);
-	  String[] predictorSpec = Utils.partitionOptions(wekaOptions);
+	
+	if (meta.equals("weka.classifiers.meta.Vote") || meta.equals("weka.classifiers.meta.Stacking")) {
+	    System.out.println("{[");
+	    while(true){
+	        String filteredClassifier = Utils.getOption('B', wekaOptions);
+                if (filteredClassifier.length() == 0) {
+	              break;
+                }
+                String [] filteredClassifierSpec = Utils.partitionOptions(wekaOptions);
+	          
+                String filters = getOption("F", filteredClassifierSpec);
+                String [] filterSpec = Utils.splitOptions(filters);
+                String[] M = Utils.splitOptions(getOption("M", filterSpec));
+                String[] O = Utils.splitOptions(getOption("O", filterSpec));
+                String[] T = Utils.splitOptions(getOption("T", filterSpec));
+                String[] R = Utils.splitOptions(getOption("R", filterSpec));
+                String[] S = Utils.splitOptions(getOption("S", filterSpec));
+	          
+                String predictor = getOption("W", filteredClassifierSpec);
+                String[] predictorSpec = Utils.partitionOptions(filteredClassifierSpec);
+	          
+                System.out.println("{");
+                System.out.println(String.format("'missing_values': {'method': '%s', 'params': '%s'}", 
+                        M[0], 
+                        M.length>1 ? String.join(" ", Arrays.copyOfRange(M, 1, M.length)) : ""
+                        )
+                );
+                System.out.println(String.format("'outliers': {'method': '%s', 'params': '%s'}", 
+                        O[0], 
+                        O.length>1 ? String.join(" ", Arrays.copyOfRange(O, 1, O.length)) : ""
+                        )
+                );
+                System.out.println(String.format("'transformation': {'method': '%s', 'params': '%s'}", 
+                        T[0], 
+                        T.length>1 ? String.join(" ", Arrays.copyOfRange(T, 1, T.length)) : ""
+                        )
+                );
+                System.out.println(String.format("'dimensionality_reduction': {'method': '%s', 'params': '%s'}", 
+                        R[0], 
+                        R.length>1 ? String.join(" ", Arrays.copyOfRange(R, 1, R.length)) : ""
+                        )
+                );
+                System.out.println(String.format("'sampling': {'method': '%s', 'params': '%s'}", 
+                        S[0], 
+                        S.length>1 ? String.join(" ", Arrays.copyOfRange(S, 1, S.length)) : ""
+                        )
+                );
+                System.out.println(String.format("'predictor': {'method': '%s', 'params': '%s'}", 
+                        predictor, 
+                        predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
+                        )
+                );
+                System.out.println("},");
+	    }
+	    System.out.println("],");
+	    System.out.println(String.format("'meta': {'method': '%s', 'params': '%s'}", 
+                    meta, 
+                    (wekaOptions.length>0 ? String.join(" ", Arrays.copyOfRange(wekaOptions, 1, wekaOptions.length)) : "").trim()
+                    )
+            );
+            System.out.println("}");
+	}
+	else if (meta.startsWith("weka.classifiers.meta") || meta.equals("weka.classifiers.lazy.LWL")){
+	  String filteredClassifier = getOption("W", wekaOptions);
+	  String[] filteredClassifierSpec = Utils.partitionOptions(wekaOptions);
 	  
-	  System.out.println("missing_values=" + M);
-	  System.out.println("outliers=" + O);
-	  System.out.println("transformation=" + T);
-	  System.out.println("dimensionality_reduction=" + R);
-	  System.out.println("sampling=" + S);
-	  System.out.println("predictor=" + predictor + " " + Arrays.toString(predictorSpec));
-	  System.out.println("meta=" + meta);
+	  String filters = getOption("F", filteredClassifierSpec);
+	  String [] filterSpec = Utils.splitOptions(filters);
+	  String[] M = Utils.splitOptions(getOption("M", filterSpec));
+	  String[] O = Utils.splitOptions(getOption("O", filterSpec));
+	  String[] T = Utils.splitOptions(getOption("T", filterSpec));
+	  String[] R = Utils.splitOptions(getOption("R", filterSpec));
+	  String[] S = Utils.splitOptions(getOption("S", filterSpec));
+	  
+	  String predictor = getOption("W", filteredClassifierSpec);
+	  String[] predictorSpec = Utils.partitionOptions(filteredClassifierSpec);
+	  
+	  System.out.println("{");
+	  System.out.println(String.format("'missing_values': {'method': '%s', 'params': '%s'}", 
+	          M[0], 
+	          M.length>1 ? String.join(" ", Arrays.copyOfRange(M, 1, M.length)) : ""
+	          )
+	  );
+	  System.out.println(String.format("'outliers': {'method': '%s', 'params': '%s'}", 
+                  O[0], 
+                  O.length>1 ? String.join(" ", Arrays.copyOfRange(O, 1, O.length)) : ""
+                  )
+          );
+	  System.out.println(String.format("'transformation': {'method': '%s', 'params': '%s'}", 
+                  T[0], 
+                  T.length>1 ? String.join(" ", Arrays.copyOfRange(T, 1, T.length)) : ""
+                  )
+          );
+	  System.out.println(String.format("'dimensionality_reduction': {'method': '%s', 'params': '%s'}", 
+                  R[0], 
+                  R.length>1 ? String.join(" ", Arrays.copyOfRange(R, 1, R.length)) : ""
+                  )
+          );
+	  System.out.println(String.format("'sampling': {'method': '%s', 'params': '%s'}", 
+                  S[0], 
+                  S.length>1 ? String.join(" ", Arrays.copyOfRange(S, 1, S.length)) : ""
+                  )
+          );
+	  System.out.println(String.format("'predictor': {'method': '%s', 'params': '%s'}", 
+	          predictor, 
+	          predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
+                  )
+          );
+	  System.out.println(String.format("'meta': {'method': '%s', 'params': '%s'}", 
+	          meta, 
+	          (wekaOptions.length>0 ? String.join(" ", Arrays.copyOfRange(wekaOptions, 1, wekaOptions.length)) : "").trim()
+                  )
+          );
+	  System.out.println("}");
 	}
 	else{
-	  System.out.println("meta=" + Arrays.toString(wekaOptions));
+	  System.out.println("meta=" + String.join(" ", wekaOptions));
 	}
       }
       catch (Exception e) {
