@@ -217,6 +217,13 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                     clsGroup.children.add(targetclassStr);
 
                     addClassifierParameters(clsGroup, clsParams);
+                    
+                    // Insert the filtered classifier as last mandatory parameter so it can be used to link both the base classifier and the filters
+                    HyperoptString filteredClassStr = new HyperoptString(true, "W", "weka.classifiers.meta.FilteredClassifier");
+                    clsGroup.children.add(filteredClassStr);
+                    HyperoptString dashStr = new HyperoptString(true, "DASHDASH", "REMOVED");
+                    clsGroup.children.add(dashStr);
+                    
 
                     metaChoice.choices.add(clsGroup);
                     didMeta = true;
@@ -250,28 +257,28 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                     }
                     
                     HyperoptChoice metaFilterChoice = new HyperoptChoice(false, "meta_filter_choice");
-                  	metaGroup.children.add(metaFilterChoice);
-
-                  	boolean didMetaFilter = false;
-                  	for (ClassParams clsParams: mMetaFilterClassParams) 
-                  	{
-                  		HyperoptGroup clsGroup = new HyperoptGroup(false, null);
-                  		clsGroup.containsNamed = true;
-                  		clsGroup.prefix = "_0_" + getPrefix(clsParams.getTargetClass()) + "_F";
-
-                  		HyperoptString targetclassStr = new HyperoptString(true, "_0_" + getPrefix(clsParams.getTargetClass()) + "_A_QUOTE_START_F", clsParams.getTargetClass());
-                  		targetclassStr.ignorePrefix = true;
-                  		clsGroup.children.add(targetclassStr);                    
-
-                  		addClassifierParameters(clsGroup, clsParams);
-                  	    
-                  		HyperoptString dashStr2 = new HyperoptString(true, clsGroup.prefix+"_00__"+clsGroup.children.size()+"_QUOTE_END", "REMOVED");
-                  		dashStr2.ignorePrefix = true;
-                  		clsGroup.children.add(dashStr2);
-
-                  		metaFilterChoice.choices.add(clsGroup);
-                  		didMetaFilter = true;
-                  	}
+                	metaGroup.children.add(metaFilterChoice);
+      
+                	boolean didMetaFilter = false;
+                	for (ClassParams clsParams: mMetaFilterClassParams) 
+                	{
+                		HyperoptGroup clsGroup = new HyperoptGroup(false, null);
+                		clsGroup.containsNamed = true;
+                		clsGroup.prefix = "_0_" + getPrefix(clsParams.getTargetClass()) + "_F";
+      
+                		HyperoptString targetclassStr = new HyperoptString(true, "_0_" + getPrefix(clsParams.getTargetClass()) + "_A_QUOTE_START_F", clsParams.getTargetClass());
+                		targetclassStr.ignorePrefix = true;
+                		clsGroup.children.add(targetclassStr);                    
+      
+                		addClassifierParameters(clsGroup, clsParams);
+                	    
+                		HyperoptString dashStr2 = new HyperoptString(true, clsGroup.prefix+"_00__"+clsGroup.children.size()+"_QUOTE_END", "REMOVED");
+                		dashStr2.ignorePrefix = true;
+                		clsGroup.children.add(dashStr2);
+      
+                		metaFilterChoice.choices.add(clsGroup);
+                		didMetaFilter = true;
+                	}
                 }
             }
 
@@ -318,15 +325,46 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                             HyperoptGroup clsGroup = new HyperoptGroup(false, null);
                             clsGroup.containsNamed = true;
                             clsGroup.prefix = "_1_" + String.format("%02d", i) + "_" + getPrefix(clsParams.getTargetClass()) + "_1_";
-                            HyperoptString targetclassStr = new HyperoptString(true, "_1_" +String.format("%02d", i) + "_" + getPrefix(clsParams.getTargetClass()) + "_0_QUOTE_START_B", clsParams.getTargetClass());
-                            targetclassStr.ignorePrefix = true;
-                            clsGroup.children.add(targetclassStr);
 
+                            HyperoptString filteredClassStr = new HyperoptString(true, "_1_" +String.format("%02d", i) + "_" + getPrefix(clsParams.getTargetClass()) + "_0_QUOTE_START_B", "weka.classifiers.meta.FilteredClassifier");
+                            filteredClassStr.ignorePrefix = true;
+                            clsGroup.children.add(filteredClassStr);
+
+                            // Include meta-filters and filters                            
+                            HyperoptChoice metaFilterChoice = new HyperoptChoice(false, "meta_filter_choice");
+                            clsGroup.children.add(metaFilterChoice);
+
+                            boolean didMetaFilter = false;
+                            for (ClassParams clsFilterParams: mMetaFilterClassParams) 
+                            {
+                              HyperoptGroup clsFilterGroup = new HyperoptGroup(false, null);
+                              clsFilterGroup.containsNamed = true;
+                              clsFilterGroup.prefix = "_0_" + getPrefix(clsFilterParams.getTargetClass()) + "_F";
+
+                              HyperoptString targetclassStr = new HyperoptString(true, "_A_QUOTE_START_F", clsFilterParams.getTargetClass());
+                              clsFilterGroup.children.add(targetclassStr);                    
+
+                              addClassifierParameters(clsFilterGroup, clsFilterParams);
+	    
+                              HyperoptString dashStr2 = new HyperoptString(true, "_QUOTE_END", "REMOVED");
+                              clsFilterGroup.children.add(dashStr2);
+
+                              metaFilterChoice.choices.add(clsFilterGroup);
+                              didMetaFilter = true;
+                            }
+                            
+                            // Include classifier
+                            HyperoptString targetclassStr = new HyperoptString(true, "W", clsParams.getTargetClass());
+                            clsGroup.children.add(targetclassStr);
+                            
+                            HyperoptString dashStr2 = new HyperoptString(true, "DASHDASH", "REMOVED");
+                            clsGroup.children.add(dashStr2);
+                            
                             addClassifierParameters(clsGroup, clsParams);
 
-                            HyperoptString dashStr = new HyperoptString(true, "_1_" + String.format("%02d", i) + "_" + getPrefix(clsParams.getTargetClass()) + "_2_QUOTE_END", "REMOVED");
-                            dashStr.ignorePrefix = true;
-                            clsGroup.children.add(dashStr);
+                            HyperoptString endQuoteStr = new HyperoptString(true, "_1_" + String.format("%02d", i) + "_" + getPrefix(clsParams.getTargetClass()) + "_2_QUOTE_END", "REMOVED");
+                            endQuoteStr.ignorePrefix = true;
+                            clsGroup.children.add(endQuoteStr);
 
                             ensembleBaseChoice.choices.add(clsGroup);
                         }
