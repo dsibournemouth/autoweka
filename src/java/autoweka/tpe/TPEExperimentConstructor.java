@@ -431,7 +431,11 @@ public class TPEExperimentConstructor extends ExperimentConstructor
 				group.children.add(choice);
 					
 				for(String allowedFilter: current.categoricalInnards) {
-					// We assume filter is applicable
+
+				        if (!this.mApplicableBaseFilters.contains(allowedFilter)){
+				            continue;
+				        }
+				        
 					ClassParams baseClsParams = new ClassParams(mParamBaseDir + File.separatorChar + tmpFolder + File.separatorChar + allowedFilter + ".params");
 					ArrayList<Parameter> params2 = baseClsParams.getParameters();
 				        ArrayList<Conditional> conditionals2 = baseClsParams.getConditionals();
