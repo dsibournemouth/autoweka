@@ -1,19 +1,18 @@
 package autoweka;
 
-import weka.core.Instances;
-import weka.filters.Filter;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
-import java.util.HashMap;
-import java.util.ArrayList;
 
+import weka.core.Instances;
+import weka.filters.Filter;
 import autoweka.Parameter.ParamType;
 
 /**
@@ -54,6 +53,8 @@ public abstract class ExperimentConstructor {
     protected List<String> mAllowedClassifiers = new ArrayList<String>();
 
     protected List<String> mAllowedFilters = new ArrayList<String>();
+    
+    protected List<String> mApplicableBaseFilters = new ArrayList<String>(); 
 
     /**
      * How deep should the ensemble tree go?
@@ -355,6 +356,10 @@ public abstract class ExperimentConstructor {
 
         mBaseFilterClassParams = app.base;
         mMetaFilterClassParams = app.meta;
+        
+        for (ClassParams c : mBaseFilterClassParams){
+            mApplicableBaseFilters.add(c.getTargetClass());
+        }
     }
 
     private void checkPrefixes() {
@@ -748,6 +753,17 @@ public abstract class ExperimentConstructor {
                 // Adding quote if the parameter contains more parameters
                 newPrefix += "A_QUOTE_START_";
                 quoted = true;
+                
+                // Select only those filters that can be used
+                if (oldParam.defaultCategorical.startsWith("weka.filters")) {
+                    List<String> filteredInnards = new ArrayList<String>();
+                    for (String s : oldParam.categoricalInnards) {
+                        if (mApplicableBaseFilters.contains(s)) {
+                            filteredInnards.add(s);
+                        }
+                    }
+                    oldParam.categoricalInnards = filteredInnards;
+                }
             }
 
             Parameter param = new Parameter(newPrefix + oldParam.name, oldParam);
