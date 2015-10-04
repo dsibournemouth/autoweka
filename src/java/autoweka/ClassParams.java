@@ -74,6 +74,7 @@ public class ClassParams
                     mConditionals.add(new Conditional(line, mParameterMap));
                 }
             }
+            in.close();
         }
         catch(IOException e)
         {

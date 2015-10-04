@@ -25,8 +25,6 @@ import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.RandomizableIteratedFilteredClassifierEnhancer;
 import weka.classifiers.Sourcable;

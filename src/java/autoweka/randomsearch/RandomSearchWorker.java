@@ -57,7 +57,6 @@ class RandomSearchWorker
     public void run()
     {
       	
-      	RandomSearchResult bestResult = null;
       	double bestError = 1E10;
       	double totalTime = 0;
       	int numTotalEvaluations = 0;
@@ -76,7 +75,6 @@ class RandomSearchWorker
           
           if (error < bestError) {
             bestError = error;
-            bestResult = res;
             trajectory.addPoint(new Point(totalTime, error, res.argString));
           }
         }

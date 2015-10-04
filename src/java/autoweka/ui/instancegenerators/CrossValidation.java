@@ -11,6 +11,8 @@ import autoweka.ui.PropertyPanel;
 
 public class CrossValidation extends PropertyPanel
 {
+    private static final long serialVersionUID = 1509510915374247304L;
+    
     private JTextField mSeedText;
     private JTextField mNumFoldsText;
     public CrossValidation(Frame owner)

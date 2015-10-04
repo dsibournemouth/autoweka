@@ -8,6 +8,8 @@ import org.javabuilders.swing.SwingBuilder;
 
 class TextAreaWindow extends JFrame
 {
+    private static final long serialVersionUID = 30520866198643930L;
+    
     private JScrollPane mScrollPane;
     private JTextArea mTextArea;
     public TextAreaWindow(String title, String text, int width, int height)

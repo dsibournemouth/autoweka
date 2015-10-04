@@ -168,7 +168,6 @@ public class SubProcessWrapper extends Wrapper
             Thread killerHook = new Util.ProcessKillerShutdownHook(proc);
             Runtime.getRuntime().addShutdownHook(killerHook);
 
-            String prevLine = null;
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 

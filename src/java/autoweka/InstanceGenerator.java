@@ -104,6 +104,7 @@ public abstract class InstanceGenerator
                     System.err.println("Unknown file in zip dataset '" + name + "'");
                 }
             }
+            zipFile.close();
         } catch (java.io.IOException e) {
             throw new RuntimeException("IO Operation failed", e);
         }

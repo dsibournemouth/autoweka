@@ -77,10 +77,11 @@ public class SMACTrajectoryParser extends TrajectoryParser
                       System.out.println("Line not matching: " + line);
                     }
                 }
+                scanner.close();
               
               	double currentBest = 1e100;
                 int numEvals = 0;
-                int numGood = 0;
+                //int numGood = 0;
                 int numCompleted = 0;
                 int numMemOut = 0;
                 int numTimeOut = 0;
@@ -103,9 +104,9 @@ public class SMACTrajectoryParser extends TrajectoryParser
                         switch (row[13]) {
                           case "SAT":
                             // all good
-                            numGood++;
+                            //numGood++;
                             Integer configurationId = Integer.parseInt(row[1]);
-                            Integer instanceId = Integer.parseInt(row[2]);
+                            //Integer instanceId = Integer.parseInt(row[2]);
                             Double response = Double.parseDouble(row[3]);
                             
                             // Store response
@@ -143,6 +144,7 @@ public class SMACTrajectoryParser extends TrajectoryParser
                           default:
                             System.err.println("Unexpected evaluation status: " + row[13]);
                         }
+                        scanner.close();
                         
                     } catch (Exception e) {
                         //Whatevs... it's wrong

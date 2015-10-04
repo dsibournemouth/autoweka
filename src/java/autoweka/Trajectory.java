@@ -2,6 +2,7 @@ package autoweka;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.*;
 
 /** Class that captures a trajectory of an optimisation run
@@ -60,6 +61,7 @@ public class Trajectory extends XmlSerializable
         }
 
         //Needed for the XML stuff
+        @SuppressWarnings("unused")
         private Point(){}
 
         public Point(double time, double errorEstimate, String args)
@@ -116,6 +118,7 @@ public class Trajectory extends XmlSerializable
     private int mNumCrashedEvaluations = -1;
 
     //Needed for the XML stuff
+    @SuppressWarnings("unused")
     private Trajectory() {}
 
     /**

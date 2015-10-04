@@ -1,12 +1,12 @@
 package autoweka;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.ArrayList;
 import java.util.Queue;
-import java.io.FileInputStream;
 
 /**
  *  Generic class that gets called from an SMBO method, completes the evaluation, and returns the result back up to the SMBO method.

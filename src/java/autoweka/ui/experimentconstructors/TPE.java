@@ -11,10 +11,11 @@ import javax.swing.JTextField;
 import org.javabuilders.swing.SwingJavaBuilder;
 
 import autoweka.ui.PropertyPanel;
-import autoweka.ui.StringComboOption;
 
 public class TPE extends PropertyPanel
 {
+    private static final long serialVersionUID = -2314836987629837763L;
+    
     private JTextField mExecutableText;
     private JTextField mPythonPathText;
     private JTextField mTPERunnerText;

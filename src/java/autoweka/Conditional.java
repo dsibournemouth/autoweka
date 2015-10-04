@@ -1,13 +1,11 @@
 package autoweka;
 
-import java.awt.List;
-import java.util.Collections;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Simple struct that matains conditionality between params
  */

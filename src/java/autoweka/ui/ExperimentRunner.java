@@ -19,6 +19,8 @@ import org.javabuilders.swing.SwingJavaBuilder;
 
 class ExperimentRunner extends JFrame
 {
+    private static final long serialVersionUID = -5089622168063803247L;
+    
     private JTextField mExpFolderText;
     private JTextField mSeedText;
     private JButton mOpenExpFolderButton;

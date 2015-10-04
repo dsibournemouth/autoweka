@@ -7,6 +7,8 @@ import javax.swing.JDialog;
 
 public abstract class PropertyPanel extends JDialog
 {
+    private static final long serialVersionUID = 6396462051400618042L;
+
     public PropertyPanel(Frame owner)
     {
         super(owner, "Instance Generator Options", true);

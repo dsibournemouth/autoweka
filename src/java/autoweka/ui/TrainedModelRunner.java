@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.javabuilders.annotations.DoInBackground;
@@ -36,6 +34,8 @@ import autoweka.tools.TrainedModelPredictionMaker;
 class TrainedModelRunner extends JFrame
 {
 
+    private static final long serialVersionUID = -320220575788592626L;
+    
     private JTextField mExperimentText;
     private JLabel mSelectedErrorLabel;
     private JLabel mSelectedSeedLabel;
@@ -226,6 +226,8 @@ class TrainedModelRunner extends JFrame
     
     private class ResultsWindow extends JFrame
     {
+        private static final long serialVersionUID = -8961977488651019467L;
+        
         private File mOutputFile;
         private ResultsWindow(String displayText, File outputFile)
         {

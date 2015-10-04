@@ -1,19 +1,18 @@
 package autoweka.instancegenerators;
 
-import autoweka.InstanceGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.filters.supervised.instance.Resample;
 import weka.filters.Filter;
+import weka.filters.supervised.instance.Resample;
+import autoweka.InstanceGenerator;
 import autoweka.Util;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Vector;
 
 /** 
  * Experimental InstanceGenerator that splits the data up into random folds, with a fixed percentage used for training
@@ -33,6 +32,8 @@ public class RandomSubSampling extends InstanceGenerator
 {
     private static class RegressionResample extends Resample
     {
+        private static final long serialVersionUID = 4806954751697674390L;
+        
         public Capabilities getCapabilities() {
             Capabilities result = super.getCapabilities();
             result.disableAll();

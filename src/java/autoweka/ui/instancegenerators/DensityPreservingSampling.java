@@ -11,6 +11,8 @@ import autoweka.ui.PropertyPanel;
 
 public class DensityPreservingSampling extends PropertyPanel
 {
+    private static final long serialVersionUID = -2889480227263404283L;
+    
     private JTextField mSeedText;
     private JTextField mNumLevelsText;
     public DensityPreservingSampling(Frame owner)

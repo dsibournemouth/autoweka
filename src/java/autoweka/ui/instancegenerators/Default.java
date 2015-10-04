@@ -9,6 +9,8 @@ import autoweka.ui.PropertyPanel;
 
 public class Default extends PropertyPanel
 {
+    private static final long serialVersionUID = -8288228920397148893L;
+
     public Default(Frame owner)
     {
         super(owner);

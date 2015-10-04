@@ -11,6 +11,8 @@ import autoweka.ui.PropertyPanel;
 
 public class RandomSubSampling extends PropertyPanel
 {
+    private static final long serialVersionUID = 5805546907171990684L;
+    
     private JTextField mStartingSeedText;
     private JTextField mNumSamplesText;
     private JTextField mPercentText;

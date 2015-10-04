@@ -33,6 +33,8 @@ import autoweka.Util;
 
 public class ExperimentBuilder extends JFrame
 {
+    private static final long serialVersionUID = -4793837476736332477L;
+
     private BuildResult mResult;
 
     private JTabbedPane mTabs;

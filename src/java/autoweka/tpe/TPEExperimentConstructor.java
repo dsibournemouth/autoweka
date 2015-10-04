@@ -259,7 +259,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                     HyperoptChoice metaFilterChoice = new HyperoptChoice(false, "meta_filter_choice");
                 	metaGroup.children.add(metaFilterChoice);
       
-                	boolean didMetaFilter = false;
+                	//boolean didMetaFilter = false;
                 	for (ClassParams clsParams: mMetaFilterClassParams) 
                 	{
                 		HyperoptGroup clsGroup = new HyperoptGroup(false, null);
@@ -277,7 +277,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                 		clsGroup.children.add(dashStr2);
       
                 		metaFilterChoice.choices.add(clsGroup);
-                		didMetaFilter = true;
+                		//didMetaFilter = true;
                 	}
                 }
             }
@@ -334,7 +334,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                             HyperoptChoice metaFilterChoice = new HyperoptChoice(false, "meta_filter_choice");
                             clsGroup.children.add(metaFilterChoice);
 
-                            boolean didMetaFilter = false;
+                            //boolean didMetaFilter = false;
                             for (ClassParams clsFilterParams: mMetaFilterClassParams) 
                             {
                               HyperoptGroup clsFilterGroup = new HyperoptGroup(false, null);
@@ -350,7 +350,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
                               clsFilterGroup.children.add(dashStr2);
 
                               metaFilterChoice.choices.add(clsFilterGroup);
-                              didMetaFilter = true;
+                              //didMetaFilter = true;
                             }
                             
                             // Include classifier

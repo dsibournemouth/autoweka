@@ -17,6 +17,8 @@ import autoweka.ui.StringComboOption;
 
 public class SMAC extends PropertyPanel
 {
+    private static final long serialVersionUID = -944606664935374317L;
+    
     private JTextField mExecutableText;
     private JComboBox mInitialIncumbentCombo;
     private JComboBox mExecutionModeCombo;

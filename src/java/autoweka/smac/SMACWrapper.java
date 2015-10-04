@@ -1,10 +1,10 @@
 package autoweka.smac;
 
-import java.util.Properties;
-import java.util.Queue;
 import java.io.File;
-import autoweka.Wrapper;
+import java.util.Queue;
+
 import autoweka.ClassifierResult;
+import autoweka.Wrapper;
 
 public class SMACWrapper extends Wrapper
 {

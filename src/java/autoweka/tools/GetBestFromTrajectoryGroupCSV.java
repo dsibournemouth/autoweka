@@ -36,7 +36,7 @@ public class GetBestFromTrajectoryGroupCSV
     File trajectoryFile = new File(args[0]);
     String predictionsFilename = trajectoryFile.getParentFile()
 	.getAbsolutePath()
-	+ trajectoryFile.separator
+	+ File.separator
 	+ "predictions."
 	+ res.seed + ".csv";
     

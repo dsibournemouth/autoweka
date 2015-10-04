@@ -3,14 +3,11 @@ package weka.filters.unsupervised.instance;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import weka.core.Capabilities;
 import weka.core.Instances;
 import weka.core.Option;
 import weka.core.OptionHandler;
-import weka.core.RevisionUtils;
 import weka.core.Utils;
 import weka.filters.AllFilter;
-import weka.filters.CategorizedMultiFilter;
 import weka.filters.Filter;
 import weka.filters.MultiFilter;
 import weka.filters.UnsupervisedFilter;

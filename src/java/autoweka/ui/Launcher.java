@@ -8,6 +8,8 @@ import weka.gui.GUIChooser;
 
 public class Launcher extends JFrame
 {
+    private static final long serialVersionUID = -3238517942590016822L;
+
     public static void main(String[] args)
     {
         Launcher l = new Launcher();

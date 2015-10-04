@@ -103,6 +103,7 @@ public class TPETrajectoryParser extends TrajectoryParser
                 linen++;
             }
             traj.setEvaluationCounts(numEvals, numMemOut, numTimeOut);
+            scanner.close();
         }
         catch(Exception e)
         {

@@ -1,10 +1,8 @@
 package autoweka.ui;
 
 import java.awt.Component;
-
 import java.awt.Container;
 import java.awt.Dialog;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +15,6 @@ import java.util.Properties;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -167,6 +164,8 @@ class UIUtil
 
     static class StackTraceDialog extends JDialog
     {
+        private static final long serialVersionUID = 7306508767349939120L;
+
         private StackTraceDialog(Component comp, Throwable e)
         {
             super(comp != null ? SwingUtilities.windowForComponent(comp) : null, "Stack Trace", Dialog.ModalityType.APPLICATION_MODAL);

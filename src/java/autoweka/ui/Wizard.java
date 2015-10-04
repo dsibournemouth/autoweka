@@ -27,6 +27,8 @@ import autoweka.Util;
 
 class Wizard extends JFrame
 {
+    private static final long serialVersionUID = 3074530390612124455L;
+
     private BuildResult mResult;
     
     private JFileChooser mFileChooser = new JFileChooser(new File(System.getProperty("user.dir")));

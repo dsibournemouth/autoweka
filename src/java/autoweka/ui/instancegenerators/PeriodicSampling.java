@@ -11,6 +11,8 @@ import autoweka.ui.PropertyPanel;
 
 public class PeriodicSampling extends PropertyPanel
 {
+    private static final long serialVersionUID = -6745962579050336047L;
+    
     private JTextField mNumFoldsText;
     public PeriodicSampling(Frame owner)
     {

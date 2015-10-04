@@ -21,9 +21,6 @@
 
 package weka.classifiers.meta;
 
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
-import weka.classifiers.SingleClassifierEnhancer;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;

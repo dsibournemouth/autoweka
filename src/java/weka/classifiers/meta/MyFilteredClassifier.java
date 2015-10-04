@@ -86,9 +86,10 @@ import weka.filters.Filter;
 public class MyFilteredClassifier 
   extends SingleClassifierEnhancer 
   implements Drawable {
+  
+  
+  private static final long serialVersionUID = -5013195094902596873L;
 
-  
-  
   /** The filter */
   protected Filter m_Filter = new weka.filters.AllFilter();
 

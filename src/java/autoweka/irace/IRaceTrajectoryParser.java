@@ -1,21 +1,19 @@
 package autoweka.irace;
 
-import autoweka.ClassParams;
-import autoweka.Parameter;
-import autoweka.Trajectory;
-import autoweka.TrajectoryParser;
-import autoweka.Experiment;
-import autoweka.Util;
-
-import java.util.Scanner;
-import java.io.FileInputStream;
 import java.io.File;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import autoweka.Experiment;
+import autoweka.Trajectory;
+import autoweka.TrajectoryParser;
+import autoweka.Util;
 
 public class IRaceTrajectoryParser extends TrajectoryParser
 {
@@ -43,6 +41,7 @@ public class IRaceTrajectoryParser extends TrajectoryParser
                     System.out.println("Failed to match parameter line '" + line + "'");
                 }
             }
+            paramFile.close();
         }catch(Exception e){
             throw new RuntimeException(e);
         }
@@ -101,6 +100,7 @@ public class IRaceTrajectoryParser extends TrajectoryParser
                     traj.addPoint(new Trajectory.Point(time, score, Util.argMapToString(argMap)));
                 }
             }
+            scanner.close();
         }
         catch(Exception e)
         {
