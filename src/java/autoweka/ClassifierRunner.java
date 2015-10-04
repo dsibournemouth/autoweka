@@ -1,23 +1,20 @@
 package autoweka;
 
-import weka.classifiers.Evaluation;
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.evaluation.output.prediction.CSV;
-import weka.core.Instances;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import weka.attributeSelection.ASEvaluation;
 import weka.attributeSelection.ASSearch;
 import weka.attributeSelection.AttributeSelection;
-
-import java.util.Map;
-
-import org.apache.commons.lang.ArrayUtils;
+import weka.classifiers.AbstractClassifier;
+import weka.classifiers.Evaluation;
+import weka.classifiers.evaluation.output.prediction.CSV;
+import weka.classifiers.meta.FilteredClassifier;
+import weka.core.Instances;
 
 /**
  * Class that is responsible for actually running a WEKA classifier from start to finish using the Auto-WEKA argument format.
@@ -276,6 +273,18 @@ public class ClassifierRunner
             e.printStackTrace();
             throw new RuntimeException("Failed to set classifier options: " + e.getMessage(), e);
         }
+        
+        
+        try {
+            classifier.getCapabilities().testWithFail(training);
+            if (classifier instanceof FilteredClassifier){
+                ((FilteredClassifier) classifier).getClassifier().getCapabilities().testWithFail(training);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            throw new RuntimeException("This configuration cannot handle the given dataset: " + e.getMessage(), e);
+        }
+        
         /*
         try
         {
