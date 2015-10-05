@@ -432,7 +432,7 @@ public class TPEExperimentConstructor extends ExperimentConstructor
 					
 				for(String allowedFilter: current.categoricalInnards) {
 
-				        if (!this.mApplicableBaseFilters.contains(allowedFilter)){
+				        if (allowedFilter.startsWith("weka.fitlers") && !this.mApplicableBaseFilters.contains(allowedFilter)){
 				            continue;
 				        }
 				        
