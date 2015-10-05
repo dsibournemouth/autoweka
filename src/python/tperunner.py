@@ -78,9 +78,12 @@ def executeableWrapper(args):
         execcmd = "%s %s %s" % (options.executable, instance.replace("|", "\\|"), argString)
         # print "EXEC", execcmd
         try:
-            res = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True).strip().split("\n")[-1].strip()
-        except:
+            process_output = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True)
+            print process_output
+            res = process_output.strip().split("\n")[-1].strip()
+        except Exception as e:
             res = 'FAILED'
+            print str(e)
 
         match = resultRegex.match(res)
         if match:
