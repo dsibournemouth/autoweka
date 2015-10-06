@@ -5,9 +5,13 @@ import java.io.File;
 import org.apache.commons.lang.ArrayUtils;
 
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.rules.ZeroR;
 import weka.core.Attribute;
+import weka.core.AttributeStats;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.RemoveOutliers;
 import autoweka.InstanceGenerator;
 
 
@@ -60,6 +64,19 @@ class DatasetStats
             int numNominal = 0;
             int numNumeric = 0;
             int numClasses = training.numClasses();
+            int numMissing = 0;
+            int numOutliers = 0;
+            AttributeStats [] m_AttributeStats = new AttributeStats [training.numAttributes()];
+            
+            try {
+                RemoveOutliers outlierDetector = new RemoveOutliers();
+                outlierDetector.setInputFormat(training);
+                Instances filteredInstances = Filter.useFilter(training, outlierDetector);
+                numOutliers = training.size() - filteredInstances.size();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            
             for(int i = 0; i < training.numAttributes(); i++){
                 if(i == training.classIndex())
                     continue;
@@ -81,6 +98,9 @@ class DatasetStats
                     default:
                         throw new RuntimeException("Invalid attribute type '" + at.type() + "'");
                 }
+                
+                m_AttributeStats[i] = training.attributeStats(i);
+                numMissing += m_AttributeStats[i].missingCount;
             }
             
             double errorRate = -1;
@@ -95,18 +115,34 @@ class DatasetStats
               e.printStackTrace();
             }
             
+            double naiveBayesErrorRate = -1;
+            try{
+                NaiveBayes classifer = new NaiveBayes();
+                classifer.buildClassifier(training);
+                Evaluation eval = new Evaluation(training);
+                eval.evaluateModel(classifer, testing);
+                naiveBayesErrorRate = eval.pctIncorrect();
+              }
+              catch(Exception e){
+                e.printStackTrace();
+              }
+            
             if(latexOutput){
               System.out.println(String.format("%s & %d & %d & %d & %d & %d & %.02f \\\\", name, numNumeric, numNominal, numClasses, training.size(), testing.size(), errorRate));  
             }
             else{
-              System.out.println(" Num Training: " + training.size());
-              System.out.println(" Num Testing:  " + testing.size());
+              System.out.println(" Num Training:   " + training.size());
+              System.out.println(" Num Testing:    " + testing.size());
+              System.out.println(" Num Attributes: " + training.numAttributes());
               System.out.println("   Num Numeric:  " + numNumeric);
               System.out.println("   Num Nominal:  " + numNominal);
               System.out.println("   Num Date:     " + numDate);
               System.out.println("   Num String:   " + numString);
-              System.out.println("   Num Classes:   " + numClasses);
+              System.out.println("   Num Classes:  " + numClasses);
+              System.out.println(" Num Missing:    " + numMissing);
+              System.out.println(" Num Outliers:   " + numOutliers);
               System.out.println(String.format("Majority class error: %.02f %%", errorRate));
+              System.out.println(String.format("NaiveBayes error: %.02f %%", naiveBayesErrorRate));
             }
         }
     }
