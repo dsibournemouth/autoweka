@@ -1,6 +1,7 @@
 package autoweka;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -82,8 +83,9 @@ public abstract class InstanceGenerator
     {
         InputStream trainSource = null, testSource = null;
         //The instance file is a zipped file containing a file called 'train' and one called 'test'
+        ZipFile zipFile = null;
         try {
-            ZipFile zipFile = new ZipFile(zipFileName);
+            zipFile = new ZipFile(zipFileName);
             Enumeration entries = zipFile.entries();
             while(entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry)entries.nextElement();
@@ -104,7 +106,6 @@ public abstract class InstanceGenerator
                     System.err.println("Unknown file in zip dataset '" + name + "'");
                 }
             }
-            zipFile.close();
         } catch (java.io.IOException e) {
             throw new RuntimeException("IO Operation failed", e);
         }
@@ -135,6 +136,12 @@ public abstract class InstanceGenerator
             throw new RuntimeException("Failed to load testing data provided in zip", e);
         }
 
+        // Closing zipFile at the end, otherwise can't access to data files
+        try {
+            zipFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private void loadTrainTestArff(String trainArff, String testArff, String classIndex)
