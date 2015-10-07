@@ -276,12 +276,12 @@ public class Experiment extends XmlSerializable
                 logOutput.write(line + "\n");
                 logOutput.flush();
             }
-            
-            logOutput.close();
 
             //And we might as well do the trajectory parse
             TrajectoryParser.main(new String[]{"-single", expFolder.getAbsolutePath(), seed});
 
+            logOutput.close();
+            
             if(!noExit)
                 System.exit(proc.waitFor());
         }

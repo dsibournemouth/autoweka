@@ -144,14 +144,14 @@ public class SMACTrajectoryParser extends TrajectoryParser
                           default:
                             System.err.println("Unexpected evaluation status: " + row[13]);
                         }
-                        scanner.close();
                         
                     } catch (Exception e) {
                         //Whatevs... it's wrong
                         e.printStackTrace();
                     }
                 }
-                traj.setEvaluationCounts(numEvals, numMemOut, numTimeOut, numCompleted, numCrashed); 
+                traj.setEvaluationCounts(numEvals, numMemOut, numTimeOut, numCompleted, numCrashed);
+                scanner.close();
             }
             else
             {
