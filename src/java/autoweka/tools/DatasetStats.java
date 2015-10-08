@@ -20,9 +20,17 @@ class DatasetStats
     public static void main(String[] args)
     {
         boolean latexOutput = false;
+        boolean csvOutput = false;
+        
         if (args[0].equals("latex")){
           latexOutput = true;
           args = (String[]) ArrayUtils.subarray(args, 1, args.length);
+          System.out.println(String.format("name & numNumeric & numNominal & numClasses & training.numMissing & training.numOutliers & training.size & testing.size & errorRate & naiveBayesErrorRate \\\\"));
+        }
+        else if (args[0].equals("csv")){
+          csvOutput = true;
+          args = (String[]) ArrayUtils.subarray(args, 1, args.length);
+          System.out.println(String.format("name, numNumeric, numNominal, numClasses, training.numMissing, training.numOutliers, training.size, testing.size, errorRate, naiveBayesErrorRate"));
         }
         
         File firstFile = new File(args[0]);
@@ -43,7 +51,7 @@ class DatasetStats
         for(String zip : args){
             File f = new File(zip);
             String name = f.getName().replace(".zip", "");
-            if(!latexOutput){
+            if(!latexOutput && !csvOutput){
               System.out.println("Dataset: " + zip);
             }
             
@@ -127,10 +135,13 @@ class DatasetStats
                 e.printStackTrace();
               }
             
-            if(latexOutput){
-              System.out.println(String.format("%s & %d & %d & %d & %d & %d & %.02f \\\\", name, numNumeric, numNominal, numClasses, training.size(), testing.size(), errorRate));  
+            if (latexOutput) {
+              System.out.println(String.format("%s & %d & %d & %d & %d & %d & %d & %d & %.02f & %.02f \\\\", name, numNumeric, numNominal, numClasses, numMissing, numOutliers, training.size(), testing.size(), errorRate, naiveBayesErrorRate));  
             }
-            else{
+            else if (csvOutput) {
+              System.out.println(String.format("%s,%d,%d,%d,%d,%d,%d,%d,%.02f,%.02f", name, numNumeric, numNominal, numClasses, numMissing, numOutliers, training.size(), testing.size(), errorRate, naiveBayesErrorRate));
+            }
+            else {
               System.out.println(" Num Training:   " + training.size());
               System.out.println(" Num Testing:    " + testing.size());
               System.out.println(" Num Attributes: " + training.numAttributes());
