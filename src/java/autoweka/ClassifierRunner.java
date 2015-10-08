@@ -104,6 +104,7 @@ public class ClassifierRunner
         {
             ClassifierResult res = new ClassifierResult(resultMetric);
             res.setTrainingTime(time);
+            return res;
         }
 
         return runner.result;
