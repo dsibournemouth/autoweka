@@ -22,7 +22,7 @@ def scatter_all_seeds(results, title):
         if is_regression:
             error = np.log10(error)
 
-        plt.scatter(time, error, c=cm.hsv(seed / 25., 1))
+        plt.plot(time, error, linestyle='solid', linewidth=.5, marker='o', markersize=5, color=cm.hsv(seed / 25., 1), alpha=.75)
 
     plt.xlabel("Time (h)")
     if is_regression:
