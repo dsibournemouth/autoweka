@@ -73,35 +73,50 @@ def aggregated_line_seeds(results, title):
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
-    parser.add_argument('--dataset', choices=datasets, required=True)
-    parser.add_argument('--strategy', choices=strategies, required=True)
-    parser.add_argument('--generation', choices=generations, required=True)
+    parser.add_argument('--dataset', choices=datasets, required=False)
+    parser.add_argument('--strategy', choices=strategies, required=False)
+    parser.add_argument('--generation', choices=generations, required=False)
 
     args = parser.parse_args()
 
-    dataset = args.dataset
-    strategy = args.strategy
-    generation = args.generation
+    # override default values
+    if args.dataset:
+        selected_datasets = [args.dataset]
+    else:
+        selected_datasets = datasets
+    if args.strategy:
+        selected_strategies = [args.strategy]
+    else:
+        selected_strategies = strategies
+    if args.generation:
+        selected_generations = [args.generation]
+    else:
+        selected_generations = generations
 
     conn = sqlite3.connect('results.db')
     c = conn.cursor()
 
-    query = "SELECT seed, time, error FROM trajectories WHERE dataset='%s' AND strategy='%s' " \
-            "AND (generation='%s' or generation='%s-%s') AND error<1000000000 " \
-            "AND time<=%d" % (
-                dataset, strategy, generation, generation, dataset, TIME_LIMIT)
+    for dataset in selected_datasets:
+        for strategy in selected_strategies:
+            for generation in selected_generations:
 
-    results = c.execute(query).fetchall()
+                query = "SELECT seed, time, error FROM trajectories WHERE dataset='%s' AND strategy='%s' " \
+                        "AND (generation='%s' or generation='%s-%s') AND error<1000000000 " \
+                        "AND time<=%d" % (
+                            dataset, strategy, generation, generation, dataset, TIME_LIMIT)
+
+                results = c.execute(query).fetchall()
+
+                if not results:
+                    print "No results for dataset='%s' strategy='%s' generation='%s'" % (dataset, strategy, generation)
+                    continue
+
+                title = '%s.%s.%s' % (dataset, strategy, generation)
+
+                scatter_all_seeds(results, title)
+                aggregated_line_seeds(results, title)
 
     conn.close()
-
-    if not results:
-        raise Exception("No results for dataset='%s' strategy='%s' generation='%s'" % (dataset, strategy, generation))
-
-    title = '%s.%s.%s' % (dataset, strategy, generation)
-
-    scatter_all_seeds(results, title)
-    aggregated_line_seeds(results, title)
 
 
 if __name__ == "__main__":

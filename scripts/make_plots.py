@@ -25,20 +25,22 @@ for d in datasets:
         system("python boxplot.py %s full_cv_error" % d)
 
     for s in strategies:
-        if s not in ['DEFAULT', 'RAND']:
-            if cv_dps:
-                system("python plot_cv.vs.dps.py --dataset=%s --strategy=%s" % (d, s))
+        if s == 'DEFAULT':
+            continue
 
-            for g in generations:
-                if trajectories:
-                    system("python plot_trajectories.vs.time.py --dataset=%s --strategy=%s --generation=%s" % (
-                        d, s, g))
+        if cv_dps:
+            system("python plot_cv.vs.dps.py --dataset=%s --strategy=%s" % (d, s))
 
-                if flows:
-                    system("python plot_flow.py --dataset=%s --strategy=%s --generation=%s" % (
-                        d, s, g))
+        for g in generations:
+            if trajectories:
+                system("python plot_trajectories.vs.time.py --dataset=%s --strategy=%s --generation=%s" % (
+                    d, s, g))
 
-                for seed in seeds:
-                    if signals:
-                        system("python plot_signal.py --dataset=%s --strategy=%s --generation=%s --seed=%s" % (
-                            d, s, g, seed))
+            if flows:
+                system("python plot_flow.py --dataset=%s --strategy=%s --generation=%s" % (
+                    d, s, g))
+
+            for seed in seeds:
+                if signals:
+                    system("python plot_signal.py --dataset=%s --strategy=%s --generation=%s --seed=%s" % (
+                        d, s, g, seed))

@@ -32,7 +32,7 @@ def main():
 
     for dataset in selected_datasets:
         for strategy in selected_strategies:
-            if strategy not in ['DEFAULT', 'RAND']:
+            if strategy not in ['DEFAULT']:
                 for generation in selected_generations:
                     for seed in selected_seeds:
                         d = {"dataset": dataset, "strategy": strategy, "generation": generation}
