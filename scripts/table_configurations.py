@@ -3,6 +3,7 @@ import sqlite3
 import subprocess
 import argparse
 import operator
+import json
 import numpy as np
 from config import *
 
@@ -19,22 +20,10 @@ def parse_configuration(configuration, complete):
               'predictor': {'method': '', 'params': ''},
               'meta': {'method': '', 'params': ''}}
 
-    command = "$MY_JAVA_PATH/java -cp $AUTOWEKA_PATH/autoweka.jar weka.core.Utils parseOptions %s" % configuration
+    command = "%s/java -cp %s/autoweka.jar weka.core.Utils parseOptions %s" % (os.environ['MY_JAVA_PATH'], os.environ['AUTOWEKA_PATH'], configuration)
     output = subprocess.check_output(command, shell=True)
-    output = output.split("\n")
-    for line in output:
-        option = line.rstrip().split('=')
-        if len(option) == 2:
-            tmp = option[1].split(" ")
-            this_method = tmp[0].replace("weka.filters.AllFilter", "Nothing")
-            if this_method == "": this_method = "Nothing"
-            this_params = tmp[1:-1] if len(tmp) > 1 else ''
-            if option[0] != 'predictor' and len(this_params) > 0:
-                this_params = " ".join(this_params)
-            params[option[0]]['method'] = this_method
-            params[option[0]]['params'] = this_params
-
-    return params
+    output = output.replace('weka.filters.AllFilter', '-')
+    return json.loads(output)
 
 
 def create_frequency_table(frequency):
@@ -272,19 +261,7 @@ def get_results(dataset, strategy, generation):
 
     return results, best_error_seed, best_test_error_seed
 
-
-def main():
-    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
-    parser.add_argument('--dataset', choices=datasets, required=True)
-    parser.add_argument('--strategy', choices=strategies, required=True)
-    parser.add_argument('--generation', choices=generations, required=True)
-
-    args = parser.parse_args()
-
-    dataset = args.dataset
-    strategy = args.strategy
-    generation = args.generation
-
+def sub_main(dataset, strategy, generation):
     print "Creating table for %s %s %s" % (dataset, strategy, generation)
 
     results, best_error_seed, best_test_error_seed = get_results(dataset, strategy, generation)
@@ -313,6 +290,28 @@ def main():
     f = open('../tables/%s.%s.%s.html' % (dataset, strategy, generation), 'w')
     f.write(html)
     f.close()
+def main():
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    parser.add_argument('--dataset', choices=datasets, required=False)
+    parser.add_argument('--strategy', choices=strategies, required=False)
+    parser.add_argument('--generation', choices=generations, required=False)
+
+    args = parser.parse_args()
+
+    # override default values
+    selected_datasets = [args.dataset] if args.dataset else datasets
+    selected_strategies = [args.strategy] if args.strategy else strategies
+    selected_generations = [args.generation] if args.generation else generations
+        
+    for dataset in selected_datasets:
+        for strategy in selected_strategies:
+            for generation in selected_generations:
+                try:
+                    sub_main(dataset, strategy, generation)
+                except Exception as e:
+                    print e
+                    continue
+                
 
 
 if __name__ == "__main__":
