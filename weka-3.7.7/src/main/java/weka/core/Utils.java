@@ -2160,32 +2160,32 @@ public final class Utils
                 String[] predictorSpec = Utils.partitionOptions(filteredClassifierSpec);
 	          
                 System.out.println("{");
-                System.out.println(String.format("'missing_values': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"missing_values\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         M[0], 
                         M.length>1 ? String.join(" ", Arrays.copyOfRange(M, 1, M.length)) : ""
                         )
                 );
-                System.out.println(String.format("'outliers': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"outliers\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         O[0], 
                         O.length>1 ? String.join(" ", Arrays.copyOfRange(O, 1, O.length)) : ""
                         )
                 );
-                System.out.println(String.format("'transformation': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"transformation\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         T[0], 
                         T.length>1 ? String.join(" ", Arrays.copyOfRange(T, 1, T.length)) : ""
                         )
                 );
-                System.out.println(String.format("'dimensionality_reduction': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"dimensionality_reduction\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         R[0], 
                         R.length>1 ? String.join(" ", Arrays.copyOfRange(R, 1, R.length)) : ""
                         )
                 );
-                System.out.println(String.format("'sampling': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"sampling\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         S[0], 
                         S.length>1 ? String.join(" ", Arrays.copyOfRange(S, 1, S.length)) : ""
                         )
                 );
-                System.out.println(String.format("'predictor': {'method': '%s', 'params': '%s'}", 
+                System.out.println(String.format("\"predictor\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                         predictor, 
                         predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
                         )
@@ -2193,7 +2193,7 @@ public final class Utils
                 System.out.println("},");
 	    }
 	    System.out.println("],");
-	    System.out.println(String.format("'meta': {'method': '%s', 'params': '%s'}", 
+	    System.out.println(String.format("\"meta\": {\"method\": \"%s\", \"params\": \"%s\"}", 
                     meta, 
                     (wekaOptions.length>0 ? String.join(" ", Arrays.copyOfRange(wekaOptions, 1, wekaOptions.length)) : "").trim()
                     )
@@ -2216,37 +2216,37 @@ public final class Utils
 	  String[] predictorSpec = Utils.partitionOptions(filteredClassifierSpec);
 	  
 	  System.out.println("{");
-	  System.out.println(String.format("'missing_values': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"missing_values\": {\"method\": \"%s\", \"params\": \"%s\"},", 
 	          M[0], 
 	          M.length>1 ? String.join(" ", Arrays.copyOfRange(M, 1, M.length)) : ""
 	          )
 	  );
-	  System.out.println(String.format("'outliers': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"outliers\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                   O[0], 
                   O.length>1 ? String.join(" ", Arrays.copyOfRange(O, 1, O.length)) : ""
                   )
           );
-	  System.out.println(String.format("'transformation': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"transformation\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                   T[0], 
                   T.length>1 ? String.join(" ", Arrays.copyOfRange(T, 1, T.length)) : ""
                   )
           );
-	  System.out.println(String.format("'dimensionality_reduction': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"dimensionality_reduction\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                   R[0], 
                   R.length>1 ? String.join(" ", Arrays.copyOfRange(R, 1, R.length)) : ""
                   )
           );
-	  System.out.println(String.format("'sampling': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"sampling\": {\"method\": \"%s\", \"params\": \"%s\"},", 
                   S[0], 
                   S.length>1 ? String.join(" ", Arrays.copyOfRange(S, 1, S.length)) : ""
                   )
           );
-	  System.out.println(String.format("'predictor': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"predictor\": {\"method\": \"%s\", \"params\": \"%s\"},", 
 	          predictor, 
 	          predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
                   )
           );
-	  System.out.println(String.format("'meta': {'method': '%s', 'params': '%s'}", 
+	  System.out.println(String.format("\"meta\": {\"method\": \"%s\", \"params\": \"%s\"}", 
 	          meta, 
 	          (wekaOptions.length>0 ? String.join(" ", Arrays.copyOfRange(wekaOptions, 1, wekaOptions.length)) : "").trim()
                   )
