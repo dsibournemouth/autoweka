@@ -210,6 +210,8 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
 
     table += '</tbody></table>\n'
 
+    table += '<a href="#" onclick="$(\'.extra_info\').toggle()">Show more info</a><div class="extra_info" style="display:none">'
+    
     sim = average_similarity(matrix)
     table += '<strong>Average flow similarity: %0.2f &#37;</strong><br/>\n' % (sim * 100)
 
@@ -224,8 +226,10 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
 
     frequency_table = create_frequency_table(frequency)
     table += frequency_table
+    
+    table += '</div>'
 
-    table += "\n<div>Percentage used: " + create_percentage_used_table(frequency) + "</div>\n"
+    #table += "\n<div>Percentage used: " + create_percentage_used_table(frequency) + "</div>\n"
 
     return table
 
