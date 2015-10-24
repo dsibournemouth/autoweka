@@ -30,6 +30,7 @@ autoweka.ui.properties
 /plots*
 /tables*
 /flowcharts*
+/distances*
 *.csv
 *.db
 *.pyc
