@@ -33,7 +33,7 @@ instances = [line.strip() for line in open(options.instanceFile, 'r').readlines(
 
 trainingTime = 0
 tpeTime = 0
-lastPythonTime = time.clock()
+lastPythonTime = time.time()
 
 def executeableWrapper(args):
     global trainingTime, tpeTime, lastPythonTime
@@ -77,7 +77,7 @@ def executeableWrapper(args):
     for instance in instances:
         execcmd = "%s %s %s" % (options.executable, instance.replace("|", "\\|"), argString)
         # print "EXEC", execcmd
-        start_time = time.clock()
+        start_time = time.time()
 
         try:
             process_output = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True)
@@ -87,7 +87,7 @@ def executeableWrapper(args):
             res = 'FAILED'
             print str(e)
             
-        end_time = time.clock()
+        end_time = time.time()
         trainingTime += end_time - start_time # difference in seconds
 
         match = resultRegex.match(res)
@@ -118,10 +118,10 @@ def executeableWrapper(args):
     if not failed:
         computedScore = sum(losses)/len(losses)
 
-    pythonTime = time.clock() - lastPythonTime
+    pythonTime = time.time() - lastPythonTime
     #trainingTime += pythonTime
     tpeTime += pythonTime
-    lastPythonTime = time.clock()
+    lastPythonTime = time.time()
 
     #Let the world know how long stuff has been working for
     print "Training time:", trainingTime, ", TPE time: ", tpeTime
