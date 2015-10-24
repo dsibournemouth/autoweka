@@ -1,13 +1,9 @@
 import os
 import sqlite3
-import subprocess
 import argparse
-import operator
-import json
-import numpy as np
 import traceback
 from config import *
-from table_configurations import parse_configuration, table_header, table_row, average_similarity, create_table
+from table_configurations import create_table
 
 
 def get_results(dataset, strategy, generation):
@@ -41,6 +37,7 @@ def get_results(dataset, strategy, generation):
 
     return results, best_error_seed, best_test_error_seed
 
+
 def sub_main(dataset, strategy, generation):
     print "Creating table for %s %s %s" % (dataset, strategy, generation)
 
@@ -51,7 +48,8 @@ def sub_main(dataset, strategy, generation):
 
     table = create_table(results, best_error_seed, best_test_error_seed, strategy != 'DEFAULT')
     return table
-    
+
+
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     parser.add_argument('--dataset', choices=datasets, required=False)
@@ -64,7 +62,7 @@ def main():
     selected_datasets = [args.dataset] if args.dataset else datasets
     selected_strategies = [args.strategy] if args.strategy else strategies
     selected_generations = [args.generation] if args.generation else generations
-    
+
     css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
     javascript = '<script type="text/javascript" src="js/jquery-latest.js"></script>' \
                  '<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>' \
@@ -72,7 +70,7 @@ def main():
 
     header = '<html><head>%s%s</head><body>\n' % (css, javascript)
     footer = '</body></html>'
-        
+
     for dataset in selected_datasets:
         tables = ''
         for strategy in selected_strategies:
@@ -89,6 +87,7 @@ def main():
         f = open('../tables/top_%s.html' % dataset, 'w')
         f.write(header + tables + footer)
         f.close()
+
 
 if __name__ == "__main__":
     main()
