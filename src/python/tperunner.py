@@ -5,7 +5,7 @@ import math
 import re
 import subprocess
 import sys
-import os
+import time
 logging.basicConfig( stream=sys.stdout, level=logging.INFO)
 
 defaultMaxEvals = 0xFFFFFFFF
@@ -33,7 +33,7 @@ instances = [line.strip() for line in open(options.instanceFile, 'r').readlines(
 
 trainingTime = 0
 tpeTime = 0
-lastPythonTime = os.times()[0]
+lastPythonTime = time.clock()
 
 def executeableWrapper(args):
     global trainingTime, tpeTime, lastPythonTime
@@ -77,6 +77,8 @@ def executeableWrapper(args):
     for instance in instances:
         execcmd = "%s %s %s" % (options.executable, instance.replace("|", "\\|"), argString)
         # print "EXEC", execcmd
+        start_time = time.clock()
+
         try:
             process_output = subprocess.check_output(execcmd, stderr=subprocess.STDOUT, shell=True)
             print process_output
@@ -84,10 +86,13 @@ def executeableWrapper(args):
         except Exception as e:
             res = 'FAILED'
             print str(e)
+            
+        end_time = time.clock()
+        trainingTime += end_time - start_time # difference in seconds
 
         match = resultRegex.match(res)
         if match:
-            trainingTime += float(match.group("time"))
+            #trainingTime += float(match.group("time"))
             score = float(match.group("score"))
             losses.append(score)
             print "Run Status", instance, res
@@ -113,16 +118,16 @@ def executeableWrapper(args):
     if not failed:
         computedScore = sum(losses)/len(losses)
 
-    pythonTime = os.times()[0] - lastPythonTime
-    trainingTime += pythonTime
+    pythonTime = time.clock() - lastPythonTime
+    #trainingTime += pythonTime
     tpeTime += pythonTime
-    lastPythonTime = os.times()[0]
+    lastPythonTime = time.clock()
 
     #Let the world know how long stuff has been working for
     print "Training time:", trainingTime, ", TPE time: ", tpeTime
     print "Computed score", computedScore
 
-    if options.tunerTimeout > 0 and trainingTime > options.tunerTimeout:
+    if options.tunerTimeout > 0 and (trainingTime > options.tunerTimeout or tpeTime > options.tunerTimeout):
         print "Tuner timeout hit"
         sys.exit(0)
 
