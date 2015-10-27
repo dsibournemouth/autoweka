@@ -1,4 +1,5 @@
 import os
+import traceback
 import argparse
 import numpy as np
 from config import *
@@ -53,14 +54,21 @@ def sub_main(dataset, strategy, generation, plot_flags):
         params = parse_configuration(result[4], True)
         error = float(result[5])
         flow = [
-            params['missing_values']['method'],
-            params['outliers']['method'],
-            params['transformation']['method'],
-            params['dimensionality_reduction']['method'],
-            params['sampling']['method'],
-            params['predictor']['method'],
-            params['meta']['method']
+                params['missing_values']['method'] if 'missing_values' in params.keys() else "-",
+                params['outliers']['method'] if 'outliers' in params.keys() else "-",
+                params['transformation']['method'] if 'transformation' in params.keys() else "-",
+                params['dimensionality_reduction']['method'] if 'dimensionality_reduction' in params.keys() else "-",
+                params['sampling']['method'] if 'sampling' in params.keys() else "-"
         ]
+            
+        if 'predictors' in params.keys():
+            for predictor in params['predictors']:
+                flow.append(predictor['predictor']['method'])
+        else:
+            flow.append(params['predictor']['method'])
+            
+        flow.append(params['meta']['method'])
+        
         configurations.append(flow)
         errors.append(error)
         flow_string = ""
@@ -104,6 +112,7 @@ def main():
                     sub_main(dataset, strategy, generation, plot_flags)
                 except Exception as e:
                     print e
+                    traceback.print_exc()
                     continue
 
 
