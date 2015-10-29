@@ -5,6 +5,7 @@ import numpy as np
 from config import *
 from table_configurations import parse_configuration, get_results
 from plot_dendograms import plot_dendogram
+from plot_distances import plot_distances
 
 
 def create_distance_matrix_by_configuration(configurations):
@@ -63,7 +64,8 @@ def sub_main(dataset, strategy, generation, plot_flags):
             
         if 'predictors' in params.keys():
             for predictor in params['predictors']:
-                flow.append(predictor['predictor']['method'])
+                predictor_string = predictor['predictor']['method'].split(' ')[0]
+                flow.append(predictor_string)
         else:
             flow.append(params['predictor']['method'])
             
@@ -76,15 +78,21 @@ def sub_main(dataset, strategy, generation, plot_flags):
             flow_string += flow[i].split(".")[-1] + " "
         labels.append("#%s (%.2f) %s" % (seed, error, flow_string))
 
+    
+    matrix = create_distance_matrix_by_configuration(configurations)
+    mean_distance_configuration = (np.sum(matrix)/2) / (matrix.shape[0]*matrix.shape[1] / 2)
     if plot_flags['by_configuration']:
-        matrix = create_distance_matrix_by_configuration(configurations)
         np.savetxt("../distances/by_configuration/%s.%s.%s.csv" % (dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation), "../distances/by_configuration")
-    
+
+
+    matrix = create_distance_matrix_by_error(errors)
+    mean_distance_error = (np.sum(matrix)/2) / (matrix.shape[0]*matrix.shape[1] / 2)
     if plot_flags['by_error']:
-        matrix = create_distance_matrix_by_error(errors)
         np.savetxt("../distances/by_error/%s.%s.%s.csv" % (dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation), "../distances/by_error")
+        
+    return mean_distance_configuration, mean_distance_error
 
 
 def main():
@@ -105,16 +113,23 @@ def main():
     plot_flags = {'by_configuration': args.plot_by_configuration,
                   'by_error': args.plot_by_error}
 
+    means_label = []
+    means_config = []
+    means_error = []
     for dataset in selected_datasets:
         for strategy in selected_strategies:
             for generation in selected_generations:
                 try:
-                    sub_main(dataset, strategy, generation, plot_flags)
+                    mean_distance_configuration, mean_distance_error = sub_main(dataset, strategy, generation, plot_flags)
+                    means_label.append("%s.%s.%s" % (dataset, strategy, generation))
+                    means_config.append(mean_distance_configuration)
+                    means_error.append(mean_distance_error)
                 except Exception as e:
                     print e
                     traceback.print_exc()
                     continue
 
+    plot_distances(means_config, means_error, means_label)
 
 if __name__ == "__main__":
     main()

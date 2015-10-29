@@ -15,7 +15,9 @@ def parse_configuration(configuration, complete):
     command = "%s/java -cp %s/autoweka.jar weka.core.Utils parseOptions %s" % (
         os.environ['MY_JAVA_PATH'], os.environ['AUTOWEKA_PATH'], configuration)
     output = subprocess.check_output(command, shell=True)
+    #print output
     output = output.replace('weka.filters.AllFilter', '-')
+    output = output.replace('MyFilteredClassifier', 'FilteredClassifier')
     return json.loads(output)
 
 

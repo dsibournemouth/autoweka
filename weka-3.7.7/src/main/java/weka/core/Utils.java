@@ -2157,9 +2157,13 @@ public final class Utils
                 String[] T = Utils.splitOptions(getOption("T", filterSpec));
                 String[] R = Utils.splitOptions(getOption("R", filterSpec));
                 String[] S = Utils.splitOptions(getOption("S", filterSpec));
-	          
-                String predictor = getOption("W", filteredClassifierSpec);
-                String[] predictorSpec = Utils.partitionOptions(filteredClassifierSpec);
+	        
+                String predictor = "";
+                String[] predictorSpec = new String[]{};
+                if (filteredClassifier.equals("weka.classifiers.meta.FilteredClassifier")) {
+                    predictor = getOption("W", filteredClassifierSpec);
+                    predictorSpec = Utils.partitionOptions(filteredClassifierSpec);    
+                }
 	          
                 json += "{";
                 if (M.length > 0) {
