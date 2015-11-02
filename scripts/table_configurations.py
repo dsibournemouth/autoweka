@@ -15,10 +15,15 @@ def parse_configuration(configuration, complete):
     command = "%s/java -cp %s/autoweka.jar weka.core.Utils parseOptions %s" % (
         os.environ['MY_JAVA_PATH'], os.environ['AUTOWEKA_PATH'], configuration)
     output = subprocess.check_output(command, shell=True)
-    #print output
     output = output.replace('weka.filters.AllFilter', '-')
     output = output.replace('MyFilteredClassifier', 'FilteredClassifier')
-    return json.loads(output)
+    try:
+        return json.loads(output)
+    except Exception as e:
+        print configuration
+        print output
+        raise e
+        
 
 
 def create_frequency_table(frequency):
@@ -230,7 +235,7 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
 
 
 def get_results(dataset, strategy, generation):
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error, num_evaluations

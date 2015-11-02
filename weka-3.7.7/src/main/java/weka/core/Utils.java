@@ -2149,9 +2149,16 @@ public final class Utils
 	              break;
                 }
                 String [] filteredClassifierSpec = Utils.partitionOptions(wekaOptions);
-	          
-                String filters = getOption("F", filteredClassifierSpec);
-                String [] filterSpec = Utils.splitOptions(filters);
+	        
+                String [] filterSpec = new String[]{};
+                try{
+                    String filters = getOption("F", filteredClassifierSpec);
+                    filterSpec = Utils.splitOptions(filters);
+                }
+                catch(Exception e){
+                    // continue
+                }
+                
                 String[] M = Utils.splitOptions(getOption("M", filterSpec));
                 String[] O = Utils.splitOptions(getOption("O", filterSpec));
                 String[] T = Utils.splitOptions(getOption("T", filterSpec));
@@ -2198,7 +2205,7 @@ public final class Utils
                 }
                 // TODO Hack to remove
                 if (!predictor.startsWith("weka")) {
-                    predictor = filteredClassifier;
+                    predictor = filteredClassifier.split(" ")[0];
                     predictorSpec = filteredClassifierSpec;
                 }
                 json += String.format("\"predictor\": {\"method\": \"%s\", \"params\": \"%s\"}", 
@@ -2220,8 +2227,14 @@ public final class Utils
 	  String filteredClassifier = getOption("W", wekaOptions);
 	  String[] filteredClassifierSpec = Utils.partitionOptions(wekaOptions);
 	  
-	  String filters = getOption("F", filteredClassifierSpec);
-	  String [] filterSpec = Utils.splitOptions(filters);
+	  String [] filterSpec = new String[]{};
+          try{
+              String filters = getOption("F", filteredClassifierSpec);
+              filterSpec = Utils.splitOptions(filters);
+          }
+          catch(Exception e){
+              // continue
+          }
 	  String[] M = Utils.splitOptions(getOption("M", filterSpec));
 	  String[] O = Utils.splitOptions(getOption("O", filterSpec));
 	  String[] T = Utils.splitOptions(getOption("T", filterSpec));

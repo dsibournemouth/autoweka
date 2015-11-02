@@ -36,9 +36,9 @@ def plot_distances(x, y, labels):
     plt.xlabel('MCPS dissimilarity')
     plt.ylabel('Error variance')
     # TODO fix legend
-    handles, labels = ax.get_legend_handles_labels()
-    lgd = ax.legend(handles, labels, loc='center right', bbox_to_anchor=(0.5,-0.1), numpoints=1)
-    plt.savefig('../distances/_all.png', dpi=200, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    #handles, labels = ax.get_legend_handles_labels()
+    #lgd = ax.legend(handles, labels, loc='center right', bbox_to_anchor=(0.5,-0.1), numpoints=1)
+    plt.savefig('../distances/_all.png', dpi=200, bbox_inches='tight')
     plt.close("all")
 
 

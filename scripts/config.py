@@ -6,7 +6,7 @@ datasets = [
 
 generations = ['CV']
 
-strategies = ['DEFAULT',
+strategies = [#'DEFAULT',
               'RAND',
               'SMAC',
               # 'ROAR',
@@ -50,3 +50,6 @@ methods = [
 
 is_regression = False
 NUM_FOLDS_CONFIG = 10
+
+experiments_folder = 'experiments'
+database_file = 'results.db'
