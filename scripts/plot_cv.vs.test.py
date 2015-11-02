@@ -61,7 +61,7 @@ def comparison_plot(results_CV, title):
 
 def main():
 
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     sql_CV = "SELECT dataset, strategy, seed, error, test_error FROM results WHERE generation='CV'"

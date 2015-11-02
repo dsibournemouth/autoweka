@@ -20,7 +20,7 @@ def main():
     seed = args.seed
 
     experiment = "%s.%s.%s-%s" % (dataset, strategy, generation, dataset)
-    logfile = '%s/experiments/%s/out/logs/%s' % (os.environ['AUTOWEKA_PATH'], experiment, seed)
+    logfile = '%s/%s/%s/out/logs/%s' % (os.environ['AUTOWEKA_PATH'], experiments_folder, experiment, seed)
 
     command = "grep SubProcessWrapper: %s.log | sed -e 's/SubProcessWrapper: Time(\([0-9.]*\)) Score(\([0-9.]*\))/\\1,\\2/g'" % logfile
 

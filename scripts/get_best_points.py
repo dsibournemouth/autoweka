@@ -40,8 +40,8 @@ def main():
                         trajectory_file = "%s.trajectories.%s" % (experiment, seed)
 
                         os.system(
-                            "cd %s && %s/java -cp autoweka.jar autoweka.tools.GetBestFromTrajectoryGroupCSV experiments/%s/%s" % (
-                                os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'], experiment, trajectory_file))
+                            "cd %s && %s/java -cp autoweka.jar autoweka.tools.GetBestFromTrajectoryGroupCSV %s/%s/%s" % (
+                                os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'], experiments_folder, experiment, trajectory_file))
 
 
 if __name__ == "__main__":

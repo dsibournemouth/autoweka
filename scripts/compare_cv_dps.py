@@ -2,7 +2,7 @@ import sqlite3
 from pylab import *
 from config import *
 
-conn = sqlite3.connect('results.db')
+conn = sqlite3.connect(database_file)
 c = conn.cursor()
 
 strategy = 'SMAC'

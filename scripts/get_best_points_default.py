@@ -10,7 +10,7 @@ is_classification = True
 
 validation = sys.argv[1]
 
-path = "%s/experiments/defaultParameters" % os.environ['AUTOWEKA_PATH']
+path = "%s/%s/defaultParameters" % (os.environ['AUTOWEKA_PATH'], experiments_folder)
 
 f_validation = open("%s/%s.csv" % (path, validation), 'w')
 f_best = open("%s/scripts/results_default.csv" % os.environ['AUTOWEKA_PATH'], 'w')

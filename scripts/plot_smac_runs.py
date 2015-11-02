@@ -90,7 +90,7 @@ def main():
     for dataset in selected_datasets:
         results = []
         for seed in seeds:
-            path = "%s/experiments/%s.SMAC.CV-%s/out/autoweka/state-run%s" % (os.environ['AUTOWEKA_PATH'], dataset, dataset, seed)
+            path = "%s/%s/%s.SMAC.CV-%s/out/autoweka/state-run%s" % (os.environ['AUTOWEKA_PATH'], experiments_folder, dataset, dataset, seed)
             try:
                 os.chdir(path)
                 found_files = glob.glob("runs_and_results-it*.csv")

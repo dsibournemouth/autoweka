@@ -22,7 +22,7 @@ skip_keys = ['TPE-DPS']
 
 dataset = sys.argv[1]
 
-conn = sqlite3.connect('results.db')
+conn = sqlite3.connect(database_file)
 c = conn.cursor()
 
 query = "SELECT strategy,generation,%s FROM results WHERE dataset='%s' AND %s<100000" % (

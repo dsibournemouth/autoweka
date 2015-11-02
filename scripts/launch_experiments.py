@@ -33,8 +33,8 @@ def main():
     for dataset in selected_datasets:
         for strategy in selected_strategies:
             for generation in selected_generations:
-                folder = '%s/experiments/%s.%s.%s-%s' % (
-                    os.environ['AUTOWEKA_PATH'], dataset, strategy, generation, dataset)
+                folder = '%s/%s/%s.%s.%s-%s' % (
+                    os.environ['AUTOWEKA_PATH'], experiments_folder, dataset, strategy, generation, dataset)
                 for seed in selected_seeds:
                     experiment_name = '%s.%s.%s.%s' % (dataset, strategy, generation, seed)
                     command = 'qsub  -N %s -l q=compute ./single-experiment.sh %s %s' % (experiment_name, folder, seed)

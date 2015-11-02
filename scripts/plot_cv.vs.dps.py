@@ -110,7 +110,7 @@ def main():
     results_DPS = []
 
     for error_type in ['error', 'test_error']:
-        conn = sqlite3.connect('results.db')
+        conn = sqlite3.connect(database_file)
         c = conn.cursor()
 
         sql_CV = "SELECT seed, %s, num_evaluations FROM results WHERE dataset='%s' AND strategy='%s' AND generation='CV' ORDER BY seed" % (

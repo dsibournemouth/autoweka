@@ -10,7 +10,7 @@ from config import *
 
 
 def create_table():
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     c.execute('DROP TABLE IF EXISTS trajectories')
@@ -78,10 +78,10 @@ def main():
     if len(sys.argv) > 1:
         create_table()
 
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
-    mypath = '%s/experiments' % os.environ['AUTOWEKA_PATH']
+    mypath = '%s/%s' % (os.environ['AUTOWEKA_PATH'], experiments_folder)
     experiments = [f for f in listdir(mypath) if isdir(join(mypath, f))]
     for e in experiments:
         folder = "%s/%s" % (mypath, e)

@@ -19,7 +19,7 @@ else:
 datasets_path = "datasets"
 repetitions = 10
 
-conn = sqlite3.connect('%s/scripts/results.db' % os.environ['AUTOWEKA_PATH'])
+conn = sqlite3.connect(database_file)
 c = conn.cursor()
 
 if individual:

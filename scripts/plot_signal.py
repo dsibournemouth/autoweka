@@ -19,10 +19,10 @@ def plot_target_vs_prediction(targets, predictions, limit, title):
 
 def get_target_and_predictions(dataset, strategy, generation, seed):
     experiment_name = '%s.%s.%s-%s' % (dataset, strategy, generation, dataset)
-    training_predictions_filename = '%s/experiments/%s/training.predictions.%s.csv' % (
-        os.environ['AUTOWEKA_PATH'], experiment_name, seed)
-    predictions_filename = '%s/experiments/%s/predictions.%s.csv' % (
-        os.environ['AUTOWEKA_PATH'], experiment_name, seed)
+    training_predictions_filename = '%s/%s/%s/training.predictions.%s.csv' % (
+        os.environ['AUTOWEKA_PATH'], experiments_folder, experiment_name, seed)
+    predictions_filename = '%s/%s/%s/predictions.%s.csv' % (
+        os.environ['AUTOWEKA_PATH'], experiments_folder, experiment_name, seed)
 
     training_results = np.genfromtxt(training_predictions_filename, skip_header=1, delimiter=",")
     testing_results = np.genfromtxt(predictions_filename, skip_header=1, delimiter=",")

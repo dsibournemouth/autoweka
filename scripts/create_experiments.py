@@ -17,7 +17,7 @@ template = f_input.read()
 
 for d in selected_datasets:
     print d
-    f_output_name = '%s/experiments/%s.batch' % (os.environ['AUTOWEKA_PATH'], d)
+    f_output_name = '%s/%s/%s.batch' % (os.environ['AUTOWEKA_PATH'], experiments_folder, d)
     f_output = open(f_output_name, 'w')
     clean = template.replace("{DATASET}", d)
     f_output.write(clean)

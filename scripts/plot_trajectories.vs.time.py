@@ -93,7 +93,7 @@ def main():
     else:
         selected_generations = generations
 
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     for dataset in selected_datasets:

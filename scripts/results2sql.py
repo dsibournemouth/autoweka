@@ -117,7 +117,7 @@ def main():
 
     args = parser.parse_args()
 
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
 
     if args.create_tables:
         create_tables(conn, pretend=args.pretend)

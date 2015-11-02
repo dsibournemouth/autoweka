@@ -38,7 +38,7 @@ def main():
                 for generation in selected_generations:
                     d = {"dataset": dataset, "strategy": strategy, "generation": generation}
                     experiment = "{dataset}.{strategy}.{generation}-{dataset}".format(**d)
-                    folder = '%s/experiments/%s' % (os.environ['AUTOWEKA_PATH'], experiment)
+                    folder = '%s/%s/%s' % (os.environ['AUTOWEKA_PATH'], experiments_folder, experiment)
                     for seed in selected_seeds:
                         filename = 'training.predictions.%s.csv' % seed
                         # avoid computing existing predictions

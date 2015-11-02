@@ -58,7 +58,7 @@ def table_row(dataset, results):
 
 
 def get_results(dataset):
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     c.execute('''SELECT dataset, strategy, generation, avg(error), avg(test_error),

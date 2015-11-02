@@ -7,7 +7,7 @@ from table_configurations import create_table
 
 
 def get_results(dataset, strategy, generation):
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
     c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error, num_evaluations

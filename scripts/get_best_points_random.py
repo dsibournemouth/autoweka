@@ -63,7 +63,7 @@ def main():
         info("Extracting hashes...")
         subprocess.call("./extract_hashes.sh", shell=True)
 
-    mypath = '%s/experiments' % os.environ['AUTOWEKA_PATH']
+    mypath = '%s/%s' % (os.environ['AUTOWEKA_PATH'], experiments_folder)
     experiments = [f for f in listdir(mypath) if isdir(join(mypath, f))]
 
     for e in experiments:
@@ -73,8 +73,8 @@ def main():
             if dataset not in datasets:
                 continue
 
-            points_path = "%s/experiments/%s/points" % (os.environ['AUTOWEKA_PATH'], e)
-            logs_path = "%s/experiments/%s/out/hashes" % (os.environ['AUTOWEKA_PATH'], e)
+            points_path = "%s/%s/%s/points" % (os.environ['AUTOWEKA_PATH'], experiments_folder, e)
+            logs_path = "%s/%s/%s/out/hashes" % (os.environ['AUTOWEKA_PATH'], experiments_folder, e)
             if not isdir(points_path):
                 info("!!!! No points for this experiment: %s" % e)
                 continue

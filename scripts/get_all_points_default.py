@@ -10,7 +10,7 @@ if len(sys.argv) < 2:
 
 validation = sys.argv[1]
 
-path = "%s/experiments/defaultParameters" % os.environ['AUTOWEKA_PATH']
+path = "%s/%s/defaultParameters" % (os.environ['AUTOWEKA_PATH'], experiments_folder)
 
 best = dict()
 best_seed = dict()

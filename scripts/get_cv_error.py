@@ -28,7 +28,7 @@ def main():
 
     strategy = 'SMAC'
 
-    conn = sqlite3.connect('results.db')
+    conn = sqlite3.connect(database_file)
 
     c = conn.cursor()
 
@@ -42,7 +42,7 @@ def main():
                 cv_error = 0
                 failure = False
                 try:
-                    f = open('%s/experiments/%s/out/autoweka/%s' % (os.environ['AUTOWEKA_PATH'], experiment, cv_logfile))
+                    f = open('%s/%s/%s/out/autoweka/%s' % (os.environ['AUTOWEKA_PATH'], experiment, experiments_folder, cv_logfile))
                     for line in f:
                         if "TIMEOUT" in line or "CRASH" in line:
                             failure = True
