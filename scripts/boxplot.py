@@ -9,6 +9,7 @@ mpl.use('Agg')
 from pylab import *
 import sys
 from collections import OrderedDict
+from config import *
 
 if len(sys.argv) < 3:
     print 'Syntax: python boxplot.py <dataset_name> <type_error>'

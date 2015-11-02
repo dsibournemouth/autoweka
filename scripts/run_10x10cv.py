@@ -4,6 +4,7 @@ import subprocess
 import sys
 import os
 from numpy import median
+from config import *
 
 if len(sys.argv) < 5:
     # print "Syntax: python run_10x10cv.py <dataset_name> <strategy> <generation> <seed>"

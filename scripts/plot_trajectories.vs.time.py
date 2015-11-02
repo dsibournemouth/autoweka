@@ -8,8 +8,6 @@ import pandas.stats.moments as stats
 from operator import itemgetter
 from config import *
 
-TIME_LIMIT = 30 * 60 * 60  # 30 hours
-
 
 def scatter_all_seeds(results, title):
     plt.close()
