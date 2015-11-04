@@ -64,7 +64,7 @@ class RandomSearchWorker
         while(mTimeRemaining > 0)
         {
           RandomSearchResult res = evaluatePoint();
-          double error = 1E10;
+          double error = 0;
           if (res.results.size() > 0) {
                 // Skip test error (the last element in the results array)
                 for(RandomSearchResult.InstanceResult instanceResult : res.results.subList(0, res.results.size()-1)){
@@ -73,6 +73,8 @@ class RandomSearchWorker
                 }
                 error /= res.results.size()-1;
                 numTotalEvaluations += res.results.size();
+          } else {
+              error = 1E10;
           }
           
           if (error < bestError) {
