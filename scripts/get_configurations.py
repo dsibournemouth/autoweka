@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os
 import traceback
 import argparse
@@ -75,7 +78,10 @@ def sub_main(dataset, strategy, generation, plot_flags):
         errors.append(error)
         flow_string = ""
         for i in reversed(range(0, len(flow))):
-            flow_string += flow[i].split(".")[-1] + " "
+            this_component = flow[i].split(".")[-1]
+            if this_component != '-':
+                flow_string += this_component + u" ← "
+        flow_string = flow_string[:-3]
         labels.append("#%s (%.2f) %s" % (seed, error, flow_string))
 
     
