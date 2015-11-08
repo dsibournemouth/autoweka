@@ -1,5 +1,5 @@
-import argparse
 import os
+import argparse
 import sqlite3
 import subprocess
 from config import *

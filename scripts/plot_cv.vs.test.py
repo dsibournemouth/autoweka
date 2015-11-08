@@ -1,3 +1,4 @@
+import os
 import argparse
 import sqlite3
 from pylab import *  # includes np and plt

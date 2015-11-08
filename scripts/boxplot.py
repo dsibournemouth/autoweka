@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import argparse
+import os
 import sqlite3
 import matplotlib as mpl
 import matplotlib.pyplot as plt
