@@ -5,6 +5,7 @@ import argparse
 import operator
 import json
 import numpy as np
+import traceback
 from config import *
 
 
@@ -22,6 +23,7 @@ def parse_configuration(configuration, complete):
     except Exception as e:
         print configuration
         print output
+        traceback.print_exc()
         raise e
         
 
@@ -274,7 +276,9 @@ def sub_main(dataset, strategy, generation):
     if not results:
         raise Exception("No results for %s.%s.%s" % (dataset, strategy, generation))
 
-    table = create_table(results, best_error_seed, best_test_error_seed, strategy != 'DEFAULT')
+    #is_complete = strategy != 'DEFAULT'
+    is_complete = False
+    table = create_table(results, best_error_seed, best_test_error_seed, is_complete)
 
     plots = ''
     if strategy not in ['DEFAULT', 'RAND']:
@@ -299,6 +303,7 @@ def sub_main(dataset, strategy, generation):
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--dataset', choices=datasets, required=False)
     parser.add_argument('--strategy', choices=strategies, required=False)
     parser.add_argument('--generation', choices=generations, required=False)
@@ -317,6 +322,7 @@ def main():
                     sub_main(dataset, strategy, generation)
                 except Exception as e:
                     print e
+                    traceback.print_exc()
                     continue
 
 

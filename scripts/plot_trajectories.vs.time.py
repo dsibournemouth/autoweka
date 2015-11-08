@@ -71,6 +71,7 @@ def aggregated_line_seeds(results, title):
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--dataset', choices=datasets, required=False)
     parser.add_argument('--strategy', choices=strategies, required=False)
     parser.add_argument('--generation', choices=generations, required=False)

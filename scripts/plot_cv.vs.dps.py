@@ -1,3 +1,4 @@
+import os
 import argparse
 import sqlite3
 from pylab import *  # includes np and plt
@@ -96,7 +97,8 @@ def num_evaluations_plot(results_CV, results_DPS, title):
     plt.clf()
 
 def main():
-    parser = argparse.ArgumentParser(prog='plot_trajectories.vs.time.py')
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--dataset', choices=datasets, required=True)
     parser.add_argument('--strategy', choices=strategies, required=True)
 

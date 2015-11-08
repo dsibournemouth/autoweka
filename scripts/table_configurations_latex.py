@@ -1,8 +1,8 @@
 import os
 import argparse
 import sqlite3
-from config import *
 from table_configurations import parse_configuration
+from config import *
 
 def get_results(dataset):
     conn = sqlite3.connect(database_file)
@@ -19,12 +19,14 @@ def get_results(dataset):
     conn.close()
 
     return results
-
+    
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
+    
     parser.add_argument('--dataset', choices=datasets, required=False)
-
     args = parser.parse_args()
+    
 
     # override default values
     if args.dataset:

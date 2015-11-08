@@ -60,7 +60,9 @@ def comparison_plot(results_CV, title):
 
 
 def main():
-
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
+    
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
 

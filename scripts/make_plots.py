@@ -4,6 +4,7 @@ import os
 from config import *
 
 parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+globals().update(load_config(parser))
 parser.add_argument('--only-boxplots', action='store_true')
 parser.add_argument('--only-cv-dps', action='store_true')
 parser.add_argument('--only-trajectories', action='store_true')

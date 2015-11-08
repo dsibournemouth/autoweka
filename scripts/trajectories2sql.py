@@ -75,6 +75,8 @@ def parse_trajectories(folder, c):
 
 
 def main():
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     if len(sys.argv) > 1:
         create_table()
 

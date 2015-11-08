@@ -55,6 +55,7 @@ def get_seed(tmp_folder, point):
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--skip-hashes', action='store_true')
 
     args = parser.parse_args()

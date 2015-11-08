@@ -2,6 +2,7 @@ import os
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt
+from config import *
 
 #methods = ['single', 'complete', 'average', 'centroid', 'median', 'ward']
 methods = ['complete']
@@ -23,6 +24,7 @@ def plot_dendogram(distance_matrix, labels, title, folder):
         
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--matrix', required=True)
     parser.add_argument('--method', choices=methods, required=False)
     

@@ -197,6 +197,8 @@ def get_results(dataset, strategy, generation):
 
 
 def main():
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     print "dataset, RAND mean, RAND var, SMAC mean, SMAC var, TPE mean, TPE var"
 
     for dataset in datasets:

@@ -147,6 +147,7 @@ def create_table():
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--latex-cv', action='store_true')
     parser.add_argument('--latex-test', action='store_true')
 

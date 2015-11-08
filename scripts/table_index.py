@@ -99,6 +99,8 @@ def create_table():
 
 
 def main():
+    parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     print "Creating index"
 
     table = create_table()

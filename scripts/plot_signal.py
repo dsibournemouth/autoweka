@@ -37,6 +37,7 @@ def get_target_and_predictions(dataset, strategy, generation, seed):
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
+    globals().update(load_config(parser))
     parser.add_argument('--dataset', choices=datasets, required=True)
     parser.add_argument('--strategy', choices=strategies, required=True)
     parser.add_argument('--generation', choices=generations, required=True)
