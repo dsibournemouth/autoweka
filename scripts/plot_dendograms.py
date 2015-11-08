@@ -1,4 +1,5 @@
 import os
+import argparse
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt

@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 import sqlite3
+import argparse
 import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import isdir, join
