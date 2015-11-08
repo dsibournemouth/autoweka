@@ -346,10 +346,12 @@ public abstract class ExperimentConstructor {
     }
 
     private void loadFilters() {
+        if (mAllowedFilters.size() == 0) {
+            return;
+        }
+        
         Instances instances = mInstanceGenerator.getTraining();
-        List<String> allowed = null;
-        if (mAllowedFilters.size() > 0)
-            allowed = mAllowedFilters;
+        List<String> allowed = mAllowedFilters;
 
         ApplicabilityTester.ApplicableFilters app = ApplicabilityTester
                 .getApplicableFilters(instances, mParamBaseDir, allowed);
