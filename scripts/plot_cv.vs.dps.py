@@ -47,7 +47,7 @@ def comparison_plot(results_CV, results_DPS, title):
 
     # plt.show()
     print "Saving %s" % title
-    plt.savefig('../plots/comparison-%s.png' % title)
+    plt.savefig('../plots%s/comparison-%s.png' % (suffix, title))
     plt.clf()
 
 def num_evaluations_plot(results_CV, results_DPS, title):
@@ -92,7 +92,7 @@ def num_evaluations_plot(results_CV, results_DPS, title):
 
     # plt.show()
     print "Saving %s" % title
-    plt.savefig('../plots/num_evaluations-%s.png' % title)
+    plt.savefig('../plots%s/num_evaluations-%s.png' % (suffix, title))
     plt.clf()
 
 def main():

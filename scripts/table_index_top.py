@@ -49,7 +49,7 @@ def main():
     html += table
     html += '</body></html>'
 
-    f = open('../tables/index_top.html', 'w')
+    f = open('../tables%s/index_top.html' % suffix, 'w')
     f.write(html)
     f.close()
 

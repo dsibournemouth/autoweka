@@ -35,7 +35,7 @@ def scatter_all_seeds(results, title):
     plt.margins(0.1, 0.1)
 
     plt.title(title)
-    plt.savefig("%s/plots/smac-runs-%s.individual.png" % (os.environ['AUTOWEKA_PATH'], title))
+    plt.savefig("%s/plots%s/smac-runs-%s.individual.png" % (os.environ['AUTOWEKA_PATH'], suffix, title))
     # plt.show()
 
 
@@ -68,7 +68,7 @@ def aggregated_line_seeds(results, title):
     plt.margins(0.05, 0.05)
 
     plt.title(title)
-    plt.savefig("%s/plots/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], title), bbox_inches='tight')
+    plt.savefig("%s/plots%s/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], suffix, title), bbox_inches='tight')
     # plt.show()
 
 

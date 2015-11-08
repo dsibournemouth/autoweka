@@ -187,7 +187,7 @@ def main():
     html += table
     html += '</body></html>'
 
-    f = open('../tables/index_bootstrap.html', 'w')
+    f = open('../tables%s/index_bootstrap.html' % suffix, 'w')
     f.write(html)
     f.close()
 

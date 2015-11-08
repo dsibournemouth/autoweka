@@ -292,7 +292,7 @@ def sub_main(dataset, strategy, generation):
     html += plots
     html += '</body></html>'
 
-    f = open('../tables/%s.%s.%s.html' % (dataset, strategy, generation), 'w')
+    f = open('../tables%s/%s.%s.%s.html' % (suffix, dataset, strategy, generation), 'w')
     f.write(html)
     f.close()
 

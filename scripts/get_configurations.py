@@ -88,14 +88,14 @@ def sub_main(dataset, strategy, generation, plot_flags):
     matrix = create_distance_matrix_by_configuration(configurations)
     mean_distance_configuration = (np.sum(matrix)/2) / (matrix.shape[0]*matrix.shape[1] / 2)
     if plot_flags['by_configuration']:
-        np.savetxt("../distances/by_configuration/%s.%s.%s.csv" % (dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
+        np.savetxt("../distances%s/by_configuration/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation), "../distances/by_configuration")
 
 
     matrix = create_distance_matrix_by_error(errors)
     mean_distance_error = (np.sum(matrix)/2) / (matrix.shape[0]*matrix.shape[1] / 2)
     if plot_flags['by_error']:
-        np.savetxt("../distances/by_error/%s.%s.%s.csv" % (dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
+        np.savetxt("../distances%s/by_error/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix, fmt="%.6f", delimiter=",")
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation), "../distances/by_error")
         
     return mean_distance_configuration, mean_distance_error

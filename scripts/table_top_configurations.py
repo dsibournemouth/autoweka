@@ -84,7 +84,7 @@ def main():
                     traceback.print_exc()
                     continue
 
-        f = open('../tables/top_%s.html' % dataset, 'w')
+        f = open('../tables%s/top_%s.html' % (suffix, dataset), 'w')
         f.write(header + tables + footer)
         f.close()
 

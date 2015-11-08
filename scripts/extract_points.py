@@ -108,7 +108,7 @@ ax1.fill_between(sorted_time, y_lower, y_mean, facecolor='gray', interpolate=Tru
 if not os.path.isdir("plots"):
     os.mkdir("plots")
 #fig.savefig("plots/points.png", bbox_inches='tight')
-fig.savefig("%s/plots/points-%s.png" % (os.environ['AUTOWEKA_PATH'], title), bbox_inches='tight')
+fig.savefig("%s/plots%s/points-%s.png" % (os.environ['AUTOWEKA_PATH'], suffix, title), bbox_inches='tight')
 # plt.show()
 
 

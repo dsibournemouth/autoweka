@@ -55,7 +55,7 @@ def comparison_plot(results_CV, title):
 
     # plt.show()
     print "Saving %s" % title
-    plt.savefig('../plots/comparison-cv-test.png')
+    plt.savefig('../plots%s/comparison-cv-test.png' % suffix)
     plt.clf()
 
 

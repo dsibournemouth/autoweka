@@ -67,7 +67,7 @@ def main():
 
     # available layouts: https://pygraphviz.github.io/documentation/latest/reference/agraph.html
     flowchart.layout(prog='circo')
-    flowchart.draw('../flowcharts/flow.%s.%s.%s.%s.circo.svg' % (dataset, strategy, generation, seed))
+    flowchart.draw('../flowcharts%s/flow.%s.%s.%s.%s.circo.svg' % (suffix, dataset, strategy, generation, seed))
 
 
 if __name__ == "__main__":

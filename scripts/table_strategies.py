@@ -73,8 +73,8 @@ def main():
     plots = '<table id="plots"><thead>' \
             '<tr><th>Estimated error (70% dataset)</th><th>Test error (30% dataset)</th></tr>' \
             '</thead><tbody>'
-    plots += '<tr><td><img src="../plots/boxplot.error.%s.png" width="100%%"/></td>' % dataset
-    plots += '<td><img src="../plots/boxplot.test_error.%s.png" width="100%%"/></td></tr>' % dataset
+    plots += '<tr><td><img src="../plots%s/boxplot.error.%s.png" width="100%%"/></td>' % (suffix, dataset)
+    plots += '<td><img src="../plots%s/boxplot.test_error.%s.png" width="100%%"/></td></tr>' % (suffix, dataset)
     plots += '</tbody></table>'
 
     css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
@@ -89,7 +89,7 @@ def main():
     html += plots
     html += '</body></html>'
 
-    f = open('../tables/%s.html' % dataset, 'w')
+    f = open('../tables%s/%s.html' % (suffix, dataset), 'w')
     f.write(html)
     f.close()
 

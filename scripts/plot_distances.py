@@ -38,7 +38,7 @@ def plot_distances(x, y, labels):
     # TODO fix legend
     #handles, labels = ax.get_legend_handles_labels()
     #lgd = ax.legend(handles, labels, loc='center right', bbox_to_anchor=(0.5,-0.1), numpoints=1)
-    plt.savefig('../distances/_all.png', dpi=200, bbox_inches='tight')
+    plt.savefig('../distances%s/_all.png' % suffix, dpi=200, bbox_inches='tight')
     plt.close("all")
 
 

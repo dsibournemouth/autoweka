@@ -114,7 +114,7 @@ def main():
     html += table
     html += '</body></html>'
 
-    f = open('../tables/index.html', 'w')
+    f = open('../tables%s/index.html' % suffix, 'w')
     f.write(html)
     f.close()
 

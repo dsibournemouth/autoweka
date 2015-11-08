@@ -48,7 +48,7 @@ for dataset in datasets:
         # xlims and ylims.
         diag_line, = plot(xlim(), ylim(), ls="--", c=".3")
         print "Saving %s / %s" % (dataset, strategy)
-        savefig('../plots/comparison.%s.%s.png' % (dataset, strategy))
+        savefig('../plots%s/comparison.%s.%s.png' % (suffix, dataset, strategy))
         clf()
         # plt.show()
     except Exception, e:
