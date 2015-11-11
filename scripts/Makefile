@@ -4,59 +4,51 @@ PYTHON=python
 
 all: best_points_all training_predictions plots tables
 
-best_points_all: best_points best_points_default best_points_random
+best_points_all: best_points best_points_default
 
 best_points:
-	$(PYTHON) get_best_points.py > results.csv && $(PYTHON) results2sql.py --insert results.csv
+	$(PYTHON) get_best_points.py --config=$(CONFIG) > results-$(CONFIG).csv && $(PYTHON) results2sql.py --config=$(CONFIG) --insert results-$(CONFIG).csv
 
 best_points_default:
-	$(PYTHON) get_best_points_default.py CV && $(PYTHON) results2sql.py --insert results_default.csv
-
-best_points_random:
-	$(PYTHON) get_best_points_random.py > results_random.csv && $(PYTHON) results2sql.py --insert results_random.csv --convert-configuration
+	$(PYTHON) get_best_points_default.py CV && $(PYTHON) results2sql.py --config=$(CONFIG) --insert results_default.csv
 
 trajectories:
-	$(PYTHON) trajectories2sql.py true
+	$(PYTHON) trajectories2sql.py --config=$(CONFIG) --create-table
 
 training_predictions:
-	$(PYTHON) generate_training_predictions.py
+	$(PYTHON) generate_training_predictions.py --config=$(CONFIG)
 
 sqlite_init: sqlite_create sqlite_populate
 
 sqlite_create:
-	$(PYTHON) results2sql.py --create-tables
+	$(PYTHON) results2sql.py --config=$(CONFIG) --create-tables
 
 sqlite_populate:
-	$(PYTHON) results2sql.py --insert-datasets --insert-experiments
+	$(PYTHON) results2sql.py --config=$(CONFIG) --insert-datasets --insert-experiments
 
 plots:
-	$(PYTHON) make_plots.py
+	$(PYTHON) make_plots.py --config=$(CONFIG)
 
 boxplots:
-	$(PYTHON) make_plots.py --only-boxplots
+	$(PYTHON) make_plots.py --config=$(CONFIG) --only-boxplots
 
 cv_dps_plots:
-	$(PYTHON) make_plots.py --only-cv-dps
+	$(PYTHON) make_plots.py --config=$(CONFIG) --only-cv-dps
 
 trajectories_plots:
-	$(PYTHON) make_plots.py --only-trajectories
+	$(PYTHON) make_plots.py --config=$(CONFIG) --only-trajectories
 
 signals_plots:
-	$(PYTHON) make_plots.py --only-signals
+	$(PYTHON) make_plots.py --config=$(CONFIG) --only-signals
 
 flows_plots:
-	$(PYTHON) make_plots.py --only-flows
+	$(PYTHON) make_plots.py --config=$(CONFIG) --only-flows
 
 tables:
-	$(PYTHON) make_tables.py
+	$(PYTHON) table_index.py --config=$(CONFIG)
+	$(PYTHON) table_configurations.py --config=$(CONFIG)
+	$(PYTHON) table_strategies.py --config=$(CONFIG)
+	$(PYTHON) table_index_bootstrap.py --config=$(CONFIG)
 
-clean: clean_plots clean_tables
-
-clean_plots:
-	rm ../plots/*.png
-
-clean_tables:
-	rm ../tables/*.html
-
-clean_sqlite:
-	rm results.db
+# TODO clusters:
+	
