@@ -59,40 +59,43 @@ def get_results(dataset):
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
-    parser.add_argument('--dataset', choices=datasets, required=True)
+    parser.add_argument('--dataset', choices=datasets, required=False)
 
     args = parser.parse_args()
+    
+    # override default values
+    selected_datasets = [args.dataset] if args.dataset else datasets
 
-    dataset = args.dataset
+    for dataset in selected_datasets:
 
-    print "Creating table for %s" % dataset
+        print "Creating table for %s" % dataset
 
-    results = get_results(dataset)
+        results = get_results(dataset)
 
-    table = create_table(results)
+        table = create_table(results)
 
-    plots = '<table id="plots"><thead>' \
-            '<tr><th>Estimated error (70% dataset)</th><th>Test error (30% dataset)</th></tr>' \
-            '</thead><tbody>'
-    plots += '<tr><td><img src="../plots%s/boxplot.error.%s.png" width="100%%"/></td>' % (suffix, dataset)
-    plots += '<td><img src="../plots%s/boxplot.test_error.%s.png" width="100%%"/></td></tr>' % (suffix, dataset)
-    plots += '</tbody></table>'
+        plots = '<table id="plots"><thead>' \
+                '<tr><th>Estimated error (70% dataset)</th><th>Test error (30% dataset)</th></tr>' \
+                '</thead><tbody>'
+        plots += '<tr><td><img src="../plots%s/boxplot.error.%s.png" width="100%%"/></td>' % (suffix, dataset)
+        plots += '<td><img src="../plots%s/boxplot.test_error.%s.png" width="100%%"/></td></tr>' % (suffix, dataset)
+        plots += '</tbody></table>'
 
-    css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
+        css = '<link rel="stylesheet" href="js/themes/blue/style.css" type="text/css" media="print, projection, screen" />'
 
-    javascript = '<script type="text/javascript" src="js/jquery-latest.js"></script>' \
-                 '<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>' \
-                 '<script>$(document).ready(function(){$("#myTable").tablesorter();});</script>'
+        javascript = '<script type="text/javascript" src="js/jquery-latest.js"></script>' \
+                     '<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>' \
+                     '<script>$(document).ready(function(){$("#myTable").tablesorter();});</script>'
 
-    html = '<html><head>%s%s</head>' % (css, javascript)
-    html += '<body><h1>Results of dataset: %s</h1>' % dataset
-    html += table
-    html += plots
-    html += '</body></html>'
+        html = '<html><head>%s%s</head>' % (css, javascript)
+        html += '<body><h1>Results of dataset: %s</h1>' % dataset
+        html += table
+        html += plots
+        html += '</body></html>'
 
-    f = open('../tables%s/%s.html' % (suffix, dataset), 'w')
-    f.write(html)
-    f.close()
+        f = open('../tables%s/%s.html' % (suffix, dataset), 'w')
+        f.write(html)
+        f.close()
 
 
 if __name__ == "__main__":
