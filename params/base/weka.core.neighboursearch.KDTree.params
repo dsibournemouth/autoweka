@@ -1,1 +1,5 @@
-#TODO
+A {weka.core.EuclideanDistance}[weka.core.EuclideanDistance]
+S {weka.core.neighboursearch.kdtrees.MedianOfWidestDimension,weka.core.neighboursearch.kdtrees.MidPointOfWidestDimension,weka.core.neighboursearch.kdtrees.KMeansInpiredMethod,weka.core.neighboursearch.kdtrees.SlidingMidPointOfWidestSide}[weka.core.neighboursearch.kdtrees.SlidingMidPointOfWidestSide]
+W [0.01,0.10][0.01]l
+INT_L [1,100][40]i
+N {REMOVED,REMOVE_PREV}[REMOVED]

@@ -1,0 +1,3 @@
+INT_N [1,100][40]i
+R {REMOVED,REMOVE_PREV}[REMOVE_PREV]
+S {weka.core.neighboursearch.balltrees.MedianDistanceFromArbitraryPoint,weka.core.neighboursearch.balltrees.MedianOfWidestDimension,weka.core.neighboursearch.balltrees.PointsClosestToFurthestChildren}[weka.core.neighboursearch.balltrees.MedianDistanceFromArbitraryPoint]
