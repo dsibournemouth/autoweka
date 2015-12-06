@@ -1,6 +1,6 @@
-import os
-import sqlite3
 import argparse
+import os
+
 from config import *
 
 
@@ -62,12 +62,11 @@ def main():
     parser.add_argument('--dataset', choices=datasets, required=False)
 
     args = parser.parse_args()
-    
+
     # override default values
     selected_datasets = [args.dataset] if args.dataset else datasets
 
     for dataset in selected_datasets:
-
         print "Creating table for %s" % dataset
 
         results = get_results(dataset)

@@ -1,7 +1,5 @@
 import os
 import sys
-import argparse
-from config import *
 
 if len(sys.argv) < 2:
     print 'Syntax: python get_best_points_default.py <CV|Test>'

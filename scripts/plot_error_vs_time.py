@@ -1,5 +1,5 @@
-import os
 import argparse
+import os
 import subprocess
 
 from config import *
@@ -28,7 +28,8 @@ def main():
     results = subprocess.check_output(command, shell=True).rstrip()
 
     if not results:
-        raise Exception("No results for dataset='%s' strategy='%s' generation='%s' seed='%s'" % (dataset, strategy, generation, seed))
+        raise Exception("No results for dataset='%s' strategy='%s' generation='%s' seed='%s'" % (
+        dataset, strategy, generation, seed))
 
     counter = 0
     for line in results:
@@ -39,6 +40,7 @@ def main():
         cum_time += time
 
     print results
+
 
 if __name__ == "__main__":
     main()

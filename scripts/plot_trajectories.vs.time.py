@@ -1,11 +1,11 @@
-import os
 import argparse
-import sqlite3
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import pandas.stats.moments as stats
+import os
 from operator import itemgetter
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+
 from config import *
 
 
@@ -13,14 +13,14 @@ def scatter_all_seeds(results, title):
     plt.close()
     results = np.array(results)
 
-    for seed in range(0, 25):
+    for seed in seeds:
         mask = results[:, 0] == seed
         time = results[mask, 1] / 60 / 60
         error = results[mask, 2]
         if is_regression:
             error = np.log10(error)
 
-        plt.plot(time, error, linestyle='solid', linewidth=.5, marker='o', markersize=5, color=cm.hsv(seed / 25., 1), alpha=.75)
+        plt.plot(time, error, linestyle='solid', linewidth=.5, marker='o', markersize=5, color=cm.hsv(float(seed) / number_seeds, 1), alpha=.75)
 
     plt.xlabel("Time (h)")
     if is_regression:
@@ -44,16 +44,21 @@ def aggregated_line_seeds(results, title):
     if is_regression:
         sorted_errors = np.log10(sorted_errors)
 
-    y_mean = stats.rolling_mean(sorted_errors, 5)
+    #y_mean = stats.rolling_mean(sorted_errors, 5)
     # y_std = stats.rolling_std(sorted_errors, 5)
-    y_upper = stats.rolling_max(sorted_errors, 5)
-    y_lower = stats.rolling_min(sorted_errors, 5)
+    #y_upper = stats.rolling_max(sorted_errors, 5)
+    #y_lower = stats.rolling_min(sorted_errors, 5)
+    #y_mean = np.cumsum(sorted_errors)/np.array(range(1, len(sorted_errors)+1))
+    #y_upper = np.maximum.accumulate(sorted_errors)
+    y_lower = np.minimum.accumulate(sorted_errors)
+    #np.savetxt("%s/plots%s/trajectories-%s-accumulate.csv" % (os.environ['AUTOWEKA_PATH'], suffix, title), y_lower, delimiter=",")
 
-    plt.plot(sorted_time, y_mean, color="red", label="Rolling mean")
+    #plt.plot(sorted_time, y_mean, color="red", label="Accumulated mean")
+    plt.plot(sorted_time, y_lower, color="red", label="Accumulated min")
 
     # plt.legend()
-    plt.fill_between(sorted_time, y_mean, y_upper, facecolor='gray', interpolate=True, alpha=0.5)
-    plt.fill_between(sorted_time, y_lower, y_mean, facecolor='gray', interpolate=True, alpha=0.5)
+    #plt.fill_between(sorted_time, y_mean, y_upper, facecolor='gray', interpolate=True, alpha=0.5)
+    #plt.fill_between(sorted_time, y_lower, y_mean, facecolor='gray', interpolate=True, alpha=0.5)
 
     plt.xlabel("Time (h)")
     if is_regression:

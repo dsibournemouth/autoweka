@@ -1,13 +1,14 @@
-import os
-import csv
 import argparse
+import csv
 import glob
-import sqlite3
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import pandas.stats.moments as stats
+import os
 from operator import itemgetter
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import pandas.stats.moments as stats
+
 from config import *
 
 
@@ -17,13 +18,13 @@ def scatter_all_seeds(results, title):
 
     for seed in seeds:
         mask = results[:, 0] == seed
-        time = results[mask, 1].astype(float) 
+        time = results[mask, 1].astype(float)
         time = np.divide(time, 3600.)
         error = results[mask, 2].astype(float)
         if is_regression:
             error = np.log10(error)
 
-        plt.plot(time, error, linestyle='solid', linewidth=.5, color=cm.hsv(float(seed) / 25., 1), alpha=.75)
+        plt.plot(time, error, linestyle='solid', linewidth=.5, color=cm.hsv(float(seed) / number_seeds, 1), alpha=.75)
 
     plt.xlabel("Time (h)")
     if is_regression:
@@ -68,7 +69,8 @@ def aggregated_line_seeds(results, title):
     plt.margins(0.05, 0.05)
 
     plt.title(title)
-    plt.savefig("%s/plots%s/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], suffix, title), bbox_inches='tight')
+    plt.savefig("%s/plots%s/trajectories-%s.aggregated.png" % (os.environ['AUTOWEKA_PATH'], suffix, title),
+                bbox_inches='tight')
     # plt.show()
 
 
@@ -89,38 +91,39 @@ def main():
     for dataset in selected_datasets:
         results = []
         for seed in seeds:
-            path = "%s/%s/%s.SMAC.CV-%s/out/autoweka/state-run%s" % (os.environ['AUTOWEKA_PATH'], experiments_folder, dataset, dataset, seed)
+            path = "%s/%s/%s.SMAC.CV-%s/out/autoweka/state-run%s" % (
+            os.environ['AUTOWEKA_PATH'], experiments_folder, dataset, dataset, seed)
             try:
                 os.chdir(path)
                 found_files = glob.glob("runs_and_results-it*.csv")
                 latest_file = found_files[-1]
             except:
-                print "No results for dataset='%s' strategy='SMAC' generation='CV' seed=%s" % (dataset,seed)
+                print "No results for dataset='%s' strategy='SMAC' generation='CV' seed=%s" % (dataset, seed)
                 continue
-                
-            
+
             print "Reading %s..." % latest_file
             f = open(latest_file, 'r')
             try:
                 reader = csv.reader(f)
-                reader.next() # skip header
-                
+                reader.next()  # skip header
+
                 for row in reader:
                     # time, error
                     time = float(row[12])
                     error = float(row[3])
-                    if args.skip_crashes and error>=100:
+                    if args.skip_crashes and error >= 100:
                         continue
-                        
+
                     results.append([seed, time, error])
 
             finally:
                 f.close()
-        
+
         if results:
             title = '%s.SMAC.CV' % dataset
             scatter_all_seeds(results, title)
-            #aggregated_line_seeds(results, title)
+            # aggregated_line_seeds(results, title)
+
 
 if __name__ == "__main__":
     main()

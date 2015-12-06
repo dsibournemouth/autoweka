@@ -1,6 +1,6 @@
 import argparse
 import os
-import sqlite3
+
 from config import *
 
 
@@ -43,7 +43,8 @@ def main():
                 cv_error = 0
                 failure = False
                 try:
-                    f = open('%s/%s/%s/out/autoweka/%s' % (os.environ['AUTOWEKA_PATH'], experiment, experiments_folder, cv_logfile))
+                    f = open('%s/%s/%s/out/autoweka/%s' % (
+                    os.environ['AUTOWEKA_PATH'], experiment, experiments_folder, cv_logfile))
                     for line in f:
                         if "TIMEOUT" in line or "CRASH" in line:
                             failure = True
@@ -76,9 +77,10 @@ def main():
                 if cv_error != old_cv_error:
                     print "%s,%s,%s,%s,%s,%s" % (dataset, strategy, generation, seed, old_cv_error, cv_error)
 
-                #print 'SELECT * FROM RESULTS WHERE dataset="%s" AND strategy="%s" AND generation="%s" AND seed=%s AND error!=%s;' % (dataset, strategy, generation, seed, cv_error)
+                    # print 'SELECT * FROM RESULTS WHERE dataset="%s" AND strategy="%s" AND generation="%s" AND seed=%s AND error!=%s;' % (dataset, strategy, generation, seed, cv_error)
 
     conn.close()
+
 
 if __name__ == "__main__":
     main()

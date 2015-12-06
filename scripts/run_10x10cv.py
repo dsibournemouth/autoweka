@@ -1,11 +1,11 @@
 import argparse
-import sqlite3
-from os.path import join
-import subprocess
-import sys
 import os
+import subprocess
 from numpy import median
+from os.path import join
+
 from config import *
+
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
@@ -14,9 +14,9 @@ def main():
     parser.add_argument('--strategy', choices=strategies, required=True)
     parser.add_argument('--generation', choices=generations, required=True)
     parser.add_argument('--seed', choices=seeds, required=True)
-    
+
     args = parser.parse_args()
-    
+
     dataset = args.dataset
     strategy = args.strategy
     generation = args.generation
@@ -80,6 +80,7 @@ def main():
     conn.commit()
     # print c.execute("SELECT * FROM results WHERE full_cv_error>0").fetchall()
     conn.close()
-    
+
+
 if __name__ == "__main__":
     main()

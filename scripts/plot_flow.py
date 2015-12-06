@@ -1,7 +1,8 @@
-import os
 import argparse
+import os
+
 import pygraphviz as pgv
-import sqlite3
+
 from config import *
 from table_configurations import parse_configuration
 

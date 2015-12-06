@@ -1,11 +1,13 @@
 from __future__ import print_function
+
 import argparse
 import os
+import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import isfile, isdir, join
-import subprocess
-import xml.etree.ElementTree as ET
+
 from config import *
 
 

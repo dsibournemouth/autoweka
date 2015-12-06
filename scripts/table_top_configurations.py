@@ -1,7 +1,7 @@
-import os
-import sqlite3
 import argparse
+import os
 import traceback
+
 from config import *
 from table_configurations import create_table
 

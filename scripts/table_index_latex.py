@@ -1,6 +1,6 @@
-import os
 import argparse
-import sqlite3
+import os
+
 from config import *
 
 

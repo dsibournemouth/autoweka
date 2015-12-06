@@ -1,5 +1,6 @@
 import argparse
 import os
+
 from config import *
 
 
@@ -42,7 +43,8 @@ def main():
 
                         os.system(
                             "cd %s && %s/java -cp autoweka.jar autoweka.tools.GetBestFromTrajectoryGroupCSV %s/%s/%s" % (
-                                os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'], experiments_folder, experiment, trajectory_file))
+                                os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'], experiments_folder, experiment,
+                                trajectory_file))
 
 
 if __name__ == "__main__":

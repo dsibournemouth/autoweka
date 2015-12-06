@@ -1,8 +1,10 @@
-import os
 import argparse
+import os
 from os import listdir
 from os.path import isfile, isdir, join
+
 from config import *
+
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
@@ -37,8 +39,9 @@ def main():
     print "method & numerical & categorical (simple:complex)"
     for method in params.keys():
         print "%s & %d & %d:%d" % (
-        method.replace('.params', ''), params[method]["numerical"], params[method]["categorical"]["simple"],
-        params[method]["categorical"]["complex"])
-        
+            method.replace('.params', ''), params[method]["numerical"], params[method]["categorical"]["simple"],
+            params[method]["categorical"]["complex"])
+
+
 if __name__ == "__main__":
     main()

@@ -1,7 +1,7 @@
-import os
 import argparse
+import os
 from os import system
-import sqlite3
+
 from config import *
 
 
@@ -16,22 +16,10 @@ def main():
     args = parser.parse_args()
 
     # override default values
-    if args.dataset:
-        selected_datasets = [args.dataset]
-    else:
-        selected_datasets = datasets
-    if args.strategy:
-        selected_strategies = [args.strategy]
-    else:
-        selected_strategies = strategies
-    if args.generation:
-        selected_generations = [args.generation]
-    else:
-        selected_generations = generations
-    if args.seed:
-        selected_seeds = [args.seed]
-    else:
-        selected_seeds = seeds
+    selected_datasets = [args.dataset] if args.dataset else datasets
+    selected_strategies = [args.strategy] if args.strategy else strategies
+    selected_generations = [args.generation] if args.generation else generations
+    selected_seeds = [args.seed] if args.seed else seeds
 
     for dataset in selected_datasets:
         for strategy in selected_strategies:
@@ -44,8 +32,8 @@ def main():
                         filename = 'training.predictions.%s.csv' % seed
                         # avoid computing existing predictions
                         if not os.path.isfile(os.path.join(folder, filename)):
-                            command = 'qsub -N %s -l q=compute ./launch_training_prediction.sh %s %s %s' % (
-                                experiment, experiment, dataset, seed)
+                            command = 'qsub -N %s -l q=compute ./launch_training_prediction.sh %s %s %s %s' % (
+                                experiment, experiments_folder, experiment, dataset, seed)
                             print command
                             system(command)
 

@@ -1,7 +1,5 @@
 import os
 import sys
-import argparse
-from config import *
 
 seeds = [0]
 
@@ -70,7 +68,8 @@ for d in datasets:
         # dataset.strategy.generation-dataset, seed, num_trajectories, num_evaluations, total_evaluations,
         # memout_evaluations, timeout_evaluations, error, test_error, configuration
         this_error = "NULL" if best_seed[d][s]['error'] >= float("inf") else "%.5f" % best_seed[d][s]['error']
-        this_test_error = "NULL" if best_seed[d][s]['test_error'] >= float("inf") else "%.5f" % best_seed[d][s]['test_error']
+        this_test_error = "NULL" if best_seed[d][s]['test_error'] >= float("inf") else "%.5f" % best_seed[d][s][
+            'test_error']
 
         line = "%s.%s.%s-%s,%s,%d,%d,%d,%d,%d,%s,%s,%s\n" % (
             d, 'DEFAULT', 'CV', d, s, 1, 1, 1, 0, 0,

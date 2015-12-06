@@ -1,6 +1,6 @@
-import os
 import argparse
-import sqlite3
+import os
+
 from config import *
 
 
@@ -19,7 +19,6 @@ def table_header():
 
 
 def table_row(dataset, results):
-
     d = {'results_link': '%s.html' % dataset,
          'dataset': dataset,
          'cv_def': results['DEFAULT']['CV']['error'] if 'DEFAULT' in results else "-",

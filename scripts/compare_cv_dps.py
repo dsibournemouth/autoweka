@@ -1,14 +1,16 @@
-import sqlite3
 import argparse
 import os
+import sqlite3
+
 from pylab import *
+
 from config import *
 
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
-    
+
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
@@ -31,7 +33,7 @@ def main():
                 raise Exception("[ERROR] Different number of seeds!!!")
 
             points = []
-            for seed in range(0, 25):
+            for seed in seeds:
                 if results_CV[seed][0] == results_DPS[seed][0]:
                     points.append((results_CV[seed][1], results_DPS[seed][1]))
                 else:
@@ -62,6 +64,7 @@ def main():
             print e
 
     conn.close()
-    
+
+
 if __name__ == "__main__":
     main()

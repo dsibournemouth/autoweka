@@ -1,9 +1,10 @@
 import argparse
 import os
+
 from config import *
 
-def main():
 
+def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
     parser.add_argument('--template', required=True)
@@ -29,6 +30,7 @@ def main():
                   f_output_name)
 
     f_input.close()
-    
+
+
 if __name__ == "__main__":
     main()

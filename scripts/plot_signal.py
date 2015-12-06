@@ -1,7 +1,10 @@
-import os
 import argparse
 import numpy as np
+import os
+import traceback
+
 import matplotlib.pyplot as plt
+
 from config import *
 
 
@@ -38,22 +41,30 @@ def get_target_and_predictions(dataset, strategy, generation, seed):
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
-    parser.add_argument('--dataset', choices=datasets, required=True)
-    parser.add_argument('--strategy', choices=strategies, required=True)
-    parser.add_argument('--generation', choices=generations, required=True)
-    parser.add_argument('--seed', choices=seeds, required=True)
+    parser.add_argument('--dataset', choices=datasets, required=False)
+    parser.add_argument('--strategy', choices=strategies, required=False)
+    parser.add_argument('--generation', choices=generations, required=False)
+    parser.add_argument('--seed', choices=seeds, required=False)
 
     args = parser.parse_args()
 
-    dataset = args.dataset
-    strategy = args.strategy
-    generation = args.generation
-    seed = args.seed
+    # override default values
+    selected_datasets = [args.dataset] if args.dataset else datasets
+    selected_strategies = [args.strategy] if args.strategy else strategies
+    selected_generations = [args.generation] if args.generation else generations
+    selected_seeds = [args.seed] if args.seed else seeds
 
-    targets, predictions, limit = get_target_and_predictions(dataset, strategy, generation, seed)
-
-    title = '%s.%s.%s.%s' % (dataset, strategy, generation, seed)
-    plot_target_vs_prediction(targets, predictions, limit, title)
+    for dataset in selected_datasets:
+        for strategy in selected_strategies:
+            for generation in selected_generations:
+                for seed in selected_seeds:
+                    try:
+                        targets, predictions, limit = get_target_and_predictions(dataset, strategy, generation, seed)
+                        title = '%s.%s.%s.%s' % (dataset, strategy, generation, seed)
+                        plot_target_vs_prediction(targets, predictions, limit, title)
+                    except Exception as e:
+                        print e
+                        traceback.print_exc()
 
 
 if __name__ == "__main__":

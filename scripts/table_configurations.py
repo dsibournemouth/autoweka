@@ -1,11 +1,11 @@
-import os
-import sqlite3
-import subprocess
 import argparse
-import operator
 import json
 import numpy as np
+import operator
+import os
+import subprocess
 import traceback
+
 from config import *
 
 
@@ -25,7 +25,6 @@ def parse_configuration(configuration, complete):
         print output
         traceback.print_exc()
         raise e
-        
 
 
 def create_frequency_table(frequency):
@@ -90,17 +89,17 @@ def table_header(complete):
     if complete:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
               <th>missing values</th><th>outliers</th><th>transformation</th><th>dimensionality reduction</th> \
-              <th>sampling</th><th>predictor</th><th>meta</th><th>CV RMSE</th><th>Evaluations</th></tr></thead>\n'
+              <th>sampling</th><th>predictor</th><th>meta</th><th>CV error</th><th>Test error</th><th>Evaluations</th></tr></thead>\n'
     else:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
-              <th>predictor</th><th>CV RMSE</th></tr></thead>\n'
+              <th>predictor</th><th>CV error</th><th>Test error</th></tr></thead>\n'
 
     return table
 
 
 def table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations, complete):
+    signal_plot = '../plots%s/signal.%s.%s.%s.%s.png' % (suffix, dataset, strategy, generation, seed)
     if complete:
-        signal_plot = '../plots/signal.%s.%s.%s.%s.png' % (dataset, strategy, generation, seed)
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
@@ -109,7 +108,7 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td><td>%s</td></tr>\n' % (
+               '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>\n' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['missing_values']['method'], params['missing_values']['params'],
                    params['outliers']['method'], params['outliers']['params'],
@@ -118,14 +117,14 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
                    params['sampling']['method'], params['sampling']['params'],
                    params['predictor']['method'], params['predictor']['params'],
                    params['meta']['method'], params['meta']['params'],
-                   error, num_evaluations)
+                   error, signal_plot, test_error, num_evaluations)
     else:
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td></tr>\n' % (
+               '<td>%s</td><td><a href="%s">%s</a></td></tr>\n' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['predictor']['method'], params['predictor']['params'],
-                   error)
+                   error, signal_plot, test_error)
 
 
 def average_similarity(matrix):
@@ -169,8 +168,8 @@ def create_table(results, best_error_seed, best_test_error_seed, complete):
         tr_class = ''
         if seed is best_error_seed:
             tr_class = 'border: 2px solid lightgreen;'
-        # elif seed is best_test_error_seed:
-        #    tr_class = 'border: 2px solid lightblue;'
+        elif seed is best_test_error_seed:
+            tr_class = 'border: 2px solid lightblue;'
 
         table += table_row(tr_class, dataset, strategy, generation, seed, params, error, test_error, num_evaluations,
                            complete)
@@ -276,8 +275,8 @@ def sub_main(dataset, strategy, generation):
     if not results:
         raise Exception("No results for %s.%s.%s" % (dataset, strategy, generation))
 
-    #is_complete = strategy != 'DEFAULT'
-    is_complete = False
+    is_complete = strategy != 'DEFAULT'
+    # is_complete = False
     table = create_table(results, best_error_seed, best_test_error_seed, is_complete)
 
     plots = ''

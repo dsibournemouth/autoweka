@@ -1,6 +1,6 @@
-import os
 import argparse
-import sqlite3
+import os
+
 from config import *
 
 
@@ -13,7 +13,6 @@ def table_header():
 
 
 def table_row(dataset):
-
     d = {'results_link': 'top_%s.html' % dataset,
          'dataset': dataset
          }
@@ -38,7 +37,7 @@ def create_table():
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
-    
+
     print "Creating index_top"
 
     table = create_table()

@@ -1,7 +1,7 @@
-import os
 import argparse
 import numpy as np
-import sqlite3
+import os
+
 from config import *
 
 
@@ -38,16 +38,16 @@ def table_row(dataset, results, format='html'):
          'test_tpe_ci': format_number(results['TPE']['CV']['test_error_ci']) if 'TPE' in results else "-",
          }
 
-    min_cv = {'cv_def': float(d['cv_def']),
-              'cv_rand': float(d['cv_rand']),
-              'cv_smac': float(d['cv_smac']),
-              'cv_tpe': float(d['cv_tpe'])}
+    min_cv = {'cv_def': float(d['cv_def']) if d['cv_def'] != "-" else 1E10,
+              'cv_rand': float(d['cv_rand']) if d['cv_rand'] != "-" else 1E10,
+              'cv_smac': float(d['cv_smac']) if d['cv_smac'] != "-" else 1E10,
+              'cv_tpe': float(d['cv_tpe']) if d['cv_tpe'] != "-" else 1E10}
     min_key_cv = min(min_cv, key=min_cv.get)
 
-    min_test = {'test_def': float(d['test_def']),
-                'test_rand': float(d['test_rand']),
-                'test_smac': float(d['test_smac']),
-                'test_tpe': float(d['test_tpe'])}
+    min_test = {'test_def': float(d['test_def']) if d['test_def'] != "-" else 1E10,
+                'test_rand': float(d['test_rand']) if d['test_rand'] != "-" else 1E10,
+                'test_smac': float(d['test_smac']) if d['test_smac'] != "-" else 1E10,
+                'test_tpe': float(d['test_tpe']) if d['test_tpe'] != "-" else 1E10}
     min_key_test = min(min_test, key=min_test.get)
 
     if format is 'latex_cv':
@@ -127,7 +127,8 @@ def get_results(dataset):
                 d[strategy][generation]['error'] = np.mean(errors)
                 d[strategy][generation]['error_ci'] = np.percentile(errors, 97.5) - np.percentile(errors, 2.5)
                 d[strategy][generation]['test_error'] = np.mean(test_errors)
-                d[strategy][generation]['test_error_ci'] = np.percentile(test_errors, 97.5) - np.percentile(test_errors, 2.5)
+                d[strategy][generation]['test_error_ci'] = np.percentile(test_errors, 97.5) - np.percentile(test_errors,
+                                                                                                            2.5)
 
     return d
 

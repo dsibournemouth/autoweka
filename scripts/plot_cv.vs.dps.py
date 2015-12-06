@@ -1,9 +1,9 @@
-import os
 import argparse
-import sqlite3
+import os
+
 from pylab import *  # includes np and plt
+
 from config import *
-import matplotlib.cm as cm
 
 
 def comparison_plot(results_CV, results_DPS, title):
@@ -51,6 +51,7 @@ def comparison_plot(results_CV, results_DPS, title):
     plt.savefig('../plots%s/comparison-%s.png' % (suffix, title))
     plt.clf()
 
+
 def num_evaluations_plot(results_CV, results_DPS, title):
     results_CV = np.array(results_CV)
     results_DPS = np.array(results_DPS)
@@ -71,7 +72,7 @@ def num_evaluations_plot(results_CV, results_DPS, title):
         raise Exception("[ERROR] No points for %s" % title)
 
     points = np.array(points)
-    #points = np.log10(points)  # logscale to better visualization
+    # points = np.log10(points)  # logscale to better visualization
 
     color_mask = points[:, 0] > points[:, 1]
     not_color_mask = np.logical_not(color_mask)
@@ -95,6 +96,7 @@ def num_evaluations_plot(results_CV, results_DPS, title):
     print "Saving %s" % title
     plt.savefig('../plots%s/num_evaluations-%s.png' % (suffix, title))
     plt.clf()
+
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))

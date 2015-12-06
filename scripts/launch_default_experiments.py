@@ -1,6 +1,8 @@
 import argparse
 import os
+
 from config import *
+
 
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
@@ -22,6 +24,7 @@ def main():
                 experiment_name, os.environ['AUTOWEKA_PATH'], d, m)
             print(command)
             os.system(command)
+
 
 if __name__ == "__main__":
     main()

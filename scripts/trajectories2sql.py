@@ -1,12 +1,11 @@
-import os
-import sys
-import glob
-import sqlite3
 import argparse
+import glob
+import os
+import subprocess
 import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import isdir, join
-import subprocess
+
 from config import *
 
 
@@ -78,7 +77,11 @@ def parse_trajectories(folder, c):
 def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
-    if len(sys.argv) > 1:
+    parser.add_argument('--create-table', action='store_true')
+
+    args = parser.parse_args()
+
+    if args.create_table:
         create_table()
 
     conn = sqlite3.connect(database_file)

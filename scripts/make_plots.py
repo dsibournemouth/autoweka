@@ -1,6 +1,7 @@
 import argparse
-from os import system
 import os
+from os import system
+
 from config import *
 
 parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
@@ -13,11 +14,16 @@ parser.add_argument('--only-flows', action='store_true')
 
 args = parser.parse_args()
 
-boxplots = args.only_boxplots or (not args.only_cv_dps and not args.only_trajectories and not args.only_signals and not args.only_flows)
-cv_dps = args.only_cv_dps or (not args.only_boxplots and not args.only_trajectories and not args.only_signals and not args.only_flows)
-trajectories = args.only_trajectories or (not args.only_boxplots and not args.only_cv_dps and not args.only_signals and not args.only_flows)
-signals = args.only_signals or (not args.only_boxplots and not args.only_cv_dps and not args.only_trajectories and not args.only_flows)
-flows = args.only_flows or (not args.only_boxplots and not args.only_cv_dps and not args.only_trajectories and not args.only_signals)
+boxplots = args.only_boxplots or (
+not args.only_cv_dps and not args.only_trajectories and not args.only_signals and not args.only_flows)
+cv_dps = args.only_cv_dps or (
+not args.only_boxplots and not args.only_trajectories and not args.only_signals and not args.only_flows)
+trajectories = args.only_trajectories or (
+not args.only_boxplots and not args.only_cv_dps and not args.only_signals and not args.only_flows)
+signals = args.only_signals or (
+not args.only_boxplots and not args.only_cv_dps and not args.only_trajectories and not args.only_flows)
+flows = args.only_flows or (
+not args.only_boxplots and not args.only_cv_dps and not args.only_trajectories and not args.only_signals)
 
 for d in datasets:
     if boxplots:
