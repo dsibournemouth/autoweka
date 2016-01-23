@@ -275,7 +275,7 @@ def sub_main(dataset, strategy, generation):
     if not results:
         raise Exception("No results for %s.%s.%s" % (dataset, strategy, generation))
 
-    is_complete = strategy != 'DEFAULT'
+    is_complete = strategy != 'DEFAULT' and not suffix.endswith('NEW')
     # is_complete = False
     table = create_table(results, best_error_seed, best_test_error_seed, is_complete)
 
