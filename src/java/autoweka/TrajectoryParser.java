@@ -19,6 +19,7 @@ public abstract class TrajectoryParser
     public static void main(String[] args)
     {
         String targetSeed = null;
+        String batchNumber = null;
         ArrayList<String> experimentFolders = new ArrayList<String>();
 
         //We need to figure out what mode we are in
@@ -36,18 +37,30 @@ public abstract class TrajectoryParser
                 a.remove(0);
                 args = a.toArray(new String[0]);
             }
-            if(args.length != 2)
+            if(args.length < 2)
                 throw new IllegalArgumentException("Single mode requires an experiment folder and a seed");
             //Get the experiment
             experimentFolders.add(args[0]);
             targetSeed = args[1];
+            
+            if(args.length >= 4) {
+              if (args[2] == "-batchNumber") {
+        	batchNumber = args[3];
+              }
+            }
         }
+        
+        
 
         for(String experimentPath: experimentFolders)
         {
             //Get me the experiment
             File folder = new File(experimentPath);
-            Experiment experiment = Experiment.fromXML(experimentPath + File.separator + folder.getName() + ".experiment");
+            String experimentFile = experimentPath + File.separator + folder.getName() + ".experiment";
+            if (batchNumber != null) {
+              experimentFile += "." + batchNumber;
+            }
+            Experiment experiment = Experiment.fromXML(experimentFile);
             
             if (experiment.type.equals("RandomSearch"))
               continue;

@@ -196,18 +196,28 @@ public class Experiment extends XmlSerializable
         boolean silent = false;
         boolean noExit = false;
         File expFolder = null;
+        String batchNumber = null;
         for(int i = 0; i < args.length; i++)
         {
             if(args[i].equals("-silent"))
                 silent = true;
             else if(args[i].equals("-noexit"))
                 noExit = true;
+            else if(args[i].equals("-batchNumber")){
+              batchNumber = args[++i];
+            }
             else if(experiment == null)
             {
                 //Get the experiment folder
                 expFolder = new File(args[i]).getAbsoluteFile();
-                //Get the actuall experiment
-                experiment = new File(expFolder.getAbsolutePath() + File.separator + expFolder.getName() + ".experiment");
+                
+              //Get the actual experiment
+                String experimentPath = expFolder.getAbsolutePath() + File.separator + expFolder.getName() + ".experiment";
+                if (batchNumber != null) {
+                  experimentPath += "." + batchNumber;  
+                }
+                experiment = new File(experimentPath);
+                
             }
             else if(seed == null)
                 seed = args[i];
