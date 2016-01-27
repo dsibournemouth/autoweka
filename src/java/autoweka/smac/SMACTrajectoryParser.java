@@ -37,12 +37,12 @@ public class SMACTrajectoryParser extends TrajectoryParser
 
         try
         {
-            File[] files = new File(folder.getAbsolutePath() + File.separator + "out" + File.separator + "autoweka").listFiles();
+            File[] files = new File(folder.getAbsolutePath() + File.separator + "out" + File.separator + experiment.getRunGroupName()).listFiles();
 
             // Parse the runs_and_results file
             String runsAndResultsFileName = null;
             int runsAndResultsIteration = -1;
-            String path = folder.getAbsolutePath() + File.separator + "out" + File.separator + "autoweka" + File.separator + "state-run" + seed + File.separator;
+            String path = folder.getAbsolutePath() + File.separator + "out" + File.separator + experiment.getRunGroupName() + File.separator + "state-run" + seed + File.separator;
             files = new File(path).listFiles();
             for(File f: files)
             {

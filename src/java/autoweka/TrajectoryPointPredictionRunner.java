@@ -76,12 +76,12 @@ public class TrajectoryPointPredictionRunner
             
             // SMAC problem:
             // If the errorEstimate is 0.0 it means that the incumbent has crashed 
-            List<Trajectory.Point> allPoints = traj.getPoints();
-            int index = allPoints.size()-1;
-            while(!(point.mErrorEstimate>0) && index>0){
-                point = allPoints.get(index-1);
-        	index--;
-            }
+//            List<Trajectory.Point> allPoints = traj.getPoints();
+//            int index = allPoints.size()-1;
+//            while(!(point.mErrorEstimate>0) && index>0){
+//                point = allPoints.get(index-1);
+//        	index--;
+//            }
             
             Properties props = new Properties();
             props.put("predictionsFileName", experimentDir.getAbsolutePath() + "/predictions." + traj.getSeed() + ".csv");

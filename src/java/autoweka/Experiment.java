@@ -144,6 +144,17 @@ public class Experiment extends XmlSerializable
 
     public Experiment()
     {}
+    
+    public String getRunGroupName() {
+      
+      for (int i=0; i<this.callString.size(); i++) {
+	if (this.callString.get(i).equals("--runGroupName")) {
+	  return this.callString.get(i+1);
+	}
+      }
+      
+      return "autoweka"; //default value
+    }
 
     /**
      * Throws a runtime exception if the experiment contains some sort of crazy values.
@@ -288,7 +299,15 @@ public class Experiment extends XmlSerializable
             }
 
             //And we might as well do the trajectory parse
-            TrajectoryParser.main(new String[]{"-single", expFolder.getAbsolutePath(), seed});
+            String[] trajParseArgs = null;
+            if (batchNumber != null) {
+              trajParseArgs = new String[]{"-single", expFolder.getAbsolutePath(), seed, 
+        	  "-batchNumber", batchNumber};
+            }
+            else {
+              trajParseArgs = new String[]{"-single", expFolder.getAbsolutePath(), seed};
+            }
+            TrajectoryParser.main(trajParseArgs);
 
             logOutput.close();
             

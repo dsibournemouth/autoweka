@@ -44,7 +44,7 @@ public abstract class TrajectoryParser
             targetSeed = args[1];
             
             if(args.length >= 4) {
-              if (args[2] == "-batchNumber") {
+              if (args[2].equals("-batchNumber")) {
         	batchNumber = args[3];
               }
             }
@@ -67,7 +67,6 @@ public abstract class TrajectoryParser
 
             TrajectoryGroup group = new TrajectoryGroup(experiment);
 
-            System.out.println("Experiment " + experimentPath);
             //Now, figure out what seeds there are
             if(targetSeed == null)
             {
