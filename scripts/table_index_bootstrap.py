@@ -138,8 +138,11 @@ def create_table():
     table += '<tbody>'
 
     for dataset in datasets:
-        results = get_results(dataset)
-        table += table_row(dataset, results)
+        try:
+            results = get_results(dataset)
+            table += table_row(dataset, results)
+        except:
+            pass
 
     table += '</tbody></table>'
 

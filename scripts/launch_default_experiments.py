@@ -20,8 +20,8 @@ def main():
     for d in selected_datasets:
         for m in methods:
             experiment_name = '%s.%s' % (d, m)
-            command = "qsub -N %s -l q=compute %s/scripts/default_experiment.sh %s %s" % (
-                experiment_name, os.environ['AUTOWEKA_PATH'], d, m)
+            command = "qsub -N %s -l q=compute %s/scripts/default_experiment.sh %s %s %s" % (
+                experiment_name, os.environ['AUTOWEKA_PATH'], experiments_folder, d, m)
             print(command)
             os.system(command)
 

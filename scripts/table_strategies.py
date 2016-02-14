@@ -69,7 +69,10 @@ def main():
     for dataset in selected_datasets:
         print "Creating table for %s" % dataset
 
-        results = get_results(dataset)
+        try:
+            results = get_results(dataset)
+        except:
+            continue
 
         table = create_table(results)
 

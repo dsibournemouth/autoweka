@@ -92,7 +92,7 @@ def table_header(complete):
               <th>sampling</th><th>predictor</th><th>meta</th><th>CV error</th><th>Test error</th><th>Evaluations</th></tr></thead>\n'
     else:
         table += '<thead><tr><th>dataset</th><th>strategy</th><th>generation</th><th>seed</th> \
-              <th>predictor</th><th>CV error</th><th>Test error</th></tr></thead>\n'
+              <th>predictor</th><th>CV error</th><th>Test error</th><th>Evaluations</th></tr></thead>\n'
 
     return table
 
@@ -121,10 +121,10 @@ def table_row(tr_class, dataset, strategy, generation, seed, params, error, test
     else:
         return '<tr style="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>' \
                '<td>%s<br/><small>%s</small></td>' \
-               '<td>%s</td><td><a href="%s">%s</a></td></tr>\n' % (
+               '<td>%s</td><td><a href="%s">%s</a></td><td>%s</td></tr>\n' % (
                    tr_class, dataset, strategy, generation, seed,
                    params['predictor']['method'], params['predictor']['params'],
-                   error, signal_plot, test_error)
+                   error, signal_plot, test_error, num_evaluations)
 
 
 def average_similarity(matrix):
@@ -275,7 +275,7 @@ def sub_main(dataset, strategy, generation):
     if not results:
         raise Exception("No results for %s.%s.%s" % (dataset, strategy, generation))
 
-    is_complete = strategy != 'DEFAULT'
+    is_complete = strategy != 'DEFAULT' and not suffix.endswith('NEW')
     # is_complete = False
     table = create_table(results, best_error_seed, best_test_error_seed, is_complete)
 

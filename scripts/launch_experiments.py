@@ -11,6 +11,7 @@ def main():
     parser.add_argument('--strategy', choices=strategies, required=False)
     parser.add_argument('--generation', choices=generations, required=False)
     parser.add_argument('--seed', choices=seeds, required=False)
+    parser.add_argument('--batches', type=int, required=False)
 
     args = parser.parse_args()
 
@@ -39,7 +40,10 @@ def main():
                     os.environ['AUTOWEKA_PATH'], experiments_folder, dataset, strategy, generation, dataset)
                 for seed in selected_seeds:
                     experiment_name = '%s.%s.%s.%s' % (dataset, strategy, generation, seed)
-                    command = 'qsub  -N %s -l q=compute ./single-experiment.sh %s %s' % (experiment_name, folder, seed)
+                    if args.batches:
+                        command = 'qsub  -N %s -l q=compute ./single-adaptive-experiment.sh %s %s %s' % (experiment_name, folder, args.batches, seed)
+                    else:
+                        command = 'qsub  -N %s -l q=compute ./single-experiment.sh %s %s' % (experiment_name, folder, seed)
                     print command
                     os.system(command)
 

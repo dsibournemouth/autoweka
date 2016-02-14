@@ -15,6 +15,7 @@ def plot_target_vs_prediction(targets, predictions, limit, title):
     plt.plot(predictions)
 
     plt.axvline(limit, color='r', linestyle='--')
+    plt.xlim(0, len(targets))
 
     plt.title(title)
     plt.savefig("%s/plots%s/signal.%s.png" % (os.environ['AUTOWEKA_PATH'], suffix, title), bbox_inches='tight')
