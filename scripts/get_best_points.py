@@ -11,6 +11,7 @@ def main():
     parser.add_argument('--strategy', choices=strategies, required=False)
     parser.add_argument('--generation', choices=generations, required=False)
     parser.add_argument('--seed', choices=seeds, required=False)
+    parser.add_argument('--batches', type=int, required=False)
 
     args = parser.parse_args()
 
@@ -40,11 +41,17 @@ def main():
                         d = {"dataset": dataset, "strategy": strategy, "generation": generation}
                         experiment = "{dataset}.{strategy}.{generation}-{dataset}".format(**d)
                         trajectory_file = "%s.trajectories.%s" % (experiment, seed)
+                        command = "cd %s && %s/java -cp autoweka.jar autoweka.tools.GetBestFromTrajectoryGroupCSV" % (
+                            os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'])
 
-                        os.system(
-                            "cd %s && %s/java -cp autoweka.jar autoweka.tools.GetBestFromTrajectoryGroupCSV %s/%s/%s" % (
-                                os.environ['AUTOWEKA_PATH'], os.environ['MY_JAVA_PATH'], experiments_folder, experiment,
-                                trajectory_file))
+                        if args.batches:
+                            for batch in range(0, args.batches):
+                                full_path = '%s/%s/batch%d/%s' % (
+                                experiments_folder, experiment, batch, trajectory_file)
+                                os.system('%s %s %d' % (command, full_path, batch))
+                        else:
+                            full_path = '%s/%s/%s' % (experiments_folder, experiment, trajectory_file)
+                            os.system('%s %s %s', command, full_path)
 
 
 if __name__ == "__main__":

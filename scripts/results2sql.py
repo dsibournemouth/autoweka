@@ -7,14 +7,26 @@ from config import *
 
 def insert_results(conn, file, convert_configuration=False, pretend=False):
     print "Inserting results from %s (convert=%s, pretend=%s)" % (file, convert_configuration, pretend)
+
     c = conn.cursor()
     f = open(file, 'r')
     for line in f:
+        batch = None
         tmp = line.split('.')
         dataset = tmp[0]
+
+        if ',' in dataset:
+            tmp2 = dataset.split(',')
+            batch = tmp2[0]
+            dataset = tmp2[1]
+
         strategy = tmp[1]
         generation = tmp[2].split('-')[0]
         fields = line.replace('NaN', 'NULL').split(',')
+
+        if batch:
+            del fields[0]
+
         seed = fields[1]
         configuration = fields[-1].rstrip('\n')
         if convert_configuration:
@@ -31,11 +43,18 @@ def insert_results(conn, file, convert_configuration=False, pretend=False):
         newline = "%s,(%s),'%s'" % (
             newline, select_full_cv_error, configuration)
 
-        insert_sql = '''INSERT OR REPLACE INTO results(
-                         dataset, strategy, generation, seed, num_trajectories, num_evaluations, total_evaluations,
-                         memout_evaluations, timeout_evaluations, error, test_error, full_cv_error, configuration)
-                         VALUES (%s)''' % newline
+        if batch:
+            newline = "%s,%s" % (newline, batch)
+
+        attributes = '''dataset, strategy, generation, seed, num_trajectories, num_evaluations, total_evaluations,
+                         memout_evaluations, timeout_evaluations, error, test_error, full_cv_error, configuration'''
+
+        if batch:
+            attributes = '%s, batch' % attributes
+
+        insert_sql = '''INSERT OR REPLACE INTO results(%s) VALUES (%s)''' % (attributes, newline)
         if not pretend:
+            print "Inserting batch %s of %s" % (batch, dataset)
             c.execute(insert_sql)
         else:
             print insert_sql
@@ -43,7 +62,7 @@ def insert_results(conn, file, convert_configuration=False, pretend=False):
     f.close()
 
 
-def create_tables(conn, pretend=False):
+def create_tables(conn, pretend=False, adaptive=False):
     c = conn.cursor()
 
     create_datasets = "CREATE TABLE datasets (name PRIMARY KEY, train, test)"
@@ -52,15 +71,23 @@ def create_tables(conn, pretend=False):
                              FOREIGN KEY(dataset) REFERENCES datasets(name),
                              PRIMARY KEY(dataset, strategy, generation)
                              )'''
-    create_results = '''CREATE TABLE results
-                     (dataset, strategy, generation, seed, num_trajectories,
+    attributes = '''dataset, strategy, generation, seed, num_trajectories,
                       num_evaluations, total_evaluations, memout_evaluations, timeout_evaluations,
-                      error, test_error, full_cv_error, configuration,
+                      error, test_error, full_cv_error, configuration'''
+
+    unique = 'dataset, strategy, generation, seed'
+
+    if adaptive:
+        attributes = '%s, batch' % attributes
+        unique = '%s, batch' % unique
+
+    create_results = '''CREATE TABLE results
+                     (%s,
                       FOREIGN KEY(dataset) REFERENCES experiments(dataset),
                       FOREIGN KEY(strategy) REFERENCES experiments(strategy),
                       FOREIGN KEY(generation) REFERENCES experiments(generation),
-                      UNIQUE(dataset, strategy, generation, seed) ON CONFLICT REPLACE
-                      )'''
+                      UNIQUE(%s) ON CONFLICT REPLACE
+                      )''' % (attributes, unique)
 
     if not pretend:
         c.execute(create_datasets)
@@ -115,13 +142,14 @@ def main():
     parser.add_argument('--insert')
     parser.add_argument('--convert-configuration', action='store_true')
     parser.add_argument('--pretend', action='store_true')
+    parser.add_argument('--adaptive', action='store_true')
 
     args = parser.parse_args()
 
     conn = sqlite3.connect(database_file)
 
     if args.create_tables:
-        create_tables(conn, pretend=args.pretend)
+        create_tables(conn, pretend=args.pretend, adaptive=args.adaptive)
     if args.insert_datasets:
         insert_datasets(conn, pretend=args.pretend)
     if args.insert_experiments:

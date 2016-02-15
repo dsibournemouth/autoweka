@@ -9,6 +9,9 @@ best_points_all: best_points best_points_default
 best_points:
 	$(PYTHON) get_best_points.py --config=$(CONFIG) > results-$(CONFIG).csv && $(PYTHON) results2sql.py --config=$(CONFIG) --insert results-$(CONFIG).csv
 
+best_points_adaptive:
+	$(PYTHON) get_best_points.py --config=$(CONFIG) --batches=10 > results-$(CONFIG).csv && $(PYTHON) results2sql.py --config=$(CONFIG) --insert results-$(CONFIG).csv
+
 best_points_default:
 	$(PYTHON) get_best_points_default.py CV && $(PYTHON) results2sql.py --config=$(CONFIG) --insert results_default.csv
 
@@ -22,6 +25,9 @@ sqlite_init: sqlite_create sqlite_populate
 
 sqlite_create:
 	$(PYTHON) results2sql.py --config=$(CONFIG) --create-tables
+
+sqlite_create_adaptive:
+	$(PYTHON) results2sql.py --config=$(CONFIG) --create-tables --adaptive
 
 sqlite_populate:
 	$(PYTHON) results2sql.py --config=$(CONFIG) --insert-datasets --insert-experiments

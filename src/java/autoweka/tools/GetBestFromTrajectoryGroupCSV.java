@@ -30,6 +30,12 @@ public class GetBestFromTrajectoryGroupCSV
     res.isRegression = res.experiment.resultMetric.equals("rmse") ? true
 	: false;
 
+    // TODO: get this from a parameter that ideally should be inside the trajectory file
+    Integer batch = null;
+    if (args.length >= 2) {
+        batch = Integer.parseInt(args[1]);
+    }
+    
     InstanceGenerator mInstanceGenerator = InstanceGenerator.create(res.experiment.instanceGenerator, res.experiment.datasetString);
     int sizeTestingSet = mInstanceGenerator.getTesting().size();
     
@@ -52,6 +58,7 @@ public class GetBestFromTrajectoryGroupCSV
     }
 
     // Output:
+    // Batch, (optional)
     // Experiment name,
     // Seed of best configuration,
     // Number of trajectories,
@@ -63,11 +70,17 @@ public class GetBestFromTrajectoryGroupCSV
     // Test Error (for the best configuration)
     // Best configuration
 
-    System.out.println(res.experiment.name + "," + res.seed + ","
-	+ res.numTrajectories + "," + res.numEval + "," + res.totalNumEval
-	+ "," + res.numMemOut + "," + res.numTimeOut + "," + res.errorEstimate
-	+ "," + testError + "," + res.classifierClass + " "
-	+ res.classifierArgs);
+    String output = res.experiment.name + "," + res.seed + ","
+            + res.numTrajectories + "," + res.numEval + "," + res.totalNumEval
+            + "," + res.numMemOut + "," + res.numTimeOut + "," + res.errorEstimate
+            + "," + testError + "," + res.classifierClass + " "
+            + res.classifierArgs;
+    
+    if (batch != null) {
+        output = batch + "," + output;
+    }
+    
+    System.out.println(output);
   }
 
   private static ArrayList<Double> loadErrors(String filename,
