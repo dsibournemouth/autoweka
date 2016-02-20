@@ -10,6 +10,7 @@ from config import *
 # linkage_methods = ['single', 'complete', 'average', 'centroid', 'median', 'ward']
 linkage_methods = ['complete']
 
+# This method is called from plot_similarity
 
 def plot_dendogram(distance_matrix, labels, title, folder):
     for cluster_method in linkage_methods:

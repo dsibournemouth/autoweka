@@ -103,7 +103,10 @@ def sub_main(dataset, strategy, generation, plot_flags):
     labels = []
     for result in results:
         seed = result[3]
-        params = parse_configuration(result[4], True)
+        try:
+            params = parse_configuration(result[4], True)
+        except:
+            continue
         error = float(result[5])
         flow = [
             params['missing_values']['method'] if 'missing_values' in params.keys() else "-",
@@ -134,17 +137,17 @@ def sub_main(dataset, strategy, generation, plot_flags):
 
     matrix = create_distance_matrix_by_configuration(configurations)
     mean_distance_configuration = (np.sum(matrix) / 2) / (matrix.shape[0] * matrix.shape[1] / 2)
-    if plot_flags['by_configuration']:
-        np.savetxt("../distances%s/by_configuration/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix,
+    np.savetxt("../distances%s/by_configuration/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix,
                    fmt="%.6f", delimiter=",")
+    if plot_flags['by_configuration']:
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation),
                        "../distances%s/by_configuration" % suffix)
 
     matrix = create_distance_matrix_by_error(errors)
     mean_distance_error = (np.sum(matrix) / 2) / (matrix.shape[0] * matrix.shape[1] / 2)
-    if plot_flags['by_error']:
-        np.savetxt("../distances%s/by_error/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix, fmt="%.6f",
+    np.savetxt("../distances%s/by_error/%s.%s.%s.csv" % (suffix, dataset, strategy, generation), matrix, fmt="%.6f",
                    delimiter=",")
+    if plot_flags['by_error']:
         plot_dendogram(matrix, labels, "%s.%s.%s" % (dataset, strategy, generation), "../distances%s/by_error" % suffix)
 
     return mean_distance_configuration, mean_distance_error

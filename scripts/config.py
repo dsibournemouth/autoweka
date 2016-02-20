@@ -48,7 +48,7 @@ def get_results_individual(dataset, strategy, generation):
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
 
-    c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error, num_evaluations
+    c.execute('''SELECT dataset, strategy, generation, seed, configuration, error, test_error, num_evaluations, batch
                  FROM results WHERE dataset='%s' AND strategy='%s' AND generation='%s'
                  ''' % (dataset, strategy, generation))
     results = c.fetchall()
