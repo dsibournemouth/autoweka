@@ -18,16 +18,24 @@ class AdaptiveExperimentRunner {
   public static void main(String[] args) throws IOException {
     if (args.length < 3) {
       System.out
-	  .println("AdaptiveExperimentRunner requires at least 3 arguments - the experiment folder, the number of batches and the seed (and optionally skip-run option)");
+	  .println("AdaptiveExperimentRunner requires at least 3 arguments - the experiment folder, the number of batches and the seed (and optionally, initial run and skip-run option)");
       System.exit(1);
     }
 
     File expFolderFile = new File(args[0]);
     int numberOfBatches = Integer.parseInt(args[1]);
     String seed = args[2];
+    int initialBatch = 1;
+    if (args.length > 3){
+      initialBatch = Integer.parseInt(args[3]);
+      if (initialBatch >= numberOfBatches || initialBatch < 1) {
+	System.out.println("Wrong initial batch: " + initialBatch + ". Limits [1," + (numberOfBatches-1) + "]");
+	System.exit(1);
+      }
+    }
     boolean skipRun = false;
-    if (args.length > 3)
-      skipRun = args[3].equals("skip-run") ? true : false;
+    if (args.length > 4)
+      skipRun = args[4].equals("skip-run") ? true : false;
 
     if (!expFolderFile.exists() || !expFolderFile.isDirectory()) {
       System.out
@@ -39,7 +47,7 @@ class AdaptiveExperimentRunner {
 
     System.out.println(expFolder + " " + expName);
 
-    for (int batchNumber = 1; batchNumber < numberOfBatches; batchNumber++) {
+    for (int batchNumber = initialBatch; batchNumber < numberOfBatches; batchNumber++) {
 
       // Move the previous trajectory, model and predictions
       String[] oldFiles = new String[] {expName + ".trajectories." + seed,

@@ -12,6 +12,7 @@ def main():
     parser.add_argument('--generation', choices=generations, required=False)
     parser.add_argument('--seed', choices=seeds, required=False)
     parser.add_argument('--batches', type=int, required=False)
+    parser.add_argument('--initial-batch', type=int, required=False)
 
     args = parser.parse_args()
 
@@ -32,6 +33,10 @@ def main():
         selected_seeds = [args.seed]
     else:
         selected_seeds = seeds
+    if args.initial_batch:
+        initial_batch = args.initial_batch
+    else:
+        initial_batch = 1
 
     for dataset in selected_datasets:
         for strategy in selected_strategies:
@@ -41,7 +46,7 @@ def main():
                 for seed in selected_seeds:
                     experiment_name = '%s.%s.%s.%s' % (dataset, strategy, generation, seed)
                     if args.batches:
-                        command = 'qsub  -N %s -l q=compute ./single-adaptive-experiment.sh %s %s %s' % (experiment_name, folder, args.batches, seed)
+                        command = 'qsub  -N %s -l q=compute ./single-adaptive-experiment.sh %s %s %s %s' % (experiment_name, folder, args.batches, seed, initial_batch)
                     else:
                         command = 'qsub  -N %s -l q=compute ./single-experiment.sh %s %s' % (experiment_name, folder, seed)
                     print command
