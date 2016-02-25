@@ -2141,6 +2141,7 @@ public final class Utils
 	String[] wekaOptions = Arrays.copyOfRange(ops, 1, ops.length);
 	String meta = wekaOptions[0];
 	
+	// Ensembles
 	if (meta.equals("weka.classifiers.meta.Vote") || meta.equals("weka.classifiers.meta.Stacking")) {
 	    System.out.println("{ \"predictors\": [");
 	    while(true){
@@ -2210,7 +2211,7 @@ public final class Utils
                 }
                 json += String.format("\"predictor\": {\"method\": \"%s\", \"params\": \"%s\"}", 
                         predictor, 
-                        predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
+                        predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)).replaceAll("\"","\\\\\\\"") : ""
                         );
                 json += "},";
 	    }
@@ -2288,7 +2289,7 @@ public final class Utils
 	  }
 	  System.out.println(String.format("\"predictor\": {\"method\": \"%s\", \"params\": \"%s\"},", 
 	          predictor, 
-	          predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)) : ""
+	          predictorSpec.length>0 ? String.join(" ", Arrays.copyOfRange(predictorSpec, 1, predictorSpec.length)).replaceAll("\"","\\\\\\\"") : ""
                   )
           );
 	  System.out.println(String.format("\"meta\": {\"method\": \"%s\", \"params\": \"%s\"}", 
