@@ -1,6 +1,9 @@
 package autoweka;
 
 import javax.xml.bind.annotation.*;
+
+import autoweka.smac.SMACTrajectoryParser;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.File;
@@ -243,10 +246,23 @@ public class Experiment extends XmlSerializable
         try
         {
             Experiment exp = Experiment.fromXML(new FileInputStream(experiment));
+            
+            String previousBestConfiguration = null;
+            if (batchNumber != null) {
+              // Get best configuration from previous batch
+              String previousBatch = Integer.toString(Integer.parseInt(batchNumber) - 1);
+              String previousTrajectoryFile = expFolder.getAbsolutePath() + File.separator + "batch" + previousBatch + File.separator + expFolder.getName()  + ".trajectories." + seed;
+              Trajectory previousTrajectory = TrajectoryGroup.fromXML(new FileInputStream(previousTrajectoryFile), TrajectoryGroup.class).getTrajectory(seed);
+              previousBestConfiguration = previousTrajectory.getLastPoint().mArgs;
+            }
 
             for(int i = 0; i < exp.callString.size(); i++)
             {
-                exp.callString.set(i, exp.callString.get(i).replace("{SEED}", seed));
+                String callString = exp.callString.get(i).replace("{SEED}", seed);
+                if (batchNumber != null && callString.contains("{INITIAL_INCUMBENT}")) {
+                  callString = callString.replace("{INITIAL_INCUMBENT}", previousBestConfiguration);
+                }
+                exp.callString.set(i, callString);
                 System.out.print("'" + exp.callString.get(i) + "' ");
             }
 
