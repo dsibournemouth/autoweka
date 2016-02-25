@@ -27,14 +27,18 @@ def create_distance_matrix_by_configuration(configurations):
     weights = [1, 1, 1, 1, 1, 2, 1.5]
     total_weight = sum(weights)
 
-    distance = np.zeros((rows, rows))
+    num_batches = 10  # TODO use parameter
+    distance = np.zeros((num_batches, num_batches))
     # Each row is configuration
-    for i in range(0, rows):
-        for j in range(0, rows):
+    for i in range(0, num_batches):
+        config_A = configurations[i] if i < rows - 1 else configurations[rows - 1]
+        for j in range(0, num_batches):
+            config_B = configurations[j] if j < rows - 1 else configurations[rows - 1]
+
             row_similarity = 0
             # each column is a component
             for k in range(0, columns):
-                row_similarity += weights[k] if configurations[i][k] == configurations[j][k] else 0
+                row_similarity += weights[k] if config_A[k] == config_B[k] else 0
 
             # distance == 0 if they are the same
             distance[i, j] = float(row_similarity) / total_weight
@@ -97,12 +101,12 @@ def plot_distances(x, y, labels):
 
 
 def plot_similarity_matrix(matrix, this_title):
-    mask =  np.tri(matrix.shape[0], k=-1)
-    A = np.ma.array(matrix, mask=mask) # mask out the lower triangle
+    mask = np.tri(matrix.shape[0], k=-1)
+    A = np.ma.array(matrix, mask=mask)  # mask out the lower triangle
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    cmap = cm.get_cmap('jet', 10) # jet doesn't have white color
-    cmap.set_bad('w') # default value is 'k'
+    cmap = cm.get_cmap('jet', 10)  # jet doesn't have white color
+    cmap.set_bad('w')  # default value is 'k'
     img = ax1.imshow(A, interpolation='nearest', cmap=cmap, vmin=0, vmax=1.0)
     ax1.grid(True)
     plt.title(this_title)
@@ -114,6 +118,7 @@ def plot_similarity_matrix(matrix, this_title):
     plt.show()
     plt.savefig("../distances%s/by_configuration/%s.png" % (suffix, this_title), dpi=200, bbox_inches='tight')
     plt.close("all")
+
 
 def sub_main(dataset, strategy, generation, plot_flags):
     results, best_error_seed, best_test_error_seed = get_results(dataset, strategy, generation)
@@ -167,7 +172,7 @@ def sub_main(dataset, strategy, generation, plot_flags):
         if plot_flags['by_configuration']:
             title = "%s.%s.%s.%s" % (dataset, strategy, generation, seed)
             plot_similarity_matrix(matrix, title)
-            #plot_dendogram(matrix, labels, title,
+            # plot_dendogram(matrix, labels, title,
             #               "../distances%s/by_configuration" % suffix)
 
     return np.mean(mean_distance_configuration)
@@ -200,7 +205,7 @@ def main():
             for generation in selected_generations:
                 try:
                     mean_distance_configuration = sub_main(dataset, strategy, generation,
-                                                                                plot_flags)
+                                                           plot_flags)
                     means_label.append("%s.%s.%s" % (dataset, strategy, generation))
                     means_config.append(mean_distance_configuration)
                 except Exception as e:
@@ -208,7 +213,7 @@ def main():
                     traceback.print_exc()
                     continue
 
-    #plot_distances(means_config, means_error, means_label)
+                    # plot_distances(means_config, means_error, means_label)
 
 
 if __name__ == "__main__":
