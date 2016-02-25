@@ -5,6 +5,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import isdir, join
+import re
 
 from config import *
 
@@ -16,21 +17,21 @@ def create_table():
     c.execute('DROP TABLE IF EXISTS trajectories')
 
     c.execute('''CREATE TABLE trajectories
-                 (dataset, strategy, generation, seed, time, error, configuration,
+                 (dataset, strategy, generation, seed, time, error, configuration, batch,
                   FOREIGN KEY(dataset) REFERENCES experiments(dataset),
                   FOREIGN KEY(strategy) REFERENCES experiments(strategy),
                   FOREIGN KEY(generation) REFERENCES experiments(generation),
-                  UNIQUE(dataset, strategy, generation, seed, time) ON CONFLICT REPLACE
+                  UNIQUE(dataset, strategy, generation, seed, time, batch) ON CONFLICT REPLACE
                   )''')
 
     conn.commit()
     conn.close()
 
 
-def parse_trajectories(folder, c):
+def parse_trajectories(folder, c, adaptive, datasets):
     os.chdir(folder)
 
-    all_trajectories = glob.glob("*trajectories*")
+    all_trajectories = glob.glob("*trajectories*") if not adaptive else glob.glob("batch*/*trajectories*")
     if len(all_trajectories) == 0:
         print "No trajectories found"
         return
@@ -39,7 +40,8 @@ def parse_trajectories(folder, c):
 
     for file in all_trajectories:
         # file = absorber.TPE.CV-absorber.trajectories.0
-        tmp = file.split('.')
+        print file
+        tmp = os.path.basename(file).split('.')
         dataset = tmp[0]
         strategy = tmp[1]
         generation = tmp[2].split('-')[0]
@@ -49,6 +51,8 @@ def parse_trajectories(folder, c):
             traj = e.find('trajectories')
             if traj is not None:
                 seed = int(traj.find('seed').text)  # should be only 1 element
+                batch_search = re.search('batch(\d+)', e.find('experiment').find('name').text)
+                batch = int(batch_search.group(1)) if batch_search else None
                 # numEvaluatedEvaluations = traj.find('numEvaluatedEvaluations').text
                 # numMemOutEvaluations = traj.find('numMemOutEvaluations').text
                 # numTimeOutEvaluations = traj.find('numTimeOutEvaluations').text
@@ -67,10 +71,16 @@ def parse_trajectories(folder, c):
                     except:
                         configuration = ''
 
-                    sql_query = '''INSERT OR REPLACE INTO trajectories(
-                                     dataset, strategy, generation, seed, time, error, configuration)
-                                     VALUES ('%s', '%s', '%s', %d, %f, %f, '%s')''' % (
-                        dataset, strategy, generation, seed, time, error, configuration)
+                    if batch is not None:
+                        sql_query = '''INSERT OR REPLACE INTO trajectories(
+                                     dataset, strategy, generation, seed, time, error, configuration, batch)
+                                     VALUES ('%s', '%s', '%s', %d, %f, %f, '%s', %d)''' % (
+                            dataset, strategy, generation, seed, time, error, configuration, batch)
+                    else:
+                        sql_query = '''INSERT OR REPLACE INTO trajectories(
+                                         dataset, strategy, generation, seed, time, error, configuration)
+                                         VALUES ('%s', '%s', '%s', %d, %f, %f, '%s')''' % (
+                            dataset, strategy, generation, seed, time, error, configuration)
                     c.execute(sql_query)
 
 
@@ -78,11 +88,18 @@ def main():
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__))
     globals().update(load_config(parser))
     parser.add_argument('--create-table', action='store_true')
+    parser.add_argument('--dataset', choices=datasets, required=False)
+    parser.add_argument('--adaptive', action='store_true', required=False)
 
     args = parser.parse_args()
 
     if args.create_table:
         create_table()
+
+    if args.dataset:
+        selected_datasets = [args.dataset]
+    else:
+        selected_datasets = datasets
 
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
@@ -91,7 +108,7 @@ def main():
     experiments = [f for f in listdir(mypath) if isdir(join(mypath, f))]
     for e in experiments:
         folder = "%s/%s" % (mypath, e)
-        parse_trajectories(folder, c)
+        parse_trajectories(folder, c, args.adaptive, selected_datasets)
 
     conn.commit()
     conn.close()
