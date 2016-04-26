@@ -14,7 +14,7 @@ def scatter_all_seeds(results, title):
     results = np.array(results)
 
     for seed in seeds:
-        mask = results[:, 0] == seed
+        mask = results[:, 0] == int(seed)
         time = results[mask, 1] / 60 / 60
         error = results[mask, 2]
         if is_regression:
