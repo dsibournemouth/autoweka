@@ -14,6 +14,9 @@ Auto-WEKA includes a wizard to find the best MCPS of a given dataset without any
 Auto-WEKA allows to select between a list of all WEKA methods and different optimisation strategies and parameters.
 ![GUI Builder](https://raw.githubusercontent.com/dsibournemouth/autoweka/master/img/GUI-builder.png)
 
+## Usage
+Clone the repository and run `java -jar autoweka.jar`. Then, follow [userguide.pdf](https://github.com/dsibournemouth/autoweka/blob/master/userguide.pdf) (please, note that PDF is from an older version. User guide for this new version will be updated soon).
+
 ## Publications
  * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Automatic composition and optimisation of multicomponent predictive systems" Submitted to IEEE Transactions on Knowledge and Data Engineering on April 1st, 2016. ([Under revision](https://www.dropbox.com/s/cd13qr1touqgl9z/Automatic_composition_and_optimisation_of_multicomponent_predictive_systems%20-%20prereview.pdf?dl=0)) [[results](https://github.com/dsibournemouth/autoweka/tree/master/results)]
  * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. ["Towards automatic composition of multicomponent predictive systems"](http://link.springer.com/chapter/10.1007%2F978-3-319-32034-2_3) In Proc. of HAIS 2016, 2016. [[slides](http://www.slideshare.net/draxus/towards-automatic-composition-of-multicomponent-predictive-systems)] [[results](https://github.com/dsibournemouth/autoweka/tree/master/results)]
