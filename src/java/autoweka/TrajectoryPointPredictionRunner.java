@@ -1,6 +1,8 @@
 package autoweka;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,6 +16,7 @@ public class TrajectoryPointPredictionRunner
         String dataset = null;
         boolean saveModel = false;
         boolean skipEvaluation = false;
+        boolean savePnml = false;
         for(int i = 0; i < args.length; i++)
         {
             if(args[i].equals("-seed"))
@@ -35,6 +38,10 @@ public class TrajectoryPointPredictionRunner
             else if (args[i].equals("-skipevaluation"))
             {
                skipEvaluation = true; 
+            }
+            else if (args[i].equals("-savepnml"))
+            {
+                savePnml = true; 
             }
             else if(args[i].startsWith("-"))
             {
@@ -87,6 +94,17 @@ public class TrajectoryPointPredictionRunner
             props.put("predictionsFileName", experimentDir.getAbsolutePath() + "/predictions." + traj.getSeed() + ".csv");
             if(saveModel)
                 props.put("modelOutputFilePrefix", experimentDir.getAbsolutePath() + "/trained." + traj.getSeed());
+            if(savePnml){
+                String pnml = WekaArgumentConverter.convertToPnml(point.getArgs());
+                try {
+                    PrintWriter out = new PrintWriter(experimentDir.getAbsolutePath() + "/petrinet." + traj.getSeed() + ".pnml");
+                    out.write(pnml);
+                    out.close();
+                } catch (FileNotFoundException e) {
+                    System.err.println("Error at exporting Petri net");
+                    e.printStackTrace();
+                }
+            }
             SubProcessWrapper.getErrorAndTime(experimentDir, experiment, instance, point.getArgs(), traj.getSeed(), props);
         }
     }
