@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import weka.classifiers.AbstractClassifier;
+import weka.classifiers.IteratedFilteredClassifierEnhancer;
+import weka.classifiers.meta.FilteredClassifier;
+import weka.filters.AllFilter;
+import weka.filters.CategorizedMultiFilter;
+import weka.filters.Filter;
 
 /**
  * Utility class that can convert arguments from Auto-WEKA to WEKA
@@ -79,17 +84,153 @@ public class WekaArgumentConverter
                 + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n";
         pnml += "<arc id='f_i_meta' source='i' target='meta'><inscription><text>f_i_meta</text></inscription></arc>\n";
         pnml += "<arc id='f_meta_o' source='meta' target='o'><inscription><text>f_meta_i</text></inscription></arc>\n";
-        pnml += "<page id='meta'>\n"
-                + "<net>\n"
-                + "<place id='i'><name><text>i</text></name></place>\n"
-                + "<place id='o'><name><text>o</text></name></place>\n"
-                + "<transition id='predictor'><name><text>FilteredClassifier</text></name></transition>\n"
-                + "<arc id='f_i_predictor' source='i' target='predictor'><inscription><text>f_i_predictor</text></inscription></arc>\n"
-                + "<arc id='f_predictor_o' source='predictor' target='o'><inscription><text>f_predictor_o</text></inscription></arc>\n"
-                + "</net></page>\n";
+                
+        if (classifier instanceof IteratedFilteredClassifierEnhancer) {
+            // meta-predictor with multiple base classifiers
+            pnml += "<page id='meta'><net>\n"
+                    + "<place id='i'><name><text>i</text></name></place>\n"
+                    + "<place id='o'><name><text>o</text></name></place>\n"
+                    + "<transition id='split'><name><text>Split</text></name><toolspecific tool='WoPeD' version='1.0'><operator id='split' type='101'/><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                    + "<transition id='join'><name><text>Join</text></name><toolspecific tool='WoPeD' version='1.0'><operator id='join' type='102'/><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                    + "<arc id='f_i_split' source='i' target='split'><inscription><text>f_i_split</text></inscription></arc>\n"
+                    + "<arc id='f_join_o' source='join' target='o'><inscription><text>f_join_o</text></inscription></arc>\n";
+            
+            for(int i=0; i<((IteratedFilteredClassifierEnhancer) classifier).getNumIterations(); i++) {
+                pnml += "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
+                      + "<place id='post_predictor%i'><name><text>post_predictor%i</text></name></place>\n"
+                      + "<transition id='predictor%i'><name><text>FilteredClassifier</text></name>"
+                      + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                      + "<arc id='f_split_pre_predictor%i' source='split' target='pre_predictor%i'><inscription><text>f_split_pre_predictor%i</text></inscription></arc>\n"
+                      + "<arc id='f_post_predictor%i_join' source='post_predictor%i' target='join'><inscription><text>f_post_predictor%i_join</text></inscription></arc>\n" 
+                      + "<arc id='f_pre_predictor%i_predictor%i' source='pre_predictor%i' target='predictor%i'><inscription><text>f_pre_predictor%i_predictor%i</text></inscription></arc>\n"
+                      + "<arc id='f_predictor%i_post_predictor%i' source='predictor%i' target='post_predictor%i'><inscription><text>f_predictor%i_post_predictor%i</text></inscription></arc>\n"
+                      + getPnml((IteratedFilteredClassifierEnhancer) classifier);
+                
+                pnml = pnml.replaceAll("%i", Integer.toString(i));
+            }
+            
+            pnml += "</net></page>\n";            
+        }
+        else if (classifier instanceof FilteredClassifier) {
+            // TODO support for FilteredClassifier without iterations
+        }
+        
         pnml += "</net></pnml>";
         return pnml;
     }
+    
+    public static String getPnml(IteratedFilteredClassifierEnhancer classifier) {
+        FilteredClassifier filteredClassifier = (FilteredClassifier) classifier.getClassifier();
+        CategorizedMultiFilter metaFilter = (CategorizedMultiFilter) filteredClassifier.getFilter();
+        AbstractClassifier baseClassifier = (AbstractClassifier) filteredClassifier.getClassifier();
+        
+        String pnml = "<page id='predictor%i'><net>\n"
+                    + "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
+                    + "<place id='post_predictor%i'><name><text>post_predictor%i</text></name></place>\n"
+                    + "<place id='post_filters%i'><name><text>post_filters%i</text></name></place>\n"
+                    + "<transition id='filters%i'><name><text>" + metaFilter.toString() + "</text></name>"
+                    + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                    + "<transition id='baseclassifier%i'><name><text>" + baseClassifier.getClass().toString().substring(6) + "</text></name></transition>\n"
+                    + "<arc id='f_pre_predictor%i_filters%i' source='pre_predictor%i' target='filters%i'><inscription><text>f_pre_predictor%i_filters%i</text></inscription></arc>\n"
+                    + "<arc id='f_filters%i_post_filters%i' source='filters%i' target='post_filters%i'><inscription><text>f_filters%i_post_filters%i</text></inscription></arc>\n"
+                    + "<arc id='f_post_filters%i_baseclassifier%i' source='post_filters%i' target='baseclassifier%i'><inscription><text>f_post_filters%i_baseclassifier%i</text></inscription></arc>\n"
+                    + "<arc id='f_baseclassifier%i_post_predictor%i' source='baseclassifier%i' target='post_predictor%i'><inscription><text>f_baseclassifier%i_post_predictor%i</text></inscription></arc>\n"
+                    + getPnml(metaFilter)
+                    + "</net></page>\n";
+        
+        return pnml;
+    }
+    
+    public static String getPnml(CategorizedMultiFilter metaFilter) {
+        String disabled = AllFilter.class.getName();
+        
+        Filter missingValueFilter = metaFilter.getMissingValuesHandling();
+        Filter outlierFilter = metaFilter.getOutlierHandling();
+        Filter transformation = metaFilter.getTransformation();
+        Filter dimensionalityReduction = metaFilter.getDimensionalityReduction();
+        Filter sampling = metaFilter.getSampling();
+        
+        String filters[] = {missingValueFilter.toString(), outlierFilter.toString(), transformation.toString(), dimensionalityReduction.toString(), sampling.toString()};
+        int numActiveFilters = 0;
+        for (String filter : filters) {
+            if (filter != disabled) {
+                numActiveFilters++;
+            }
+        }
+        
+        String pnml = "<page id='filters%i'><net>\n"
+                + "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
+                + "<place id='post_filters%i'><name><text>post_filters%i</text></name></place>\n";
+        
+        String prev = "pre_predictor%i";
+        if (missingValueFilter.toString() != disabled) {
+            
+            pnml += "<transition id='missing_value%i'><name><text>" + missingValueFilter.toString() + "</text></name></transition>\n"
+                  + "<arc id='f_" + prev + "_missing_value%i' source='" + prev + "' target='missing_value%i'><inscription><text>f_" + prev + "_missing_value%i</text></inscription></arc>\n";
+            if (--numActiveFilters == 0) {
+                pnml += getLastArc("missing_value%i");
+            }
+            else {
+                pnml += "<place id='post_missing_value%i'><name><text>post_missing_value%i</text></name></place>\n"
+                      + "<arc id='f_missing_value%i_post_missing_value%i' source='missing_value%i' target='post_missing_value%i'><inscription><text>f_missing_value%i_post_missing_value%i</text></inscription></arc>\n";
+            }
+            prev = "post_missing_value%i";
+        }
+        
+        if (outlierFilter.toString() != disabled) {
+            pnml += "<transition id='outlier%i'><name><text>" + outlierFilter.toString() + "</text></name></transition>\n"
+                  + "<arc id='f_" + prev + "_outlier%i' source='" + prev + "' target='outlier%i'><inscription><text>f_" + prev + "_outlier%i</text></inscription></arc>\n";
+            if (--numActiveFilters == 0) {
+                pnml += getLastArc("outlier%i");
+            }
+            else {
+                pnml += "<place id='post_outlier%i'><name><text>post_outlier%i</text></name></place>\n"
+                      + "<arc id='f_outlier%i_post_outlier%i' source='outlier%i' target='post_outlier%i'><inscription><text>f_outlier%i_post_outlier%i</text></inscription></arc>\n";
+            }
+            prev = "post_outlier%i";
+        }
+        
+        if (transformation.toString() != disabled) {
+            pnml += "<transition id='transformation%i'><name><text>" + transformation.toString() + "</text></name></transition>\n"
+                  + "<arc id='f_" + prev + "_transformation%i' source='" + prev + "' target='transformation%i'><inscription><text>f_" + prev + "_transformation%i</text></inscription></arc>\n";
+            if (--numActiveFilters == 0) {
+                pnml += getLastArc("transformation%i");
+            }
+            else {
+                pnml += "<place id='post_transformation%i'><name><text>post_transformation%i</text></name></place>\n"
+                      + "<arc id='f_transformation%i_post_transformation%i' source='transformation%i' target='post_transformation%i'><inscription><text>f_transformation%i_post_transformation%i</text></inscription></arc>\n";
+            }
+            prev = "post_transformation%i";
+        }
+        
+        if (dimensionalityReduction.toString() != disabled) {
+            pnml += "<transition id='dimensionality%i'><name><text>" + dimensionalityReduction.toString() + "</text></name></transition>\n"
+                  + "<arc id='f_" + prev + "_dimensionality%i' source='" + prev + "' target='dimensionality%i'><inscription><text>f_" + prev + "_dimensionality%i</text></inscription></arc>\n";
+            if (--numActiveFilters == 0) {
+                pnml += getLastArc("dimensionality%i");
+            }
+            else {
+                pnml += "<place id='post_dimensionality%i'><name><text>post_dimensionality%i</text></name></place>\n"
+                      + "<arc id='f_dimensionality%i_post_dimensionality%i' source='dimensionality%i' target='post_dimensionality%i'><inscription><text>f_dimensionality%i_post_dimensionality%i</text></inscription></arc>\n";
+            }
+            prev = "post_dimensionality%i";
+        }
+        
+        if (sampling.toString() != disabled) {
+            pnml += "<transition id='sampling%i'><name><text>" + sampling.toString() + "</text></name></transition>\n"
+                  + "<arc id='f_" + prev + "_sampling%i' source='" + prev + "' target='sampling%i'><inscription><text>f_" + prev + "_sampling%i</text></inscription></arc>\n";
+            pnml += getLastArc("sampling%i"); // last filter
+        }
+        
+        pnml += "</net></page>\n";
+        
+        return pnml;
+    }
+    
+    public static String getLastArc(String prev) {
+        return "<arc id='f_" + prev + "_post_filters%i' source='" + prev + "' target='post_filters%i'><inscription><text>f_" + prev + "_post_filters%i</text></inscription></arc>\n";
+    }
+    
 
     public static class Arguments{
         private Arguments(Map<String, String> _propertyMap, Map<String, List<String>> _argMap){
