@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import weka.classifiers.AbstractClassifier;
+
 /**
  * Utility class that can convert arguments from Auto-WEKA to WEKA
  */
@@ -26,6 +28,67 @@ public class WekaArgumentConverter
         Arguments wekaArgs = WekaArgumentConverter.convert(listArgs);
         return wekaArgs.propertyMap.get("targetclass") + " " + Util.joinStrings(" ",
         	Util.quoteStrings(Util.escapeQuotes(wekaArgs.argMap.get("classifier"))));
+    }
+    
+    public static String convertToPnml(String args) {
+        String pnml = "<?xml version='1.0' encoding='UTF-8'?>\n"
+                    + "<pnml>\n";
+        
+        List<String> listArgs = Arrays.asList(args.split(" "));
+        Arguments wekaArgs = WekaArgumentConverter.convert(listArgs);
+        Map<String, String> propertyMap = wekaArgs.propertyMap;
+        Map<String, List<String>> argMap = wekaArgs.argMap;
+        
+        String targetClassifierName = propertyMap.get("targetclass");
+
+        if(targetClassifierName == null || targetClassifierName.isEmpty())
+        {
+            throw new RuntimeException("No target classifier name specified");
+        }
+        
+        String[] argsArray = argMap.get("classifier").toArray(new String[0]);
+        AbstractClassifier classifier;
+        Class<?> cls;
+        try
+        {
+            cls = Class.forName(targetClassifierName);
+            classifier = (AbstractClassifier)cls.newInstance();
+        }
+        catch(ClassNotFoundException e)
+        {
+            throw new RuntimeException("Could not find class '" + targetClassifierName + "': " + e.getMessage(), e);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Failed to instantiate '" + targetClassifierName + "': " + e.getMessage(), e);
+        }
+        try
+        {
+            classifier.setOptions(argsArray);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to set classifier options: " + e.getMessage(), e);
+        }
+        
+        pnml += "<net type='http://www.informatik.hu-berlin.de/top/pntd/ptNetb' id='noID'>\n";
+        pnml += "<place id='i'><name><text>i</text></name></place>\n";
+        pnml += "<place id='o'><name><text>o</text></name></place>\n";
+        pnml += "<transition id='meta'><name><text>" + targetClassifierName + "</text></name>\n"
+                + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n";
+        pnml += "<arc id='f_i_meta' source='i' target='meta'><inscription><text>f_i_meta</text></inscription></arc>\n";
+        pnml += "<arc id='f_meta_o' source='meta' target='o'><inscription><text>f_meta_i</text></inscription></arc>\n";
+        pnml += "<page id='meta'>\n"
+                + "<net>\n"
+                + "<place id='i'><name><text>i</text></name></place>\n"
+                + "<place id='o'><name><text>o</text></name></place>\n"
+                + "<transition id='predictor'><name><text>FilteredClassifier</text></name></transition>\n"
+                + "<arc id='f_i_predictor' source='i' target='predictor'><inscription><text>f_i_predictor</text></inscription></arc>\n"
+                + "<arc id='f_predictor_o' source='predictor' target='o'><inscription><text>f_predictor_o</text></inscription></arc>\n"
+                + "</net></page>\n";
+        pnml += "</net></pnml>";
+        return pnml;
     }
 
     public static class Arguments{
