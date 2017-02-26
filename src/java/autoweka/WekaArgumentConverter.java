@@ -77,13 +77,13 @@ public class WekaArgumentConverter
             throw new RuntimeException("Failed to set classifier options: " + e.getMessage(), e);
         }
         
-        pnml += "<net type='http://www.informatik.hu-berlin.de/top/pntd/ptNetb' id='noID'>\n";
-        pnml += "<place id='i'><name><text>i</text></name></place>\n";
-        pnml += "<place id='o'><name><text>o</text></name></place>\n";
-        pnml += "<transition id='meta'><name><text>" + targetClassifierName + "</text></name>\n"
-                + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n";
-        pnml += "<arc id='f_i_meta' source='i' target='meta'><inscription><text>f_i_meta</text></inscription></arc>\n";
-        pnml += "<arc id='f_meta_o' source='meta' target='o'><inscription><text>f_meta_i</text></inscription></arc>\n";
+        pnml += "<net type='http://www.informatik.hu-berlin.de/top/pntd/ptNetb' id='noID'>\n"
+              + "<place id='i'><name><text>i</text></name></place>\n"
+              + "<place id='o'><name><text>o</text></name></place>\n"
+              + "<transition id='meta'><name><text>" + targetClassifierName + "</text></name>\n"
+              + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+              + "<arc id='f_i_meta' source='i' target='meta'><inscription><text>f_i_meta</text></inscription></arc>\n"
+              + "<arc id='f_meta_o' source='meta' target='o'><inscription><text>f_meta_i</text></inscription></arc>\n";
                 
         if (classifier instanceof IteratedFilteredClassifierEnhancer) {
             // meta-predictor with multiple base classifiers
@@ -97,14 +97,14 @@ public class WekaArgumentConverter
             
             for(int i=0; i<((IteratedFilteredClassifierEnhancer) classifier).getNumIterations(); i++) {
                 pnml += "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
-                      + "<place id='post_predictor%i'><name><text>post_predictor%i</text></name></place>\n"
-                      + "<transition id='predictor%i'><name><text>FilteredClassifier</text></name>"
-                      + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
-                      + "<arc id='f_split_pre_predictor%i' source='split' target='pre_predictor%i'><inscription><text>f_split_pre_predictor%i</text></inscription></arc>\n"
-                      + "<arc id='f_post_predictor%i_join' source='post_predictor%i' target='join'><inscription><text>f_post_predictor%i_join</text></inscription></arc>\n" 
-                      + "<arc id='f_pre_predictor%i_predictor%i' source='pre_predictor%i' target='predictor%i'><inscription><text>f_pre_predictor%i_predictor%i</text></inscription></arc>\n"
-                      + "<arc id='f_predictor%i_post_predictor%i' source='predictor%i' target='post_predictor%i'><inscription><text>f_predictor%i_post_predictor%i</text></inscription></arc>\n"
-                      + getPnml((IteratedFilteredClassifierEnhancer) classifier);
+                        + "<place id='post_predictor%i'><name><text>post_predictor%i</text></name></place>\n"
+                        + "<transition id='predictor%i'><name><text>FilteredClassifier</text></name>"
+                        + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                        + "<arc id='f_split_pre_predictor%i' source='split' target='pre_predictor%i'><inscription><text>f_split_pre_predictor%i</text></inscription></arc>\n"
+                        + "<arc id='f_post_predictor%i_join' source='post_predictor%i' target='join'><inscription><text>f_post_predictor%i_join</text></inscription></arc>\n" 
+                        + "<arc id='f_pre_predictor%i_predictor%i' source='pre_predictor%i' target='predictor%i'><inscription><text>f_pre_predictor%i_predictor%i</text></inscription></arc>\n"
+                        + "<arc id='f_predictor%i_post_predictor%i' source='predictor%i' target='post_predictor%i'><inscription><text>f_predictor%i_post_predictor%i</text></inscription></arc>\n"
+                        + convertFilteredClassifierToPnml((FilteredClassifier) classifier, "pre_predictor", "post_predictor");
                 
                 pnml = pnml.replaceAll("%i", Integer.toString(i));
             }
@@ -112,36 +112,46 @@ public class WekaArgumentConverter
             pnml += "</net></page>\n";            
         }
         else if (classifier instanceof FilteredClassifier) {
-            // TODO support for FilteredClassifier without iterations
+            pnml += "<page id='meta'><net>\n"
+                    + "<place id='i'><name><text>i</text></name></place>\n"
+                    + "<place id='o'><name><text>o</text></name></place>\n"
+                    + "<transition id='predictor'><name><text>FilteredClassifier</text></name>\n"
+                    + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
+                    + "<arc id='f_i_predictor' source='i' target='predictor'><inscription><text>f_i_predictor</text></inscription></arc>\n"
+                    + "<arc id='f_predictor_o' source='predictor' target='o'><inscription><text>f_predictor_i</text></inscription></arc>\n"
+                    + convertFilteredClassifierToPnml((FilteredClassifier) classifier, "i", "o")
+                    + "</net></page>\n";
+
+            pnml = pnml.replaceAll("%i", "");
         }
         
         pnml += "</net></pnml>";
         return pnml;
     }
     
-    public static String getPnml(IteratedFilteredClassifierEnhancer classifier) {
+    public static String convertFilteredClassifierToPnml(FilteredClassifier classifier, String prev, String post) {
         FilteredClassifier filteredClassifier = (FilteredClassifier) classifier.getClassifier();
         CategorizedMultiFilter metaFilter = (CategorizedMultiFilter) filteredClassifier.getFilter();
         AbstractClassifier baseClassifier = (AbstractClassifier) filteredClassifier.getClassifier();
         
         String pnml = "<page id='predictor%i'><net>\n"
-                    + "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
-                    + "<place id='post_predictor%i'><name><text>post_predictor%i</text></name></place>\n"
+                    + "<place id='"+prev+"%i'><name><text>"+prev+"%i</text></name></place>\n"
+                    + "<place id='"+post+"%i'><name><text>"+post+"%i</text></name></place>\n"
                     + "<place id='post_filters%i'><name><text>post_filters%i</text></name></place>\n"
                     + "<transition id='filters%i'><name><text>" + metaFilter.toString() + "</text></name>"
                     + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
                     + "<transition id='baseclassifier%i'><name><text>" + baseClassifier.getClass().toString().substring(6) + "</text></name></transition>\n"
-                    + "<arc id='f_pre_predictor%i_filters%i' source='pre_predictor%i' target='filters%i'><inscription><text>f_pre_predictor%i_filters%i</text></inscription></arc>\n"
+                    + "<arc id='f_"+prev+"%i_filters%i' source='"+prev+"%i' target='filters%i'><inscription><text>f_"+prev+"%i_filters%i</text></inscription></arc>\n"
                     + "<arc id='f_filters%i_post_filters%i' source='filters%i' target='post_filters%i'><inscription><text>f_filters%i_post_filters%i</text></inscription></arc>\n"
                     + "<arc id='f_post_filters%i_baseclassifier%i' source='post_filters%i' target='baseclassifier%i'><inscription><text>f_post_filters%i_baseclassifier%i</text></inscription></arc>\n"
-                    + "<arc id='f_baseclassifier%i_post_predictor%i' source='baseclassifier%i' target='post_predictor%i'><inscription><text>f_baseclassifier%i_post_predictor%i</text></inscription></arc>\n"
-                    + getPnml(metaFilter)
+                    + "<arc id='f_baseclassifier%i_"+post+"%i' source='baseclassifier%i' target='"+post+"%i'><inscription><text>f_baseclassifier%i_"+post+"%i</text></inscription></arc>\n"
+                    + getPnml(metaFilter, prev)
                     + "</net></page>\n";
         
         return pnml;
     }
     
-    public static String getPnml(CategorizedMultiFilter metaFilter) {
+    public static String getPnml(CategorizedMultiFilter metaFilter, String prev) {
         String disabled = AllFilter.class.getName();
         
         Filter missingValueFilter = metaFilter.getMissingValuesHandling();
@@ -158,11 +168,11 @@ public class WekaArgumentConverter
             }
         }
         
+        prev += "%i";
         String pnml = "<page id='filters%i'><net>\n"
-                + "<place id='pre_predictor%i'><name><text>pre_predictor%i</text></name></place>\n"
+                + "<place id='" + prev + "'><name><text>" + prev + "</text></name></place>\n"
                 + "<place id='post_filters%i'><name><text>post_filters%i</text></name></place>\n";
         
-        String prev = "pre_predictor%i";
         if (missingValueFilter.toString() != disabled) {
             
             pnml += "<transition id='missing_value%i'><name><text>" + missingValueFilter.toString() + "</text></name></transition>\n"
