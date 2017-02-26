@@ -78,7 +78,7 @@ public class WekaArgumentConverter
         }
         
         pnml += "<net type='http://www.informatik.hu-berlin.de/top/pntd/ptNetb' id='noID'>\n"
-              + "<place id='i'><name><text>i</text></name></place>\n"
+              + "<place id='i'><name><text>i</text></name><initialMarking><text>1</text></initialMarking></place>\n"
               + "<place id='o'><name><text>o</text></name></place>\n"
               + "<transition id='meta'><name><text>" + targetClassifierName + "</text></name>\n"
               + "<toolspecific tool='WoPeD' version='1.0'><subprocess>true</subprocess><time>0</time><timeUnit>1</timeUnit><orientation>1</orientation></toolspecific></transition>\n"
