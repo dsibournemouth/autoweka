@@ -62,8 +62,8 @@ public abstract class ExperimentConstructor {
     protected int mEnsembleMaxNum = 5;
 
     // These flags sort of have meaning....
-    // protected boolean mIncludeBase = true;
-    protected boolean mIncludeBase = false; // modified by Manuel
+    protected boolean mIncludeBase = true;
+    //protected boolean mIncludeBase = false; // modified by Manuel
 
     protected boolean mIncludeMeta = true;
 

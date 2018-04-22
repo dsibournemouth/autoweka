@@ -107,7 +107,7 @@ public class Parameter
     
     public Parameter(String name, List<String> categoricalOptions)
     {
-        this(name, categoricalOptions, categoricalOptions.get(0));
+        this(name, categoricalOptions, categoricalOptions.size() > 0 ? categoricalOptions.get(0) : "");
     }
 
     public Parameter(String name, List<String> categoricalOptions, String defaultOption)
