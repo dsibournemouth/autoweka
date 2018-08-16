@@ -76,6 +76,8 @@ public class ClassifierResult
         //Is it one of the names that we know about?
         if(className.equals("errorRate"))
             return new ErrorRateMetric();
+        else if(className.equals("aoc"))
+            return new AreaAboveROC();
         else if(className.equals("meanAbsoluteErrorMetric"))
             return new MeanAbsoluteErrorMetric();
         else if(className.equals("rmse"))

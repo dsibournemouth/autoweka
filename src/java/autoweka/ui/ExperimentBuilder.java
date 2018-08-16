@@ -250,6 +250,7 @@ public class ExperimentBuilder extends JFrame
         Attribute classAttr = mInstanceGenerator.getTraining().classAttribute();
         if(classAttr.isNominal()){
             mResultMetricCombo.addItem(new StringComboOption("Error Rate (Classification)", "errorRate"));
+            mResultMetricCombo.addItem(new StringComboOption("Area Above ROC (Classification)", "aoc"));
         }else if(classAttr.isNumeric()) {
             mResultMetricCombo.addItem(new StringComboOption("Root Mean Squared Error (Regression)", "rmse"));
             mResultMetricCombo.addItem(new StringComboOption("Root Relative Squared Error (Regression)", "rrse"));
