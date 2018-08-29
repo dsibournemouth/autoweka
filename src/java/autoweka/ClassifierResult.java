@@ -68,7 +68,7 @@ public class ClassifierResult
     {
         public float getDefault() { return 1.0f; }
         public float getScore(Evaluation eval, Instances testingData) {
-            return (float)(1.0 - eval.areaUnderROC(testingData.classIndex())); 
+            return (float)(1.0 - eval.areaUnderROC(testingData.classAttribute().indexOfValue("1")));
         } 
     }
     
