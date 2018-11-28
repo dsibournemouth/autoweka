@@ -26,6 +26,9 @@ Clone the repository and run `java -jar autoweka.jar`. Then, follow [userguide.p
  * Chris Thornton, Frank Hutter, Holger Hoos, and Kevin Leyton-Brown. ["Auto-WEKA: Combined Selection and Hyperparameter Optimization of Classifiaction Algorithms"](https://dl.acm.org/citation.cfm?id=2487629) In Proc. of KDD 2013, 2013.
 
 ## Authors of this Auto-WEKA extension
+ * [Simon Kocbek] (https://www.uts.edu.au/staff/simon.kocbek), Research Fellow (University of Technology Sydney)
+
+## Authors of the original Auto-Weka for MCPS
  * [Manuel Martin Salvador](http://staffprofiles.bournemouth.ac.uk/display/msalvador), PhD Candidate (Bournemouth University)
  * [Marcin Budka](http://staffprofiles.bournemouth.ac.uk/display/mbudka), Senior Lecturer (Bournemouth University)
  * [Bogdan Gabrys](http://bogdan-gabrys.com), Professor (Bournemouth University)
