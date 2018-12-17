@@ -71,6 +71,13 @@ public class ClassifierResult
             return (float)(1.0 - eval.areaUnderROC(testingData.classAttribute().indexOfValue("1")));
         } 
     }
+    public static class AreaAbovePRC implements Metric
+    {
+        public float getDefault() { return 1.0f; }
+        public float getScore(Evaluation eval, Instances testingData) {
+            return (float)(1.0 - eval.areaUnderPRC(testingData.classAttribute().indexOfValue("1")));
+        }
+    }
     
     private static Metric getMetricFromString(String className){
         //Is it one of the names that we know about?
@@ -78,6 +85,8 @@ public class ClassifierResult
             return new ErrorRateMetric();
         else if(className.equals("aoc"))
             return new AreaAboveROC();
+        else if(className.equals("aoprc"))
+            return new AreaAbovePRC();
         else if(className.equals("meanAbsoluteErrorMetric"))
             return new MeanAbsoluteErrorMetric();
         else if(className.equals("rmse"))
