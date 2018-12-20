@@ -160,14 +160,17 @@ public class ExperimentBuilder extends JFrame
 
         ApplicabilityTester.ApplicableClassifiers app = ApplicabilityTester.getApplicableClassifiers(instances, paramDir, null);
 
-        for(ClassParams classifier : app.base) {
-            mClassifiers.add(classifier.getTargetClass());
-        }
-        for(ClassParams classifier : app.meta) {
-            mClassifiers.add(classifier.getTargetClass());
-        }
-        for(ClassParams classifier : app.ensemble) {
-            mClassifiers.add(classifier.getTargetClass());
+        // To avoid duplicates when using back button in GUI.
+        if (mClassifiers.isEmpty()) {
+            for (ClassParams classifier : app.base) {
+                mClassifiers.add(classifier.getTargetClass());
+            }
+            for (ClassParams classifier : app.meta) {
+                mClassifiers.add(classifier.getTargetClass());
+            }
+            for (ClassParams classifier : app.ensemble) {
+                mClassifiers.add(classifier.getTargetClass());
+            }
         }
         
         mClassifierList.setListData(mClassifiers);
@@ -206,11 +209,14 @@ public class ExperimentBuilder extends JFrame
 
         ApplicabilityTester.ApplicableFilters app = ApplicabilityTester.getApplicableFilters(instances, paramDir, null);
 
-        for(ClassParams filter : app.base) {
-            mFilters.add(filter.getTargetClass());
-        }
-        for(ClassParams filter : app.meta) {
-            mFilters.add(filter.getTargetClass());
+        // To avoid duplicates when using back button in GUI.
+        if (mFilters.isEmpty()) {
+            for (ClassParams filter : app.base) {
+                mFilters.add(filter.getTargetClass());
+            }
+            for (ClassParams filter : app.meta) {
+                mFilters.add(filter.getTargetClass());
+            }
         }
         
         mFilterList.setListData(mFilters);
