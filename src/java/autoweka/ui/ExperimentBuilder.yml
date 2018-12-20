@@ -49,8 +49,6 @@ JFrame(name=frame, title="Simple Experiment Constructor", size=800x600, defaultC
             - JTextField(name=mOptimisationTimeoutText, text="24")
             - JTextField(name=mClassifierMemoryLimitText, text="1000")
             - JTextField(name=mClassifierTimeoutText, text="60")
-            - JCheckBox(name=mAttributeSelectionCheckBox, selected=true)
-            - JTextField(name=mAttributeSelectionTimeoutText, text="10")
             - JButton(name=backExperimentButton, text="Back", onAction=[backExperiment])
             - JButton(name=saveExperimentButton, text="Save", onAction=[saveExperiment])
             - JButton(name=saveExperimentBatchButton, text="Save as Definition", onAction=[saveExperimentBatch])
@@ -63,8 +61,6 @@ JFrame(name=frame, title="Simple Experiment Constructor", size=800x600, defaultC
                 >"Optimisation Timeout (hours): "           mOptimisationTimeoutText+*
                 >"Training Memory Limit (MB): "             mClassifierMemoryLimitText+*
                 >"Training Run Timeout (minutes): "         mClassifierTimeoutText+*
-                >"Use Attribute Selection: "                mAttributeSelectionCheckBox+*
-                >"Attribute Selection Timeout (minutes): "  mAttributeSelectionTimeoutText+*
                 <backExperimentButton                                                          >saveExperimentButton>
                                                                                                >saveExperimentBatchButton>
     - MigLayout : |

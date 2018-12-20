@@ -64,8 +64,6 @@ public class ExperimentBuilder extends JFrame
     private JTextField mOptimisationTimeoutText;
     private JTextField mClassifierMemoryLimitText;
     private JTextField mClassifierTimeoutText;
-    private JCheckBox mAttributeSelectionCheckBox;
-    private JTextField mAttributeSelectionTimeoutText;
     
     public static void main(String[] args){
         ExperimentBuilder eb = new ExperimentBuilder();
@@ -304,7 +302,6 @@ public class ExperimentBuilder extends JFrame
             validateNonNegativeFloat("optimisation timeout", mOptimisationTimeoutText);
             validateNonNegativeFloat("classifier memory limit", mClassifierMemoryLimitText);
             validateNonNegativeFloat("classifier run timeout", mClassifierTimeoutText);
-            validateNonNegativeFloat("attribute selection timeout", mAttributeSelectionTimeoutText);
         }catch(Exception e){
             UIUtil.showExceptionDialog(this, "Error in Experiment Settings", e);
             return;
@@ -344,9 +341,6 @@ public class ExperimentBuilder extends JFrame
             datasetProps.setProperty("testArff", mTestingArffText.getText());
         
         exp.datasetString = Util.propertiesToString(datasetProps);
-        exp.attributeSelection = mAttributeSelectionCheckBox.isSelected();
-        if(exp.attributeSelection)
-            exp.attributeSelectionTimeout = Float.parseFloat(mAttributeSelectionTimeoutText.getText()) * 60;
 
         exp.tunerTimeout = Float.parseFloat(mOptimisationTimeoutText.getText()) * 3600;
         exp.trainTimeout = Float.parseFloat(mClassifierTimeoutText.getText()) * 60;
@@ -391,7 +385,6 @@ public class ExperimentBuilder extends JFrame
             validateNonNegativeFloat("optimisation timeout", mOptimisationTimeoutText);
             validateNonNegativeFloat("classifier memory limit", mClassifierMemoryLimitText);
             validateNonNegativeFloat("classifier run timeout", mClassifierTimeoutText);
-            validateNonNegativeFloat("attribute selection timeout", mAttributeSelectionTimeoutText);
         }catch(Exception e){
             UIUtil.showExceptionDialog(this, "Error in Experiment Settings", e);
             return;
@@ -436,10 +429,6 @@ public class ExperimentBuilder extends JFrame
             expComp.resultMetric = ((StringComboOption)mResultMetricCombo.getSelectedItem()).getData();
             expComp.instanceGenerator = instanceGenProps.getClassName(); 
             expComp.instanceGeneratorArgs = Util.propertiesToString(instanceGenProps.getProperties());
-
-            expComp.attributeSelection = mAttributeSelectionCheckBox.isSelected();
-            if(expComp.attributeSelection)
-                expComp.attributeSelectionTimeout = Float.parseFloat(mAttributeSelectionTimeoutText.getText()) * 60;
 
             expComp.tunerTimeout = Float.parseFloat(mOptimisationTimeoutText.getText()) * 3600;
             expComp.trainTimeout = Float.parseFloat(mClassifierTimeoutText.getText()) * 60;
