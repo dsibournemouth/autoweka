@@ -1,3 +1,4 @@
+B {weka.filters.AllFilter,weka.filters.supervised.instance.ClassBalancer,weka.filters.supervised.instance.SpreadSubsample}[weka.filters.AllFilter]
 M {weka.filters.AllFilter,weka.filters.unsupervised.attribute.CustomReplaceMissingValues,weka.filters.unsupervised.attribute.EMImputation}[weka.filters.AllFilter]
 O {weka.filters.AllFilter,weka.filters.unsupervised.instance.RemoveOutliers}[weka.filters.AllFilter]
 T {weka.filters.AllFilter,weka.filters.unsupervised.attribute.Center,weka.filters.unsupervised.attribute.Standardize,weka.filters.unsupervised.attribute.Normalize,weka.filters.unsupervised.attribute.Wavelet,weka.filters.unsupervised.attribute.IndependentComponents}[weka.filters.AllFilter]
