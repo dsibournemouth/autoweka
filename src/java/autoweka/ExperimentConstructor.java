@@ -560,10 +560,10 @@ public abstract class ExperimentConstructor {
 
             // Currently only meta-filters are considered.
             // TODO: Think if base filters should be included.
-            if (!baseFilters.isEmpty()) {
+            if (!metaFilters.isEmpty()) {
                 // Add filters
                 Parameter _1_1_F = new Parameter("_1_1_0_QUOTE_START_F",
-                        baseFilters);
+                        metaFilters);
                 paramGroup.add(_1_1_F);
                 paramGroup.add(new Conditional(_1_1_F, targetclass,
                         metaClassifiers));

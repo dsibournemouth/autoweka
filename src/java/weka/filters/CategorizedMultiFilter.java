@@ -13,6 +13,7 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 	/** The filters */
 
+	protected Filter m_BalancingData = new AllFilter();
 	protected Filter m_MissingValuesHandling = new AllFilter();
 	// weka.filters.unsupervised.attribute.ReplaceMissingValues
 	protected Filter m_OutlierHandling = new AllFilter();
@@ -103,6 +104,18 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 		super.setOptions(options);
 
+		// Balancing filters.
+		String balancingDataOption = Utils.getOption("B", options);
+		if (balancingDataOption.length() > 0) {
+			options2 = Utils.splitOptions(balancingDataOption);
+			filter = options2[0];
+			options2[0] = "";
+			m_BalancingData = (Filter) Utils.forName(Filter.class,
+					filter, options2);
+		} else {
+			m_BalancingData = new AllFilter();
+		}
+
 		// MissingValues
 		String missingValuesOption = Utils.getOption("M", options);
 		if (missingValuesOption.length() > 0) {
@@ -186,6 +199,9 @@ public class CategorizedMultiFilter extends MultiFilter {
 		// result.add(options[i]);
 		// }
 
+		result.add("-B");
+		result.add(getFilterSpec(m_BalancingData));
+
 		result.add("-M");
 		result.add(getFilterSpec(m_MissingValuesHandling));
 
@@ -205,11 +221,24 @@ public class CategorizedMultiFilter extends MultiFilter {
 	}
 
 	private void updateFilters() {
-		Filter[] flow = { m_MissingValuesHandling, m_OutlierHandling,
+		Filter[] flow = { m_BalancingData, m_MissingValuesHandling, m_OutlierHandling,
 				m_Transformation, m_DimensionalityReduction, m_Sampling };
 		setFilters(flow);
 	}
 
+
+	public String balancingDataTipText() {
+		return "Balancing filter";
+	}
+
+	public Filter getBalancingData() {
+		return m_BalancingData;
+	}
+
+	public void setBalancingData(Filter m_BalancingData) {
+		this.m_BalancingData = m_BalancingData;
+		updateFilters();
+	}
 
 	public String missingValuesTipText() {
 		return "Missing values filter";
