@@ -398,8 +398,10 @@ public class ClassifierRunner
         if(mVerbose)
         {
             System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+
             try
             {
+                System.out.println(eval.toClassDetailsString());
                 System.out.println(eval.toMatrixString());
             }catch(Exception e)
             {
