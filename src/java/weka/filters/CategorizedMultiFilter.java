@@ -1,6 +1,9 @@
 package weka.filters;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 import weka.core.Option;
@@ -31,6 +34,8 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 	// weka.filters.unsupervised.instance.Resample
 	// weka.filters.unsupervised.instance.ReservoirSample
+	
+	protected String combinationOrder = new String();
 
 	/**
 	 * Returns a string describing this filter
@@ -52,6 +57,8 @@ public class CategorizedMultiFilter extends MultiFilter {
 	@Override
 	public Enumeration<Option> listOptions() {
 		Vector<Option> result = new Vector<Option>();
+		result.addElement(new Option("\tBalancing filter.", "B", 1,
+				"-B <classname [options]>"));
 
 		result.addElement(new Option("\tMissing values filter.", "M", 1,
 				"-M <classname [options]>"));
@@ -67,6 +74,10 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 		result.addElement(new Option("\tSampling filter.", "S", 1,
 				"-S <classname [options]>"));
+		
+		
+		result.addElement(new Option("\tCombination order of filters.", "C", 1,
+				"-C <classname [options]>"));
 
 		// result.addAll(Collections.list(super.listOptions()));
 
@@ -174,6 +185,15 @@ public class CategorizedMultiFilter extends MultiFilter {
 		} else {
 			m_Sampling = new AllFilter();
 		}
+		
+		
+		// Combine filters by specified order
+		String combineFiltersOption = Utils.getOption("C", options);
+		if (combineFiltersOption.length() > 0) {
+			combinationOrder = combineFiltersOption;
+		} else {
+			combinationOrder = "BMOTRS";
+		}
 
 		// Connect all filters
 		updateFilters();
@@ -216,15 +236,74 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 		result.add("-S");
 		result.add(getFilterSpec(m_Sampling));
+		
+		result.add("-C");
+		result.add("Combination Order of Filters");
+	
 
 		return result.toArray(new String[result.size()]);
 	}
 
 	private void updateFilters() {
-		Filter[] flow = { m_BalancingData, m_MissingValuesHandling, m_OutlierHandling,
-				m_Transformation, m_DimensionalityReduction, m_Sampling };
+		
+		
+		
+		
+		Filter[] flow = { 
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(0))), 
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(1))), 
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(2))),  
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(3))),  
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(4))),  
+				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(5)))  };
+		
+		
+		
+		
+		
+		//Filter[] flow = { m_BalancingData, m_MissingValuesHandling, m_OutlierHandling, m_Transformation, m_DimensionalityReduction, m_Sampling };
+		
+		//shuffleArray(flow);
+		
+		//Filter[] flow = { m_BalancingData};
+		
+		
 		setFilters(flow);
 	}
+	
+	private Filter getFilterFromCombinationOrder(String orderOption) {
+		
+		if (orderOption.equals("B")) 
+			return m_BalancingData;
+		else if (orderOption.equals("M")) 
+			return m_MissingValuesHandling;
+		else if (orderOption.equals("O")) 
+			return m_OutlierHandling;
+		else if (orderOption.equals("T")) 
+			return m_Transformation;
+		else if (orderOption.equals("R")) 
+			return m_DimensionalityReduction;
+		else if (orderOption.equals("S")) 
+			return m_Sampling;
+		else return null;
+		
+		
+	}
+	
+	private void shuffleArray(Filter[] array)
+	{
+	    int index;
+	    Filter temp;
+	    Random random = new Random();
+	    for (int i = array.length - 1; i > 0; i--)
+	    {
+	        index = random.nextInt(i + 1);
+	        temp = array[index];
+	        array[index] = array[i];
+	        array[i] = temp;
+	    }
+	}
+	
 
 
 	public String balancingDataTipText() {
@@ -304,6 +383,16 @@ public class CategorizedMultiFilter extends MultiFilter {
 		this.m_Sampling = m_Sampling;
 		updateFilters();
 	}
+	
+	public String getCombinationOrder() {
+		return combinationOrder;
+	}
+	
+	public void setCombinationOrder(String combinationOrder) {
+		this.combinationOrder = combinationOrder;
+		updateFilters();
+	}
+	
 
 	/**
 	 * Main method for executing this class.
