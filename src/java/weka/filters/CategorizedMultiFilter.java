@@ -246,9 +246,6 @@ public class CategorizedMultiFilter extends MultiFilter {
 
 	private void updateFilters() {
 		
-		
-		
-		
 		Filter[] flow = { 
 				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(0))), 
 				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(1))), 
@@ -257,17 +254,9 @@ public class CategorizedMultiFilter extends MultiFilter {
 				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(4))),  
 				getFilterFromCombinationOrder(Character.toString(combinationOrder.charAt(5)))  };
 		
-		
-		
-		
-		
 		//Filter[] flow = { m_BalancingData, m_MissingValuesHandling, m_OutlierHandling, m_Transformation, m_DimensionalityReduction, m_Sampling };
-		
 		//shuffleArray(flow);
-		
 		//Filter[] flow = { m_BalancingData};
-		
-		
 		setFilters(flow);
 	}
 	
