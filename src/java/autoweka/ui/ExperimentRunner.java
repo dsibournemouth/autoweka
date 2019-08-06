@@ -95,8 +95,7 @@ class ExperimentRunner extends JFrame
             new Thread( new Runnable() {
                 public void run() {
                     try {
-                        ProcessBuilder pb = new ProcessBuilder(autoweka.Util.getJavaExecutable(),
-                                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5009", "-Xmx128m", "-cp",
+                        ProcessBuilder pb = new ProcessBuilder(autoweka.Util.getJavaExecutable(), "-Xmx128m", "-cp",
                                 autoweka.Util.getAbsoluteClasspath(), "autoweka.tools.ExperimentRunner",
                                 mExpFolderText.getText(), mSeedText.getText());
                         pb.redirectErrorStream(true);
