@@ -1,2 +1,0 @@
-INT_numBags [1,100][10]i
-breadthFirst {REMOVED,REMOVE_PREV}[REMOVE_PREV]

@@ -1,1 +1,0 @@
-filter {weka.filters.supervised.attribute.PLSFilter}[weka.filters.supervised.attribute.PLSFilter]

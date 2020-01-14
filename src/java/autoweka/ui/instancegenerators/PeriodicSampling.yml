@@ -1,8 +1,0 @@
-JDialog(title="PeriodicSampling Instance Generator Options", size=packed):
-    - JTextField(name=mNumFoldsText,text="10")
-    - JButton(name=okButton, text="Close", onAction=[close])
-    - MigLayout : |
-        []                 [grow,100]
-        "Number of Folds"  mNumFoldsText
-        |okButton+* 
-
