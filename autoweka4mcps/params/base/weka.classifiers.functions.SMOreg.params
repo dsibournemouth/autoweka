@@ -1,0 +1,4 @@
+C [0.5,1.5][1.0]
+N {0,1,2} [0]
+K {weka.classifiers.functions.supportVector.NormalizedPolyKernel,weka.classifiers.functions.supportVector.PolyKernel,weka.classifiers.functions.supportVector.Puk,weka.classifiers.functions.supportVector.RBFKernel}[weka.classifiers.functions.supportVector.NormalizedPolyKernel]
+I {weka.classifiers.functions.supportVector.RegSMO,weka.classifiers.functions.supportVector.RegSMOImproved}[weka.classifiers.functions.supportVector.RegSMOImproved]

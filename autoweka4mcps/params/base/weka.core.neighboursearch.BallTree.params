@@ -1,0 +1,3 @@
+C {weka.core.neighboursearch.balltrees.BottomUpConstructor,weka.core.neighboursearch.balltrees.MiddleOutConstructor,weka.core.neighboursearch.balltrees.TopDownConstructor}[weka.core.neighboursearch.balltrees.TopDownConstructor]
+A {weka.core.EuclideanDistance,weka.core.ChebyshevDistance,weka.core.ManhattanDistance,weka.core.MinkowskiDistance}[weka.core.EuclideanDistance]
+P {REMOVED,REMOVE_PREV}[REMOVE_PREV]

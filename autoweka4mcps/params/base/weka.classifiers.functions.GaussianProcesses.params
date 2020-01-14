@@ -1,0 +1,3 @@
+L [0.0001, 1] [0.1]l
+N {0,1,2} [0]
+K {weka.classifiers.functions.supportVector.NormalizedPolyKernel,weka.classifiers.functions.supportVector.PolyKernel,weka.classifiers.functions.supportVector.Puk,weka.classifiers.functions.supportVector.RBFKernel}[weka.classifiers.functions.supportVector.NormalizedPolyKernel]
