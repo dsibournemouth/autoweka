@@ -156,23 +156,23 @@ public class Wrapper {
 
         ClassifierResult res = null;
 
-        mRunner = new ClassifierRunner(mProperties);
-        res = _doRun(wrapperArgs);
+//        mRunner = new ClassifierRunner(mProperties);
+//        res = _doRun(wrapperArgs);
 
-//
-//        
-//        if (avatarEvaluatedResult) {
-//            //Build the classifier runner
-//            mRunner = new ClassifierRunner(mProperties);
-//            res = _doRun(wrapperArgs);
-//
-//        } else {
-//            mRunner = new ClassifierRunner(mProperties);
-//            res = new ClassifierResult(mResultMetric);
-//            res.setCompleted(false);
-//          
-//            
-//        }
+
+        
+        if (avatarEvaluatedResult) {
+            //Build the classifier runner
+            mRunner = new ClassifierRunner(mProperties);
+            res = _doRun(wrapperArgs);
+
+        } else {
+            mRunner = new ClassifierRunner(mProperties);
+            res = new ClassifierResult(mResultMetric);
+            res.setCompleted(false);
+          
+            
+        }
         //Post event
         _postRun();
 
