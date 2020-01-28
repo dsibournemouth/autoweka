@@ -888,6 +888,302 @@
     } ],
     "listOfMLHyperparameters" : [ ]
   }, {
+    "componentId" : "weka.classifiers.functions.VotedPerceptron",
+    "componentName" : "VotedPerceptron",
+    "componentFullClassName" : "weka.classifiers.functions.VotedPerceptron",
+    "mLComponentType" : "CLASSIFIER",
+    "componentExecutionScriptSingleComponentWeka" : "weka.classifiers.functions.VotedPerceptron -I 1 -E 1.0 -S 1 -M 10000",
+    "componentExecutionScriptFilteredClassifierWeka" : "",
+    "listOfCapabilities" : [ {
+      "mLComponentCapability" : "BINARY_CLASS",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "DATE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_CLASS_VALUES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NOMINAL_CLASS",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NO_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "IMBALANCE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "BINARY_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "DATE_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "MISSING_VALUES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NOMINAL_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NUMERIC_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "ONLY_MULTIINSTANCE",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "OUTLIER_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "PREDICTIVE_MODEL",
+      "value" : 0
+    } ],
+    "listOfEffects" : [ {
+      "mLComponentCapability" : "BINARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "DATE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_CLASS_VALUES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NO_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "IMBALANCE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "BINARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "DATE_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_VALUES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NOMINAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "ONLY_MULTIINSTANCE",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "OUTLIER_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "PREDICTIVE_MODEL",
+      "value" : 1
+    } ],
+    "listOfMLHyperparameters" : [ ]
+  }, {
+    "componentId" : "weka.classifiers.functions.MultilayerPerceptron",
+    "componentName" : "MultilayerPerceptron",
+    "componentFullClassName" : "weka.classifiers.functions.MultilayerPerceptron",
+    "mLComponentType" : "REGRESSOR",
+    "componentExecutionScriptSingleComponentWeka" : "weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a",
+    "componentExecutionScriptFilteredClassifierWeka" : "",
+    "listOfCapabilities" : [ {
+      "mLComponentCapability" : "BINARY_CLASS",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "DATE_CLASS",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_CLASS_VALUES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NO_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_CLASS",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "RELATIONAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "IMBALANCE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "BINARY_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "DATE_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_VALUES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NOMINAL_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "NUMERIC_ATTRIBUTES",
+      "value" : 1
+    }, {
+      "mLComponentCapability" : "ONLY_MULTIINSTANCE",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "OUTLIER_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "PREDICTIVE_MODEL",
+      "value" : 0
+    } ],
+    "listOfEffects" : [ {
+      "mLComponentCapability" : "BINARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "DATE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_CLASS_VALUES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NOMINAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NO_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "IMBALANCE_CLASS",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "BINARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "DATE_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "EMPTY_NOMINAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "MISSING_VALUES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NOMINAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "NUMERIC_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "ONLY_MULTIINSTANCE",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "RELATIONAL_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "STRING_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "UNARY_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "OUTLIER_ATTRIBUTES",
+      "value" : 0
+    }, {
+      "mLComponentCapability" : "PREDICTIVE_MODEL",
+      "value" : 1
+    } ],
+    "listOfMLHyperparameters" : [ ]
+  }, {
     "componentId" : "weka.classifiers.functions.GaussianProcesses",
     "componentName" : "GaussianProcesses",
     "componentFullClassName" : "weka.classifiers.functions.GaussianProcesses",

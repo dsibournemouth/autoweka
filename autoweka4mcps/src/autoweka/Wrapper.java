@@ -50,12 +50,24 @@ public class Wrapper {
     protected String mResultMetric = null;
     protected boolean isAvatar = false;
     protected IOUtils iou = new IOUtils();
+    protected String workingDir = "";
+    protected String configDir = "";
 
     /**
      * Runs the wrapper with the given command line arguments - see the class
      * description for full details
      */
     public void run(String[] argsArray) {
+
+        workingDir = System.getProperty("user.dir");
+
+        configDir = autoweka.Util.getAbsoluteClasspath();
+        configDir = configDir.substring(0, configDir.lastIndexOf('\\'));
+
+        File directory = new File(workingDir + "\\avatar_log");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
 
         LinkedList<String> args = new LinkedList<String>(Arrays.asList(argsArray));
 
@@ -140,16 +152,20 @@ public class Wrapper {
         //    mProperties.forEach((key, value) -> LoggerUtil.logAvatar("Key : " + key + ", Value : " + value));
         isAvatar = Boolean.parseBoolean(mProperties.getProperty("isAvatar", "false"));
         LoggerUtil.logAvatar("isAvatar: " + mProperties.getProperty("isAvatar"));
+        LoggerUtil.logAvatar("AVATAR - classpath: " + autoweka.Util.getAbsoluteClasspath());
 
         Boolean avatarEvaluatedResult = true;
         //AVATAR
+        com.sun.management.OperatingSystemMXBean OSBean = (com.sun.management.OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+        long startTimeAvatar = OSBean.getProcessCpuTime();
         if (isAvatar) {
             LoggerUtil.logAvatar("AVATAR is Active");
             avatarEvaluatedResult = _evaluateWithAVATAR(wrapperArgs);
-            //iou.writeData(String.valueOf(avatarEvaluatedResult) + "\n", "C:\\experiments\\tmp\\avatar\\rs-avatar.txt");
+            iou.writeData(String.valueOf(avatarEvaluatedResult) + "\n", workingDir + "\\avatar_log\\rs-avatar.txt");
         } else {
             LoggerUtil.logAvatar("AVATAR is Deactive");
         }
+        long stopTimeAvatar = OSBean.getProcessCpuTime();
 
         //Let the wrapper do anything ahead of time that would be good
         _preRun();
@@ -158,20 +174,19 @@ public class Wrapper {
 
 //        mRunner = new ClassifierRunner(mProperties);
 //        res = _doRun(wrapperArgs);
-
-
-        
         if (avatarEvaluatedResult) {
             //Build the classifier runner
             mRunner = new ClassifierRunner(mProperties);
             res = _doRun(wrapperArgs);
+            res.setTrainingTime((1.0f + ((stopTimeAvatar - startTimeAvatar) * 1e-9f)) + res.getTrainingTime());
 
         } else {
+
             mRunner = new ClassifierRunner(mProperties);
             res = new ClassifierResult(mResultMetric);
             res.setCompleted(false);
-          
-            
+            res.setTrainingTime(1.0f + ((stopTimeAvatar - startTimeAvatar) * 1e-9f));
+
         }
         //Post event
         _postRun();
@@ -208,16 +223,11 @@ public class Wrapper {
         } else {
             LoggerUtil.logAvatar("AVATAR - prop: FILE NOT EXISTS");
         }
-        
-        
-        
-        
+
         MLComponentConfiguration config = new MLComponentConfiguration();
-        String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf('\\'));
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf('\\'));
-        String metaKnowledgeFilePath = workingDir + "\\avatar\\meta_knowledge.json";
-        
+
+        String metaKnowledgeFilePath = configDir + "\\avatar\\meta_knowledge.json";
+
         LoggerUtil.logAvatar("AVATAR - workingDir: " + metaKnowledgeFilePath);
         List<MLComponent> listOfLoadedMLComponents = config.loadListOfMLComponents(metaKnowledgeFilePath);
         SurrogatePipelineMapping surrogatePipelineMapping = new SurrogatePipelineMapping(listOfLoadedMLComponents);
@@ -268,9 +278,7 @@ public class Wrapper {
                         simplifiedPPStr += wrapperArg.trim() + " - ";
                     }
 
-                    if (wrapperArg.contains("weka.classifiers.") // && !(wrapperArg.contains("weka.classifiers.meta."))
-                            // && !(wrapperArg.contains("weka.classifiers.meta.FilteredClassifier"))
-                            ) {
+                    if (wrapperArg.contains("weka.classifiers.")) {
 
                         // if ( (wrapperArg.contains("weka.classifiers.meta.RandomCommittee")) 
                         //   || (!(wrapperArg.contains("weka.classifiers.meta.")))  ) {
@@ -366,7 +374,7 @@ public class Wrapper {
             simplifiedPPStr += classifierFinalStr;
         }
 
-       // iou.writeData(fullPPStr + "," + simplifiedPPStr + "\n", "C:\\experiments\\tmp\\avatar\\pipelines.txt");
+        iou.writeData(fullPPStr + "," + simplifiedPPStr + "\n", workingDir + "\\avatar_log\\pipelines.txt");
         return allComponents;
 
     }
@@ -396,11 +404,11 @@ public class Wrapper {
         //For debuging those stupid issues
         String instanceStr = "";
         for (String s : runnerArgs) {
-            LoggerUtil.logAvatar("AVATAR- Adding arg: " + s);
+            //LoggerUtil.logAvatar("AVATAR- Adding arg: " + s);
             instanceStr += s + " - ";
         }
 
-       // iou.writeData(instanceStr + "\n", "C:\\experiments\\tmp\\avatar\\wrapper-pipelines.txt");
+        iou.writeData(instanceStr + "\n", workingDir + "\\avatar_log\\wrapper-pipelines.txt");
 
         LoggerUtil.logAvatar("AVATAR- mInstance: " + mInstance);
 

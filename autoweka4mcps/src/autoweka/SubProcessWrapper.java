@@ -65,9 +65,11 @@ public class SubProcessWrapper extends Wrapper
             return;
         }
         
-        float score = res.getScore();
+        float score = 0;
         if (!res.getCompleted()){
           score = (float) 1.0E10;
+        } else {
+            score = res.getScore();
         }
         
         System.out.print("SubProcessWrapper: Time(" + res.getTime() + ") Score(" + score + ")");

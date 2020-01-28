@@ -4,6 +4,7 @@ package autoweka.ui;
 import javax.swing.JFrame;
 
 import org.javabuilders.swing.SwingJavaBuilder;
+import uts.aai.utils.IOUtils;
 
 
 
@@ -17,7 +18,12 @@ public class Launcher extends JFrame
     {
         Launcher l = new Launcher();
         l.setVisible(true);
-       
+//        String configDir = autoweka.Util.getAbsoluteClasspath();
+//        configDir = configDir.substring(0, configDir.lastIndexOf('\\'));
+//        
+//        String smacConfig = "smacexecutable="+ configDir.replaceAll("\\\\", "/")+"/smac-v2.10.03-master-778/smac";
+//        IOUtils iou = new IOUtils();
+//        iou.overWriteData(smacConfig, configDir + "\\autoweka.smac.SMACExperimentConstructor.properties");
         
     }
 
