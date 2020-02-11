@@ -15,7 +15,15 @@ Auto-WEKA allows to select between a list of all WEKA methods and different opti
 ![GUI Builder](https://raw.githubusercontent.com/dsibournemouth/autoweka/master/img/GUI-builder.png)
 
 ## Usage
-Clone the repository and run `java -jar autoweka.jar`. Then, follow [userguide.pdf](https://github.com/dsibournemouth/autoweka/blob/master/userguide.pdf) (please, note that PDF is from an older version. User guide for this new version will be updated soon).
+
+
+* It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large dataset using the following command: java -Xmx2038m -jar autoweka4mcps.jar
+
+* SMAC Configuration: Please configure the file path to SMAC in the following file autoweka.smac.SMACExperimentConstructor.properties
+
+* The experiments folders have to be put in the parent folder of AutoWeka4MCPS (default)
+
+
 
 ## Publications
 * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Automatic composition and optimisation of multicomponent predictive systems with an extended Auto-WEKA" Submitted to IEEE Transactions on Automation Science and Engineering, 2017 (under review). [[slides](http://www.slideshare.net/draxus/automating-machine-learning-is-it-feasible-62661182)] [[results](https://github.com/dsibournemouth/autoweka/tree/master/results)]
