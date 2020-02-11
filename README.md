@@ -47,7 +47,7 @@ to accelerate automatic ML pipeline composition and optimisation.
  * [Professor Bogdan Gabrys] (http://bogdan-gabrys.com/), University of Technology Sydney, Australia
  * [Associate Professor Katarzyna Musial Gabrys] (http://www.katarzyna-musial.com/), University of Technology Sydney, Australia
  * [Tomasz.Maszczyk], University of Technology Sydney, Australia
- * [Marc-André Zöller], USU Software AG, Germany
+ * [Marc-André Zöller] (https://www.researchgate.net/profile/Marc_Andre_Zoeller), USU Software AG, Germany
  * [Simon Kocbek] (https://www.uts.edu.au/staff/simon.kocbek), University of Technology Sydney, Australia
 
 ## Authors of the original Auto-Weka for MCPS
