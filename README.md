@@ -1,4 +1,4 @@
-# Auto-WEKA for MCPS
+# Auto-WEKA for MCPS (AutoWeka4MCPS)
 Auto-WEKA is a tool for automating the selection of methods and hyperparameters of WEKA. This repository contains an extended version of Auto-WEKA now supporting the optimisation of MultiComponent Predictive Systems (MCPS).
 
 ![GUI Main](https://raw.githubusercontent.com/dsibournemouth/autoweka/master/img/GUI-main.png)
@@ -17,7 +17,10 @@ Auto-WEKA allows to select between a list of all WEKA methods and different opti
 ## Usage
 
 
-* It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large dataset using the following command: java -Xmx2038m -jar autoweka4mcps.jar
+* It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large dataset, e.g., allocating 2GB memory:
+```
+java -Xmx2048m -jar autoweka4mcps.jar
+```
 
 * SMAC Configuration: Please configure the file path to SMAC in the following file autoweka.smac.SMACExperimentConstructor.properties
 
