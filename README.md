@@ -17,8 +17,9 @@ Auto-WEKA allows to select between a list of all WEKA methods and different opti
 ## Usage
 
 
-* It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large dataset, e.g., allocating 2GB memory:
+* It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large datasets, e.g., allocating 2GB memory:
 ```
+cd autoweka4mcps
 java -Xmx2048m -jar autoweka4mcps.jar
 ```
 
