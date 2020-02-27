@@ -160,10 +160,14 @@ public class Wrapper {
         long startTimeAvatar = OSBean.getProcessCpuTime();
         if (isAvatar) {
             LoggerUtil.logAvatar("AVATAR is Active");
-            avatarEvaluatedResult = _evaluateWithAVATAR(wrapperArgs);
+            avatarEvaluatedResult = _evaluateWithAVATAR(wrapperArgs, isAvatar);
             iou.writeData(String.valueOf(avatarEvaluatedResult) + "\n", workingDir + "\\avatar_log\\rs-avatar.txt");
         } else {
+            
+            
             LoggerUtil.logAvatar("AVATAR is Deactive");
+            // logging pipeline purpose
+            avatarEvaluatedResult = _evaluateWithAVATAR(wrapperArgs, isAvatar);
         }
         long stopTimeAvatar = OSBean.getProcessCpuTime();
 
@@ -203,9 +207,9 @@ public class Wrapper {
      * You should only override this if you need to do a number of different
      * runs for each wrapper invocation
      */
-    protected boolean _evaluateWithAVATAR(ArrayList<String> wrapperArgs) {
+    protected boolean _evaluateWithAVATAR(ArrayList<String> wrapperArgs, boolean isAvatar) {
 
-        LoggerUtil.logAvatar("AVATAR - Training Instances - ");
+        //LoggerUtil.logAvatar("AVATAR - Training Instances - ");
 
         String datasetString = mProperties.getProperty("datasetString");
 
@@ -231,13 +235,19 @@ public class Wrapper {
         LoggerUtil.logAvatar("AVATAR - workingDir: " + metaKnowledgeFilePath);
         List<MLComponent> listOfLoadedMLComponents = config.loadListOfMLComponents(metaKnowledgeFilePath);
         SurrogatePipelineMapping surrogatePipelineMapping = new SurrogatePipelineMapping(listOfLoadedMLComponents);
+        
+        
+        
         PetriNetsPipeline petriNetsPipeline = surrogatePipelineMapping.mappingFromWekaPipeline2PetriNetsPipeline(filterMLComponents(wrapperArgs, listOfLoadedMLComponents), dataPath);
 
+        boolean rs = true;
+        if (isAvatar) {
         PetriNetsExecutionEngine engine = new PetriNetsExecutionEngine(petriNetsPipeline, listOfLoadedMLComponents);
         //long startTime = System.currentTimeMillis();
-
-        boolean rs = engine.execute();
+        rs = engine.execute();
         LoggerUtil.logAvatar("AVATAR AVATAR AVATARAVATARAVATAR ******* - eval: " + rs);
+        }
+        
 
         //long endTime = System.currentTimeMillis();
         //LoggerUtil.logAvatar("AVATAR - EVAL RESULT - " + rs + " - Surrogate Pipeline Validation Time: " + (endTime - startTime) + " ms");
@@ -408,7 +418,7 @@ public class Wrapper {
             instanceStr += s + " - ";
         }
 
-        iou.writeData(instanceStr + "\n", workingDir + "\\avatar_log\\wrapper-pipelines.txt");
+     //   iou.writeData(instanceStr + "\n", workingDir + "\\avatar_log\\wrapper-pipelines.txt");
 
         LoggerUtil.logAvatar("AVATAR- mInstance: " + mInstance);
 

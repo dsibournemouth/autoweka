@@ -59,26 +59,26 @@ public class SMACWrapper extends Wrapper {
             resultStr = "CRASHED";
         } else {
 
-            UUID uuid = UUID.randomUUID();
-            String model_path = workingDir + "\\model\\" + uuid.toString();
-            File directory = new File(workingDir + "\\model");
-            if (!directory.exists()) {
-                directory.mkdir();
-            }
-
-            try {
-                if (res.getAttributeSelection() != null) {
-                    weka.core.SerializationHelper.write(model_path + ".attributeselection", res.getAttributeSelection());
-                } else {
-                    File oldFile = new File(model_path + ".attributeselection");
-                    if (oldFile.exists()) {
-                        oldFile.delete();
-                    }
-                }
-                weka.core.SerializationHelper.write(model_path + ".model", res.getClassifier());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+           // UUID uuid = UUID.randomUUID();
+            //String model_path = workingDir + "\\model\\" + uuid.toString();
+//            File directory = new File(workingDir + "\\model");
+//            if (!directory.exists()) {
+//                directory.mkdir();
+//            }
+//
+//            try {
+//                if (res.getAttributeSelection() != null) {
+//                    weka.core.SerializationHelper.write(model_path + ".attributeselection", res.getAttributeSelection());
+//                } else {
+//                    File oldFile = new File(model_path + ".attributeselection");
+//                    if (oldFile.exists()) {
+//                        oldFile.delete();
+//                    }
+//                }
+//                weka.core.SerializationHelper.write(model_path + ".model", res.getClassifier());
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
         }
 
         StringBuilder extraResultsSB = new StringBuilder();
