@@ -107,7 +107,7 @@ public class SMACWrapper extends Wrapper {
 
         //Print the result string
         System.out.println("Result for ParamILS: " + resultStr + ", " + res.getTime() + ", 0, " + score + ", " + mSeed + ", EXTRA " + extraResultsSB.toString());
-        System.out.println("AVATAR - " + res.getClassifier().toString());
+       // System.out.println("AVATAR - " + res.getClassifier().toString());
 
         System.exit(0);
     }

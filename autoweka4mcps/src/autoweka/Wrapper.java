@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
@@ -118,7 +119,15 @@ public class Wrapper {
         if (mExperimentSeed == null) {
             LoggerUtil.logAvatar("WARNING: No experiment seed defined, using default of 0");
             mExperimentSeed = "0";
-        }
+        } 
+//        else {
+//            int min = 0;
+//            int max = 4;
+//            Random random = new Random();
+//            int randSeed = random.nextInt(max - min + 1) + min;
+//            mExperimentSeed = String.valueOf(randSeed);
+//            LoggerUtil.logAvatar("AVATAR - SEEEEDDDDDDDDDDDDDD  -" + mExperimentSeed + "-");
+//        }
 
         //Make sure we have stuff
         if (mInstance == null) {
