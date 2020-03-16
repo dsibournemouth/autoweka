@@ -512,7 +512,7 @@ public class AbstractAlgorithmFramework {
 				if(pool == null) { throw new IllegalStateException("pool is null, this was unexpected"); }
 				if(iteration == 0)
 				{ 
-                                    int numberOfInitConfigurations = 5;
+                                    int numberOfInitConfigurations = 1;
                                     for (int i=0;i<numberOfInitConfigurations;i++) {
                                     
 

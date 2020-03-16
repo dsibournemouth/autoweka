@@ -25,3 +25,4 @@
 experiments/*
 #/dist/
 /autoweka4mcps/dist/
+/smac/build/
