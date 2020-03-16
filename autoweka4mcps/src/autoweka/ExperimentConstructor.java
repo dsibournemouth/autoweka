@@ -252,6 +252,10 @@ public abstract class ExperimentConstructor {
         mExperiment.type = getType();
         mExperiment.trajectoryParserClassName = getTrajectoryParserClassName();
         mExperiment.callString = getCallString(absExperimentDir);
+        
+        exp.callString.add("--number-init-configs");
+        exp.callString.add(String.valueOf(exp.numberOfInitConfigs));
+        
         mExperiment.envVariables = getEnvVariables();
         mExperiment.toXML(mExperimentPath + File.separator + mExperiment.name
                 + File.separator + mExperiment.name + ".experiment");

@@ -36,6 +36,12 @@ public class Experiment extends XmlSerializable {
     /**
      * The name of the result metric to use - see ClassiferResult.Metric
      */
+    @XmlElement(name = "numberOfInitConfigs")
+    public int numberOfInitConfigs = 1;
+    /**
+     * The name of the result metric to use - see ClassiferResult.Metric
+     */
+    
     @XmlElement(name = "resultMetric")
     public String resultMetric = "errorRate";
     /**

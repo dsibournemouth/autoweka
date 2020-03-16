@@ -43,7 +43,9 @@ public class ClassicInitializationProcedure implements InitializationProcedure {
     private final SeedableRandomPool pool;
     private boolean deterministicInstanceOrdering;
     private final AlgorithmExecutionConfiguration algorithmExecutionConfig;
-
+    private List<AlgorithmRunResult> algorithmRunResults;
+    
+    
     public ClassicInitializationProcedure(ThreadSafeRunHistory runHistory, ParameterConfiguration initialIncumbent, TargetAlgorithmEvaluator tae, ClassicInitializationProcedureOptions opts, InstanceSeedGenerator insc, List<ProblemInstance> instances, int maxIncumbentRuns, TerminationCondition termCond, double cutoffTime, SeedableRandomPool pool, boolean deterministicInstanceOrdering, AlgorithmExecutionConfiguration execConfig) {
 
         this.runHistory = runHistory;
@@ -105,7 +107,7 @@ public class ClassicInitializationProcedure implements InitializationProcedure {
                 LoggerUtil.log("Active Params : " + activeParam);
             }
             try {
-                evaluateRun(incumbentRunConfig);
+                algorithmRunResults = evaluateRun(incumbentRunConfig);
             } catch (OutOfTimeException e) {
                 log.warn("Ran out of time while evaluating the default configuration on the first run, this is most likely a configuration error");
                 //Ignore this exception
@@ -176,19 +178,15 @@ public class ClassicInitializationProcedure implements InitializationProcedure {
         return runs;
     }
 
-    @Override
-    public int getInitConfigIndex() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setInitConfigIndex(int initConfigIndex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void setIncumbent(ParameterConfiguration incumbent) {
         this.incumbent = incumbent;
+    }
+
+    @Override
+    public List<AlgorithmRunResult> getListOfAlgorithmRunResults() {
+       return algorithmRunResults;
     }
 
 }

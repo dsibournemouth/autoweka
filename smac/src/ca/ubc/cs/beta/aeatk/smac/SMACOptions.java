@@ -56,6 +56,10 @@ public class SMACOptions extends AbstractOptions {
 	@UsageTextField(defaultValues="Defaults to true when --runObj is RUNTIME, false otherwise", level=OptionLevel.INTERMEDIATE)
 	@Parameter(names={"--adaptive-capping","--ac","--adaptiveCapping"}, description="Use Adaptive Capping")
 	public Boolean adaptiveCapping = null;
+        
+        @UsageTextField(defaultValues="Default to 1", level=OptionLevel.INTERMEDIATE)
+	@Parameter(names={"--number-init-configs"}, description="Number of Random Configurations for Init")
+	public int numberOfInitConfigurations = 3;
 	
 	@UsageTextField(level=OptionLevel.INTERMEDIATE)
 	@Parameter(names={"--always-run-initial-config","--alwaysRunInitialConfiguration"}, description="if true we will always run the default and switch back to it if it is better than the incumbent")

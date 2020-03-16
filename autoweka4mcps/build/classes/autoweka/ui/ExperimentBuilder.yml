@@ -50,6 +50,7 @@ JFrame(name=frame, title="Simple Experiment Constructor", size=800x600, defaultC
             - JTextField(name=mClassifierMemoryLimitText, text="1000")
             - JTextField(name=mClassifierTimeoutText, text="60")
             - JComboBox(name=isAvatarOption)
+            - JTextField(name=numberOfInitConfigurationOption, text="1")
             - JButton(name=backExperimentButton, text="Back", onAction=[backExperiment])
             - JButton(name=saveExperimentButton, text="Save", onAction=[saveExperiment])
             - JButton(name=saveExperimentBatchButton, text="Save as Definition", onAction=[saveExperimentBatch])
@@ -63,6 +64,7 @@ JFrame(name=frame, title="Simple Experiment Constructor", size=800x600, defaultC
                 >"Training Memory Limit (MB): "             mClassifierMemoryLimitText+*
                 >"Training Run Timeout (minutes): "         mClassifierTimeoutText+*
                 >"Evaluate Pipeline using AVATAR: "         isAvatarOption+*
+                >"Number of Init Configurations: "          numberOfInitConfigurationOption+*
                 <backExperimentButton                                                          >saveExperimentButton>
                                                                                                >saveExperimentBatchButton>
     - MigLayout : |

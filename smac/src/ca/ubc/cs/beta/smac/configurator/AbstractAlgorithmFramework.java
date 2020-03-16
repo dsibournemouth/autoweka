@@ -512,7 +512,12 @@ public class AbstractAlgorithmFramework {
 				if(pool == null) { throw new IllegalStateException("pool is null, this was unexpected"); }
 				if(iteration == 0)
 				{ 
-                                    int numberOfInitConfigurations = 1;
+                                    
+                                    
+                                    
+                                    ParameterConfiguration bestInitIncumbent = null;
+                                    double bestQuality = Double.MAX_VALUE;
+                                    int numberOfInitConfigurations = options.numberOfInitConfigurations;
                                     for (int i=0;i<numberOfInitConfigurations;i++) {
                                     
 
@@ -536,7 +541,9 @@ public class AbstractAlgorithmFramework {
                                         
                                         log.info("SMAC - completed init ... " + i );
 					
-					incumbent =initProc.getIncumbent(); 
+					incumbent =initProc.getIncumbent();   
+                                        
+                                        
 					
                                         log.info("SMAC - updateIncumbentCost ...");
                                         
@@ -554,7 +561,25 @@ public class AbstractAlgorithmFramework {
                                         
                                         log.info("SMAC - after logIncumbent(iteration)");
                                         
+                                        
+                                        if (bestInitIncumbent==null) {
+                                            bestInitIncumbent = initProc.getIncumbent();
+                                            bestQuality = initProc.getListOfAlgorithmRunResults().get(0).getQuality();
+                                        } else {
+                                            double currentQuality = initProc.getListOfAlgorithmRunResults().get(0).getQuality();;
+                                            if (currentQuality<bestQuality) {
+                                                bestInitIncumbent = initProc.getIncumbent();
+                                            }
+                                            
+                                        }
+                                        
                                     }
+                                    
+                                    incumbent = bestInitIncumbent;
+                                    
+                                    
+                                    
+                                    
 				} else
 				{
 					//We are restoring state

@@ -132,11 +132,19 @@ public class SMACExecutor {
                     break;
                 }
             }
+            
+            int numberOfInitConfigs = 1;
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("--number-init-configs")) {
+                    numberOfInitConfigs = Integer.parseInt(args[i + 1]);
+                    break;
+                }
+            }
 
             List<SMACOptions> listOfSMACOptions = new ArrayList<>();
             listOfSMACOptions.add(options);
 
-            for (int s = (currentSeed + 1); s < (currentSeed + 5); s++) {
+            for (int s = (currentSeed + 1); s < (currentSeed + numberOfInitConfigs); s++) {
                 for (int i = 0; i < args.length; i++) {
                     if (args[i].equals("--seed")) {
                         args[i + 1] = String.valueOf(s);

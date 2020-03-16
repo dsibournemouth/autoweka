@@ -143,6 +143,12 @@ public class SMACExperimentConstructor extends ExperimentConstructor
             args.add(props.getProperty("intensificationPercentage")); // should be between 0 and 1, def: 0.5
         }
         
+//        if(props.containsKey("number-init-configs"))
+//        {
+//            args.add("--number-init-configs");
+//            args.add(String.valueOf(mExperiment.numberOfInitConfigs));
+//        }
+        
         // Showing the real calls
         args.add("--cli-log-all-call-strings");
         args.add("true");

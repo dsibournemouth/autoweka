@@ -63,6 +63,7 @@ public class ExperimentBuilder extends JFrame
     private JComboBox mResultMetricCombo;
     private JComboBox mOptimisationMethodCombo;
     private JTextField mOptimisationTimeoutText;
+    private JTextField numberOfInitConfigurationOption;
     private JTextField mClassifierMemoryLimitText;
     private JTextField mClassifierTimeoutText;
     
@@ -313,6 +314,7 @@ public class ExperimentBuilder extends JFrame
             if(mExperimentDirText.getText().isEmpty())
                 throw new RuntimeException("No output folder defined");
             validateNonNegativeFloat("optimisation timeout", mOptimisationTimeoutText);
+            validateNonNegativeFloat("number of init conifigurations", numberOfInitConfigurationOption);
             validateNonNegativeFloat("classifier memory limit", mClassifierMemoryLimitText);
             validateNonNegativeFloat("classifier run timeout", mClassifierTimeoutText);
         }catch(Exception e){
@@ -369,6 +371,13 @@ public class ExperimentBuilder extends JFrame
         } else {
             exp.isAvatar = false;
         }
+        
+        
+        exp.numberOfInitConfigs = Integer.parseInt(numberOfInitConfigurationOption.getText());
+        //exp.callString.add("--number-init-configs");
+   
+        
+        
         exp.tunerTimeout = Float.parseFloat(mOptimisationTimeoutText.getText()) * 3600;
         exp.trainTimeout = Float.parseFloat(mClassifierTimeoutText.getText()) * 60;
         exp.memory = mClassifierMemoryLimitText.getText() + "m";

@@ -1,6 +1,8 @@
 package ca.ubc.cs.beta.aeatk.initialization;
 
+import ca.ubc.cs.beta.aeatk.algorithmrunresult.AlgorithmRunResult;
 import ca.ubc.cs.beta.aeatk.parameterconfigurationspace.ParameterConfiguration;
+import java.util.List;
 
 public interface InitializationProcedure extends Runnable {
 
@@ -20,9 +22,9 @@ public interface InitializationProcedure extends Runnable {
     public ParameterConfiguration getIncumbent();
     
     public void setIncumbent(ParameterConfiguration incumbent);
+    
+    public List<AlgorithmRunResult> getListOfAlgorithmRunResults(); 
 
-    public int getInitConfigIndex();
-
-    public void setInitConfigIndex(int initConfigIndex);
+    
 
 }

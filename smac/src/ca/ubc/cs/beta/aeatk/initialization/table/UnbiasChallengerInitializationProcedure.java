@@ -601,18 +601,14 @@ outOfInitialization:
 		return selectedPisps;
 	}
 
-    @Override
-    public int getInitConfigIndex() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setInitConfigIndex(int initConfigIndex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void setIncumbent(ParameterConfiguration incumbent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<AlgorithmRunResult> getListOfAlgorithmRunResults() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 	
