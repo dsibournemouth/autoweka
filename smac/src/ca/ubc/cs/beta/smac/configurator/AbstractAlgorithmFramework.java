@@ -569,6 +569,7 @@ public class AbstractAlgorithmFramework {
                                             double currentQuality = initProc.getListOfAlgorithmRunResults().get(0).getQuality();;
                                             if (currentQuality<bestQuality) {
                                                 bestInitIncumbent = initProc.getIncumbent();
+                                                bestQuality = currentQuality;
                                             }
                                             
                                         }
