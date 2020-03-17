@@ -25,7 +25,7 @@ public class App {
         // TODO code application logic here
         
         
-        String expConfigFolder = "C:\\DATA\\Projects\\eclipse-workspace\\GITHUB\\autoweka-avatar\\autoweka4mcps\\listofexperiments.properties";
+        String expConfigFolder = args[0];
 
         
          try {
