@@ -4,14 +4,18 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/ui/ExperimentRunner.java</file>
-            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/Experiment.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/utils/IOUtils.java</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/ui/ExperimentBuilder.yml</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/ui/ExperimentBuilder.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/utils/CSVUtils.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/test/autoweka/utils/TestAutoWekaAvatarLogIntegration.java</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/smac/SMACExperimentConstructor.java</file>
-            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/command/CommandExperimentRun.java</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/ui/Wizard.java</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/ExperimentConstructor.java</file>
             <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/command/App.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/Experiment.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/command/CommandExperimentRun.java</file>
+            <file>file:/C:/DATA/Projects/eclipse-workspace/GITHUB/autoweka-avatar/autoweka4mcps/src/autoweka/utils/AutoWekaAvatarLogIntegration.java</file>
         </group>
     </open-files>
 </project-private>
