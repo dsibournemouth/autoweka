@@ -1,0 +1,61 @@
+@relation 'cars-weka.filters.unsupervised.instance.Resample-S0-Z30.0-no-replacement-V-weka.filters.unsupervised.attribute.RandomSubset-N8.0-S1-weka.filters.supervised.instance.Resample-B0.0-S1-Z4.1323-weka.filters.MultiFilter-Fweka.filters.unsupervised.attribute.RandomSubset -N 8.0 -S 1-Fweka.filters.supervised.instance.Resample -B 0.0 -S 1 -Z 4.1323'
+
+@attribute buying {vhigh,high,med,low}
+@attribute maint {vhigh,high,med,low}
+@attribute doors {2,3,4,5more}
+@attribute persons {2,4,more}
+@attribute lugboot {small,med,big}
+@attribute safety {low,med,high}
+@attribute class {unacc,acc,good,vgood}
+
+@data
+high,low,5more,2,med,med,unacc
+high,low,3,more,big,med,acc
+low,vhigh,3,4,small,high,acc
+high,low,2,2,big,med,unacc
+high,low,5more,2,med,high,unacc
+high,high,3,2,big,low,unacc
+med,high,2,more,big,low,unacc
+high,vhigh,5more,4,med,high,unacc
+low,med,2,more,big,med,good
+low,med,3,2,small,low,unacc
+low,vhigh,2,4,small,med,unacc
+low,low,2,4,big,med,good
+low,med,4,4,big,high,vgood
+high,high,4,2,small,low,unacc
+high,high,3,2,med,med,unacc
+med,high,5more,4,med,high,acc
+med,med,4,2,med,high,unacc
+low,med,2,4,small,med,acc
+med,low,3,4,small,high,good
+low,vhigh,2,more,small,high,unacc
+vhigh,low,5more,more,small,low,unacc
+med,med,2,4,big,low,unacc
+high,low,5more,more,med,low,unacc
+low,low,4,more,small,med,acc
+high,low,2,4,small,med,unacc
+high,vhigh,4,2,med,med,unacc
+high,med,5more,4,small,med,unacc
+low,high,2,4,med,low,unacc
+high,med,4,4,med,high,acc
+med,high,4,more,big,low,unacc
+vhigh,low,3,more,med,med,acc
+high,med,5more,more,big,high,acc
+high,high,3,2,small,med,unacc
+vhigh,high,4,4,big,high,unacc
+vhigh,med,3,4,med,high,acc
+vhigh,low,2,4,small,med,unacc
+med,vhigh,5more,2,big,high,unacc
+vhigh,vhigh,3,more,med,low,unacc
+vhigh,vhigh,3,2,big,med,unacc
+high,med,5more,2,small,low,unacc
+high,med,5more,more,big,low,unacc
+vhigh,vhigh,4,4,big,high,unacc
+vhigh,med,4,2,big,med,unacc
+high,high,2,4,med,low,unacc
+high,med,2,2,big,high,unacc
+vhigh,med,4,more,big,low,unacc
+vhigh,low,2,4,big,high,acc
+high,vhigh,2,4,big,med,unacc
+med,low,3,2,small,low,unacc
+med,vhigh,5more,2,small,high,unacc
