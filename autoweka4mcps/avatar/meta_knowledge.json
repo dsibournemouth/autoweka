@@ -33152,9 +33152,9 @@
     } ],
     "listOfMLHyperparameters" : [ ]
   }, {
-    "componentId" : "weka.filters.unsupervised.instance.PeriodicSampling",
-    "componentName" : "PeriodicSampling",
-    "componentFullClassName" : "weka.filters.unsupervised.instance.PeriodicSampling",
+    "componentId" : "weka.filters.unsupervised.instance.RemoveOutliers",
+    "componentName" : "RemoveOutliers",
+    "componentFullClassName" : "weka.filters.unsupervised.instance.RemoveOutliers",
     "mLComponentType" : "OUTLIER_REMOVAL",
     "componentExecutionScriptSingleComponentWeka" : "weka.filters.unsupervised.instance.RemoveOutliers -O \"weka.filters.unsupervised.attribute.InterquartileRange -R first-last -O 3.0 -E 6.0\"",
     "componentExecutionScriptFilteredClassifierWeka" : "-F \\\"weka.filters.unsupervised.instance.RemoveOutliers -O \\\\\\\"weka.filters.unsupervised.attribute.InterquartileRange -R first-last -O 3.0 -E 6.0\\\\\\\"\\\" ",
