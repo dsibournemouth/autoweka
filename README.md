@@ -16,7 +16,7 @@ Auto-WEKA allows to select between a list of all WEKA methods and different opti
 
 ## Usage 
 
-* Please watch the video tutorial for quick start guide with the user interface (autoweka4mcps/autoweka4mcps_quick_start_guide_ui.mp4)
+* Please watch the [video tutorial](https://github.com/UTS-AAi/autoweka/blob/master/autoweka4mcps/autoweka4mcps_quick_start_guide_ui.mp4) for quick start guide with the user interface (autoweka4mcps/autoweka4mcps_quick_start_guide_ui.mp4)
 * It's neccessary to allocate more memory for AutoWeka4MCPS to deal with large datasets, e.g., allocating 2GB memory:
 ```
 cd autoweka4mcps
