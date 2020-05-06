@@ -30,7 +30,7 @@ java -Xmx2048m -jar autoweka4mcps.jar
 
 
 ## Publications
-* Tien-Dung Nguyen, Tomasz Maszczyk, Katarzyna Musial, Marc-Andre Zöller, and Bogdan Gabrys. "AVATAR - Machine Learning Pipeline Evaluation Using Surrogate Model." In the Symposium on Intelligent Data Analysis (IDA), 2020. (Accepted)
+* Tien-Dung Nguyen, Tomasz Maszczyk, Katarzyna Musial, Marc-Andre Zöller, and Bogdan Gabrys. ["AVATAR-Machine Learning Pipeline Evaluation Using Surrogate Model"](https://link.springer.com/chapter/10.1007/978-3-030-44584-3_28). In International Symposium on Intelligent Data Analysis, pp. 352-365. Springer, Cham, 2020.
 * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Automatic composition and optimisation of multicomponent predictive systems with an extended Auto-WEKA" Submitted to IEEE Transactions on Automation Science and Engineering, 2018. [[slides](http://www.slideshare.net/draxus/automating-machine-learning-is-it-feasible-62661182)] [[results](https://github.com/dsibournemouth/autoweka/tree/master/results)]
  * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Modelling Multi-Component Predictive Systems as Petri Nets". Submitted to 15th Annual Industrial Simulation Conference, 2017 (under review). [[branch](https://github.com/dsibournemouth/autoweka/tree/feature/pnml)]
  * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. ["Effects of change propagation resulting from adaptive preprocessing in multicomponent predictive systems"](http://www.sciencedirect.com/science/article/pii/S187705091632066X). In Proc. of the 20th International Conference KES-2016.
