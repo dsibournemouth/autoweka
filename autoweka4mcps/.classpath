@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path=".wekafiles/packages/baggedLocalOutlierFactor/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/baggedLocalOutlierFactor/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/EMImputation/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/EMImputation/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/localOutlierFactor/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/localOutlierFactor/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/partialLeastSquares/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/partialLeastSquares/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/RBFNetwork/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/RBFNetwork/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/StudentFilters/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/StudentFilters/src/test/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/wavelet/src/main/java"/>
+	<classpathentry kind="src" path=".wekafiles/packages/wavelet/src/test/java"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="weka-3.7.7/src/main/java"/>
+	<classpathentry kind="src" path="weka-3.7.7/src/test/java"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/baggedLocalOutlierFactor/baggedLocalOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/baggedLocalOutlierFactor/dist/baggedLocalOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/EMImputation/dist/EMImputation.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/EMImputation/EMImputation.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/localOutlierFactor/dist/localOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/localOutlierFactor/localOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/partialLeastSquares/dist/partialLeastSquares.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/partialLeastSquares/partialLeastSquares.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/RBFNetwork/dist/RBFNetwork.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/RBFNetwork/RBFNetwork.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/StudentFilters/StudentFilters.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/wavelet/dist/wavelet.jar"/>
+	<classpathentry exported="true" kind="lib" path=".wekafiles/packages/wavelet/wavelet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/baggedLocalOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dps.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EMImputation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javabuilder.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/localOutlierFactor.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/packageManager.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/partialLeastSquares.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/RBFNetwork.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/StudentFilters.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/betterbeansbinding-core-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/betterbeansbinding-el-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/betterbeansbinding-swingbinding-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/commons-lang-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/javabuilder-core-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/javabuilder-swing-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/jsr305-1.3.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/miglayout-3.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/plugins/glazedlists/glazedlists_java15-1.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/plugins/glazedlists/janino-2.5.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/slf4j-api-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/slf4j-nop-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingbuilder/snakeyaml-1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wavelet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/weka.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/aclib-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/aclib.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/commons-collections-3.2.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/commons-collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/commons-io-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/commons-math-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/commons-math3-3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/DomainInter.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/exp4j-0.3.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/fastrf-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/fastrf.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/guava-14.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/Jama-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/jcip-annotations-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/jcip-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/jcommander.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/jmatharray.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/logback-access-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/logback-classic-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/logback-core-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/numerics4j-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/opencsv-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/slf4j-api-1.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/smac-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/smac.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.06.01-development-619/spi-0.2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/aeatk-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/aeatk.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/commons-collections-3.2.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/commons-io-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/commons-math-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/commons-math3-3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/DomainInter.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/exp4j-0.3.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/exp4j-0.4.3.BETA-3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/fastrf-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/fastrf.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/guava-14.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jackson-annotations-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jackson-core-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jackson-databind-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/Jama-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jcip-annotations-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jcip-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jcommander.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/jmatharray.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/logback-access-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/logback-classic-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/logback-core-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/numerics4j-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/opencsv-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/smac-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/smac.jar"/>
+	<classpathentry exported="true" kind="lib" path="smac-v2.10.03-master-778/lib/spi-0.2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-3.7.7/lib/java-cup.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-3.7.7/lib/JFlex.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-3.7.7/lib/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-3.7.7/lib/packageManager.jar"/>
+	<classpathentry exported="true" kind="lib" path="weka-3.7.7/resources/packageManager-source.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/avatar-master-1.0-jar-with-dependencies.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
