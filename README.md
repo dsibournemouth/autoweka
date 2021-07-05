@@ -30,6 +30,9 @@ java -Xmx2048m -jar autoweka4mcps.jar
 
 
 ## Publications
+* Tien-Dung Nguyen, David Jacob Kedziora, Katarzyna Musial, and Bogdan Gabrys. ["Exploring Opportunistic Meta-knowledge to Reduce Search Spaces for Automated Machine Learning."](https://arxiv.org/pdf/2105.00282.pdf). In The International Joint Conference on Neural Network IJCNN. IEEE, 2021. (Accepted)
+* David Jacob Kedziora, Katarzyna Musial, and Bogdan Gabrys. ["AutonoML: Towards an Integrated Framework for Autonomous Machine Learning."](https://arxiv.org/pdf/2012.12600) arXiv preprint arXiv:2012.12600 (2020). (Under Review)
+* Tien-Dung Nguyen, Bogdan Gabrys, and Katarzyna Musial. ["AutoWeka4MCPS-AVATAR: Accelerating Automated Machine Learning Pipeline Composition and Optimisation."](https://arxiv.org/abs/2011.11846) arXiv preprint arXiv:2011.11846. 2020. (Under Review)
 * Tien-Dung Nguyen, Tomasz Maszczyk, Katarzyna Musial, Marc-Andre Zöller, and Bogdan Gabrys. ["AVATAR-Machine Learning Pipeline Evaluation Using Surrogate Model"](https://link.springer.com/chapter/10.1007/978-3-030-44584-3_28). In International Symposium on Intelligent Data Analysis, pp. 352-365. Springer, Cham, 2020.
 * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Automatic composition and optimisation of multicomponent predictive systems with an extended Auto-WEKA" Submitted to IEEE Transactions on Automation Science and Engineering, 2018. [[slides](http://www.slideshare.net/draxus/automating-machine-learning-is-it-feasible-62661182)] [[results](https://github.com/dsibournemouth/autoweka/tree/master/results)]
  * Manuel Martin Salvador, Marcin Budka, and Bogdan Gabrys. "Modelling Multi-Component Predictive Systems as Petri Nets". Submitted to 15th Annual Industrial Simulation Conference, 2017 (under review). [[branch](https://github.com/dsibournemouth/autoweka/tree/feature/pnml)]
