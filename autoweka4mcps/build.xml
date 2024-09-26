@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AutoWeka4MCPS">
+    <description>Builds, tests, and runs the project AutoWeka4MCPS.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+   
+</project>

@@ -1,0 +1,6 @@
+1. Create a template using Experimenter Builder in Autoweka GUI.
+2. Modify the template and replace dataset name with {DATASET}.
+3. python create_experiments.py experiments/<template_file>
+4. python launch_experiments <STRATEGY> <GENERATION>
+5. python get_best_points.py (list a csv)
+6. python make_plots.py (plots will be saved into plots folder)

@@ -1,0 +1,7 @@
+JDialog(title="RandomSearch Options", size=packed):
+    - JButton(name=okButton, text="Close", onAction=[close])
+    - MigLayout : |
+        []                      [grow, 200]               []
+        |okButton+* 
+
+
